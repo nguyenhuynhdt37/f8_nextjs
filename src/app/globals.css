@@ -2,26 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  font-size: 62.5%;
+  /* font-size: 1.5rem; */
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Ghi đè các lớp CSS của Ant Design */
+.custom-modal .ant-modal-content {
+  background: linear-gradient(
+    to right,
+    #fcf3f8,
+    #edf8f9
+  ) !important; /* Màu nền gradient */
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.custom-modal .ant-modal-header {
+  background-color: #4caf50; /* Màu nền tiêu đề tùy chỉnh */
+  color: #fff; /* Màu chữ tiêu đề tùy chỉnh */
+}
+
+.custom-modal .ant-modal-footer {
+  background-color: #e0e0e0; /* Màu nền footer tùy chỉnh */
 }

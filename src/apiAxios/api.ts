@@ -16,8 +16,6 @@ export const login = async ({ email, password }: LoginParams): Promise<any> => {
 
     return res.data;
   } catch (error: any) {
-    // console.log(error);
-
-    return error?.response?.data;
+    return error;
   }
 };

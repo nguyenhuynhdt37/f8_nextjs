@@ -55,11 +55,6 @@ const LoginWithEmail = ({
     );
     if (atLeastOneFieldHasData) return;
     setLoading(true);
-    const result = await login({
-      email,
-      password,
-    });
-    console.log(result);
 
     setLoading(false);
     if (result?.statusCode === 400)

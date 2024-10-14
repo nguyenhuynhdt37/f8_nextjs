@@ -1,7 +1,8 @@
 import { login } from "@/apiAxios/api";
 import Loading from "@/components/Loading";
+import { useAppDispatch } from "@/redux/hook/hook";
+import { loginRedux, setEmailRedux } from "@/redux/reducers/slices/AuthSlice";
 import { isValidEmail } from "@/Utils/functions";
-import { signIn } from "next-auth/react";
 import React, {
   Dispatch,
   SetStateAction,
@@ -19,6 +20,7 @@ const LoginWithEmail = ({
 }: {
   setStep: Dispatch<SetStateAction<number>>;
 }) => {
+  const dispatch = useAppDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -55,15 +57,24 @@ const LoginWithEmail = ({
     );
     if (atLeastOneFieldHasData) return;
     setLoading(true);
-    const result = await login({
-      email,
-      password,
-    });
-    console.log(result);
-
+    dispatch(loginRedux({ email, password }))
+      .unwrap()
+      .then((data: any) => {
+        console.log("data", data);
+      })
+      .catch(() => {});
     setLoading(false);
-    if (result?.statusCode === 400)
-      setError({ ...error, email: result?.message?.message });
+    // if (result?.statusCode === 200 || result?.satusCode === 201) {
+    //   if (result?.data?.token) {
+    //     d;
+    //   }
+    // }
+    // if (result?.statusCode === 400)
+    //   setError({ ...error, email: result?.message?.message });
+    // if (result?.statusCode === 401) {
+    //   dispatch(setEmailRedux(email));
+    //   setStep(2);
+    // }
   };
 
   return (

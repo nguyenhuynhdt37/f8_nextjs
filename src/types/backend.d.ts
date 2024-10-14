@@ -9,7 +9,10 @@ declare global {
     ok?: boolean;
     url?: string;
   }
-
+  interface Ilogin {
+    email: string;
+    password: string;
+  }
   interface MessageResponse {
     message: string;
   }

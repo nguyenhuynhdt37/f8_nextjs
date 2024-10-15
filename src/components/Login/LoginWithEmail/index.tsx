@@ -60,6 +60,7 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
   };
   const handleSubmit = async () => {
     if (email === "" || password === "") return;
+
     if (error.email || error.password) return;
     if (error) setLoading(true);
     dispatch(loginRedux({ email, password }))
@@ -90,6 +91,7 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
       .finally(() => {
         setLoading(false);
       });
+
   };
 
   return (

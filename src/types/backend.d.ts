@@ -52,4 +52,15 @@ declare global {
     };
     access_token: string;
   }
+  interface ILoginRedux {
+    email: string;
+    password: string;
+  }
+  interface IAuthSlice {
+    emailSentEmail: string;
+    user: [] | null;
+    loading: boolean;
+    error: null | string;
+    accessToken: "";
+  }
 }

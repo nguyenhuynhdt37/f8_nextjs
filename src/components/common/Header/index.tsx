@@ -1,4 +1,5 @@
 import ModalAuth from "@/components/Header/ModalAuth";
+import ModalUser from "@/components/Header/ModalUser";
 import Search from "@/components/Header/Search";
 import Link from "next/link";
 
@@ -21,7 +22,8 @@ const Header = () => {
           </div>
         </div>
         <Search />
-        <ModalAuth />
+        {/* <ModalAuth /> */}
+        <ModalUser />
       </div>
     </header>
   );

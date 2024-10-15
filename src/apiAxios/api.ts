@@ -16,8 +16,7 @@ export const login = async ({ email, password }: LoginParams): Promise<any> => {
     });
     return res.data;
   } catch (error: any) {
-    console.log(error);
-    throw new Error("error", error);
+    return error?.response;
   }
 };
 export const sendEmailAsync = async (email: string): Promise<any> => {
@@ -30,9 +29,23 @@ export const sendEmailAsync = async (email: string): Promise<any> => {
     return error?.response?.data;
   }
 };
+export const CheckCodeActive = async ({
+  email,
+  codeID,
+}: ICheckCode): Promise<any> => {
+  try {
+    const res = await axiosInstance.post("/auth/confirm-email", {
+      email,
+      codeID,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
 export const GetUserInfoByToken = async (token: string): Promise<any> => {
   try {
-    const res = await axiosInstance.get("/auth/send-email", {
+    const res = await axiosInstance.get("/auth/getinfo", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -42,7 +55,6 @@ export const GetUserInfoByToken = async (token: string): Promise<any> => {
     return res.data;
   } catch (error: any) {
     console.log(error);
-
     return error?.response?.data;
   }
 };

@@ -30,3 +30,6 @@ html {
 .custom-modal .ant-modal-footer {
   background-color: #e0e0e0; /* Màu nền footer tùy chỉnh */
 }
+.notistack-snackbar {
+  font-size: 2rem;
+}

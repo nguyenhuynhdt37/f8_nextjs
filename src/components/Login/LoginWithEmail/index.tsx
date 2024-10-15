@@ -1,7 +1,16 @@
 import { login } from "@/apiAxios/api";
 import Loading from "@/components/Loading";
+import { useAppDispatch } from "@/redux/hook/hook";
+import {
+  GetUserInfoByTokenRedux,
+  loginRedux,
+  setEmailRedux,
+  setToken,
+} from "@/redux/reducers/slices/AuthSlice";
 import { isValidEmail } from "@/Utils/functions";
-import { signIn } from "next-auth/react";
+import { message, notification } from "antd";
+import { log } from "console";
+import { useSnackbar } from "notistack";
 import React, {
   Dispatch,
   SetStateAction,
@@ -14,18 +23,19 @@ interface IError {
   email: string;
   password: string;
 }
-const LoginWithEmail = ({
-  setStep,
-}: {
+interface IProps {
   setStep: Dispatch<SetStateAction<number>>;
-}) => {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
+  const dispatch = useAppDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPass, setShowPass] = useState<boolean>(false);
   const [showEye, setShowEye] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  //   const
+  const { enqueueSnackbar } = useSnackbar();
   const [error, setError] = useState<IError>({
     email: "",
     password: "",
@@ -50,15 +60,38 @@ const LoginWithEmail = ({
   };
   const handleSubmit = async () => {
     if (email === "" || password === "") return;
-    const atLeastOneFieldHasData = Object.values(error).some(
-      (value) => value !== ""
-    );
-    if (atLeastOneFieldHasData) return;
-    setLoading(true);
 
-    setLoading(false);
-    if (result?.statusCode === 400)
-      setError({ ...error, email: result?.message?.message });
+    if (error.email || error.password) return;
+    if (error) setLoading(true);
+    dispatch(loginRedux({ email, password }))
+      .unwrap()
+      .then((data: any) => {
+        dispatch(GetUserInfoByTokenRedux(data?.token))
+          .unwrap()
+          .then((data1: any) => {
+            enqueueSnackbar("Đăng nhập thành công", {
+              variant: "success",
+            });
+            localStorage.setItem("token", data?.token);
+            setOpen(false);
+          })
+          .catch(() => {
+            enqueueSnackbar("Lỗi trong quá trình lấy thông tin người dùng", {
+              variant: "success",
+            });
+          });
+      })
+      .catch((error: any) => {
+        if (error?.statusCode === 401) {
+          dispatch(setEmailRedux(email));
+          setStep(2);
+        }
+        setError({ ...error, password: error?.message?.message });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
   };
 
   return (

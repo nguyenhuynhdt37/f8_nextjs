@@ -9,6 +9,15 @@ interface IUser {
   type: string;
   role: string;
 }
+
+interface IAuthSlice {
+  emailSentEmail: string;
+  user: any | null;
+  loading: boolean;
+  error: string | null;
+  accessToken: string | null;
+}
+
 declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {

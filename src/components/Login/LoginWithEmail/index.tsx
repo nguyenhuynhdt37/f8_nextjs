@@ -1,18 +1,31 @@
+import { login } from "@/apiAxios/api";
+import Loading from "@/components/Loading";
 import { isValidEmail } from "@/Utils/functions";
-import { InputNumber } from "antd";
-import { Input } from "postcss";
-import React, { useRef, useState } from "react";
+import { signIn } from "next-auth/react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 interface IError {
   email: string;
   password: string;
 }
-const LoginWithEmail = () => {
+const LoginWithEmail = ({
+  setStep,
+}: {
+  setStep: Dispatch<SetStateAction<number>>;
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPass, setShowPass] = useState<boolean>(false);
   const [showEye, setShowEye] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  //   const
   const [error, setError] = useState<IError>({
     email: "",
     password: "",
@@ -25,21 +38,27 @@ const LoginWithEmail = () => {
       setShowEye(false);
     }
   };
-  const handleInputEmailBlur = (e: any) => {
+  const handleInputBlur = (e: any) => {
     const value = e.target.value;
+    const name = e.target.name;
     if (value === "") {
       setError({ ...error, [e.target.name]: "Trường không được để trống" });
       return;
     }
-    if (!isValidEmail(value))
+    if (name === "email" && !isValidEmail(value))
       setError({ ...error, [e.target.name]: "Không đúng định dạng email" });
   };
-  const handleInputPasswordBlur = (e: any) => {};
-  const handleSubmit = () => {
-    if (email === "")
-      setError({ ...error, email: "Email không được bỏ trống" });
-    if (password === "")
-      setError({ ...error, password: "Password không được bỏ trống" });
+  const handleSubmit = async () => {
+    if (email === "" || password === "") return;
+    const atLeastOneFieldHasData = Object.values(error).some(
+      (value) => value !== ""
+    );
+    if (atLeastOneFieldHasData) return;
+    setLoading(true);
+
+    setLoading(false);
+    if (result?.statusCode === 400)
+      setError({ ...error, email: result?.message?.message });
   };
 
   return (
@@ -55,7 +74,7 @@ const LoginWithEmail = () => {
         value={email}
         onFocus={(e) => setError({ ...error, [e.target.name]: "" })}
         onChange={(e) => setEmail(e.target.value)}
-        onBlur={handleInputEmailBlur}
+        onBlur={handleInputBlur}
       />
       <div className="pb-2 text-[#f33a58] ps-4 font-medium">{error.email}</div>
       <div
@@ -67,16 +86,17 @@ const LoginWithEmail = () => {
       >
         <input
           type={`${showPass ? "text" : "password"}`}
-          className="px-6 rounded-full my-2 border-[0.15rem] text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full"
+          className={`${
+            error?.password && "border-[#f33a58] bg-[#eedce4]"
+          } px-6 rounded-full border-[0.15rem] my-2 text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
           placeholder="Mật khẩu"
           value={password}
           name="password"
+          onFocus={(e) => setError({ ...error, [e.target.name]: "" })}
           onChange={(e) => setPassword(e.target.value)}
-          onBlur={handleInputPasswordBlur}
+          onBlur={handleInputBlur}
         ></input>
-        <div className="pb-2 text-[#f33a58] ps-4 font-medium">
-          {error.password}
-        </div>
+
         {showEye && (
           <>
             {!showPass && (
@@ -126,11 +146,16 @@ const LoginWithEmail = () => {
           </>
         )}
       </div>
+
+      <div className="pb-2 text-[#f33a58] ps-4 font-medium">
+        {error.password}
+      </div>
       <button
         onClick={handleSubmit}
-        className="w-full py-[1.2rem] bg-gradient-to-r from-[#8de0f9] to-[#88eae0] rounded-full mt-9 font-bold text-[#fff] "
+        className={`w-full flex justify-center py-[1.2rem] bg-gradient-to-r from-[#8de0f9] to-[#88eae0] rounded-full mt-9 font-bold text-[#fff]`}
       >
-        Đăng nhập
+        {!loading && "Đăng nhập"}
+        {loading && <Loading />}
       </button>
     </div>
   );

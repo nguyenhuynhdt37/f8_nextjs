@@ -1,5 +1,6 @@
 import LoginHome from "@/components/Login/LoginHome";
 import LoginWithEmail from "@/components/Login/LoginWithEmail";
+import SentEmail from "@/components/Login/SentEmail";
 import { Modal } from "antd";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FiChevronLeft } from "react-icons/fi";
@@ -10,7 +11,7 @@ const Login = ({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [step, setStep] = useState<number>(0);
+  const [step, setStep] = useState<number>(2);
   return (
     <Modal
       loading={false}
@@ -44,7 +45,8 @@ const Login = ({
           dụng chung sẽ bị khóa.
         </p>
         {step === 0 && <LoginHome setStep={setStep} />}
-        {step === 1 && <LoginWithEmail />}
+        {step === 1 && <LoginWithEmail setStep={setStep} />}
+        {step === 2 && <SentEmail />}
         <div className="flex justify-center pt-7 font-medium">
           <div className="mr-2">Bạn chưa có tài khoản?</div>
           <div className="cursor-pointer text-[#f05a30] underline">Đăng ký</div>

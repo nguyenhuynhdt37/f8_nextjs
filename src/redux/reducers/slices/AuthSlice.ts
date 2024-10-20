@@ -1,3 +1,4 @@
+
 import { log } from "console";
 import { GetUserInfoByToken, login } from "@/api/api";
 import { IAuthSlice } from "@/types/next-auth";
@@ -24,6 +25,7 @@ export const GetUserInfoByTokenRedux = createAsyncThunk(
       return thunkAPI.rejectWithValue(res?.data);
     }
     return res?.data;
+
   }
 );
 const initialState: IAuthSlice = {
@@ -41,9 +43,11 @@ const authSlice = createSlice({
     setEmailRedux: (state, action: PayloadAction<string>) => {
       state.emailSentEmail = action.payload;
     },
+
     setToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
     },
+
   },
   extraReducers: (builder) => {
     builder
@@ -53,6 +57,7 @@ const authSlice = createSlice({
       })
       .addCase(loginRedux.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
+
         state.accessToken = action?.payload?.token;
         console.log("fjkashfjahsd");
       })
@@ -84,4 +89,5 @@ const authSlice = createSlice({
 });
 
 export const { setEmailRedux, setToken } = authSlice.actions;
+
 export default authSlice.reducer;

@@ -26,6 +26,7 @@ export const sendEmailAsync = async (email: string): Promise<any> => {
 
     return res.data;
   } catch (error: any) {
+    console.log(error);
     return error?.response?.data;
   }
 };
@@ -56,5 +57,6 @@ export const GetUserInfoByToken = async (token: string): Promise<any> => {
   } catch (error: any) {
     console.log(error);
     return error?.response?.data;
+
   }
 };

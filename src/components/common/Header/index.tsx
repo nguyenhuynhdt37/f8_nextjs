@@ -22,8 +22,8 @@ const Header = () => {
           </div>
         </div>
         <Search />
-        {/* <ModalAuth /> */}
-        <ModalUser />
+        <ModalAuth />
+        {/* <ModalUser /> */}
       </div>
     </header>
   );

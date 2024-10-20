@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
+import "../globals.css";
 import Header from "@/components/common/Header";
 import ProviderWrap from "@/redux/middleware/Provider.wrapper";
 import SnackbarProviderConfig from "@/lib/Provider/SnackbarProviderConfig";
@@ -19,8 +19,10 @@ export default function RootLayout({
       <body>
         <ProviderWrap>
           <SnackbarProviderConfig>
-            <Header />
-            {children}
+            <main>
+              <Header />
+              {children}
+            </main>
           </SnackbarProviderConfig>
         </ProviderWrap>
       </body>

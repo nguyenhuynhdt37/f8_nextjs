@@ -1,4 +1,4 @@
-import { CheckCodeActive, sendEmailAsync } from "@/apiAxios/api";
+import { CheckCodeActive, sendEmailAsync } from "@/api/api";
 import Loading from "@/components/Loading";
 import { RootState } from "@/redux/store";
 import { notification } from "antd";

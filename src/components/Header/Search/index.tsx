@@ -3,7 +3,7 @@ import { useState } from "react";
 import { LuSearch } from "react-icons/lu";
 import { TiDelete } from "react-icons/ti";
 const Search = () => {
-  const [value, setValue] = useState<string>("he;");
+  const [value, setValue] = useState<string>("");
   return (
     <div className="flex items-center border-2 px-4 text-[#7c7c7c] focus:border-[#676666] py-3 rounded-full text-[2rem]">
       <LuSearch />

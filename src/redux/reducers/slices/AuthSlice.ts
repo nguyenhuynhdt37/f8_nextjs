@@ -1,6 +1,6 @@
 
 import { log } from "console";
-import { GetUserInfoByToken, login } from "@/apiAxios/api";
+import { GetUserInfoByToken, login } from "@/api/api";
 import { IAuthSlice } from "@/types/next-auth";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";

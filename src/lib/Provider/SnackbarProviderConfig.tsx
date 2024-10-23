@@ -13,7 +13,7 @@ const SnackbarProviderConfig = ({ children }: { children: any }) => {
       classes={{
         containerRoot: "mt-[5rem]",
       }}
-      style={{ fontSize: "1.2rem", marginTop: "5rem" }}
+      style={{ fontSize: "1.2rem" }}
     >
       {children}
     </SnackbarProvider>

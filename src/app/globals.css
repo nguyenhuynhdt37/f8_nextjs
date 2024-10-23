@@ -33,3 +33,7 @@ html {
 .notistack-snackbar {
   font-size: 2rem;
 }
+.progress-circle {
+  background: conic-gradient(#3b82f6 calc(var(--percentage) * 1%), #e5e7eb 0);
+  border-radius: 50%;
+}

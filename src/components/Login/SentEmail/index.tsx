@@ -1,7 +1,6 @@
-import { CheckCodeActive, sendEmailAsync } from "@/apiAxios/api";
+import { CheckCodeActive, sendEmailAsync } from "@/api/api";
 import Loading from "@/components/Loading";
 import { RootState } from "@/redux/store";
-import { notification } from "antd";
 import { error } from "console";
 import { useSnackbar } from "notistack";
 import React, {
@@ -110,9 +109,6 @@ const SentEmail = ({
       setCodeError(res?.message?.message);
     }
     if (res?.statusCode === 200 || res?.statusCode === 201) {
-      notification.success({
-        message: "Xác thực thành công!",
-      });
       enqueueSnackbar("Xác thực thành công!", {
         variant: "success",
       });

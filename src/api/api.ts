@@ -57,6 +57,31 @@ export const GetUserInfoByToken = async (token: string): Promise<any> => {
   } catch (error: any) {
     console.log(error);
     return error?.response?.data;
+  }
+};
 
+export const getCourseInfo = async ({ id }: { id: number }): Promise<any> => {
+  try {
+    const res = await axiosInstance.get(`/courses/${id}`);
+    console.log("ress", res);
+
+    return res.data;
+  } catch (error: any) {
+    console.log(error);
+    return error?.response?.data;
+  }
+};
+
+export const getFirstLesson = async ({ id }: { id: number }): Promise<any> => {
+  try {
+    const res = await axiosInstance.get(
+      `/courses/get-fisrt-lesson-by-course/${id}`
+    );
+    console.log("ress", res);
+
+    return res.data;
+  } catch (error: any) {
+    console.log(error);
+    return error?.response?.data;
   }
 };

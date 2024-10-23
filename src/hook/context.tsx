@@ -1,28 +1,21 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+"use client";
+import { createContext, useState, ReactNode, FC } from "react";
 
-interface AppState {
-  value: number;
-  setValue: (value: number) => void;
+interface MyContextProps {
+  state: number;
+  setState: (value: number) => void;
 }
 
-const AppContext = createContext<AppState | undefined>(undefined);
+const MyContext = createContext<MyContextProps | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
-  const [value, setValue] = useState<number>(0);
+export const MyProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const [state, setState] = useState<number>(1);
 
   return (
-    <AppContext.Provider value={{ value, setValue }}>
+    <MyContext.Provider value={{ state, setState }}>
       {children}
-    </AppContext.Provider>
+    </MyContext.Provider>
   );
 };
 
-export const useAppContext = (): AppState => {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error("useAppContext must be used within an AppProvider");
-  }
-  return context;
-};
+export default MyContext;

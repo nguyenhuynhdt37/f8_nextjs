@@ -1,7 +1,6 @@
 import { getCourseInfo } from "@/api/api";
-import { Content, CourseInfo } from "@/components/courses";
-import ErrorPage from "@/components/ErrorPage";
-import LoadingPage from "@/components/LoadingPage";
+import { Content, CourseInfo } from "@/components/client/courses";
+import LoadingPage from "@/components/client/LoadingPage";
 import { convertSecondsToYMDHMS } from "@/Utils/functions";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -26,7 +25,6 @@ const CoursePage = async (context: CoursePageProps) => {
 
   const data = await res.json();
   const content = data?.data;
-  console.log("res", content);
 
   const totalSecconsCourse = content?.lessonGroups?.reduce(
     (store: number, group: any) => {

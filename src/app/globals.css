@@ -10,9 +10,11 @@
 
 html {
   font-size: 62.5%;
-  /* font-size: 1.5rem; */
 }
-
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
 /* Ghi đè các lớp CSS của Ant Design */
 .custom-modal .ant-modal-content {
   background: linear-gradient(
@@ -36,4 +38,60 @@ html {
 .progress-circle {
   background: conic-gradient(#3b82f6 calc(var(--percentage) * 1%), #e5e7eb 0);
   border-radius: 50%;
+}
+
+.scrollbar-custom::-webkit-scrollbar {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: #d2d2d7;
+  border-radius: 1.2rem;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  /* background-color: #ebebeb; */
+  /* border-radius: 1.2rem; */
+  border-right: 0.1rem solid #dcdbdb;
+}
+.scrollbar-custom .ql-editor::-webkit-scrollbar-thumb {
+  background-color: #d2d2d7;
+  border-radius: 1.2rem;
+}
+.custom-textview {
+  font-size: 1.6rem;
+  color: #0a0a0a;
+  blockquote {
+    padding: 0.8rem 2rem;
+    font-size: 1.7rem;
+    color: #6d6d6d;
+    font-weight: 700;
+    border-left: solid 3px #f05123;
+    a {
+      font-weight: 400;
+      font-size: 1.6rem;
+    }
+  }
+  p {
+    padding: 1rem 0;
+  }
+  ul {
+    padding-top: 1rem;
+    padding-left: 2rem;
+    li {
+      list-style: initial;
+      line-height: 3rem;
+      a {
+        color: #f05225 !important;
+      }
+    }
+  }
+}
+
+.hello .tippy-content {
+  /* overflow: hidden; */
+  padding: 0 !important;
+  background: #fff !important;
+  border: 0 !important;
 }

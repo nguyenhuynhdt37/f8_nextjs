@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -52,3 +54,65 @@ export function convertSecondsToYMDHMS(totalSeconds: number) {
   // Trả về kết quả dưới dạng chuỗi
   return parts.length > 0 ? parts.join(", ") : "0 giây";
 }
+
+export const formatDateConfig = (dateString: string): string => {
+  if (dateString === null) {
+    return "Invalid date";
+  }
+
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date");
+    }
+    return format(date, "dd/MM/yyyy HH:mm:ss");
+  } catch (error) {
+    return "Invalid date";
+  }
+};
+
+export const createValidData = (editorValue: any, data: any) => {
+  const validData: any = [];
+
+  for (const key in editorValue) {
+    if (
+      editorValue[key] !== null &&
+      editorValue[key] !== "" &&
+      editorValue[key] !== undefined &&
+      editorValue[key] !== "null" &&
+      editorValue[key] !== data[key]
+    ) {
+      const item = {
+        path: `/${key}`,
+        op: "replace",
+        value: editorValue[key],
+      };
+      validData.push(item);
+    }
+  }
+
+  return validData;
+};
+export const UpdateData = (data: any, editData: any) => {
+  const dataUpdate = { ...data };
+  for (const key in data) {
+    if (data[key] !== editData[key]) {
+      dataUpdate[key] = editData[key];
+    }
+  }
+  return dataUpdate;
+};
+
+export function checkIsEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+export function hasWhitespace(str: string): boolean {
+  console.log("sss", str);
+
+  return /\s/.test(str);
+}
+
+export const hasValue = (obj: Record<string, any>): boolean => {
+  return Object.values(obj).some((value) => value !== "");
+};

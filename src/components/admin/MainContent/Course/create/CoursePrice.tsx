@@ -1,36 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 
 const CoursePrice = () => {
-  const [isChoise, setIsChoise] = useSta;
+  const [isChoise, setIsChoise] = useState<number>(1);
   return (
     <div className="mt-10 relative ps-4 ">
       <div className="p-10 bg-[#fff] rounded-lg shadow-lg">
         <div className="text-[1.6rem] font-medium">Giá cả</div>
         <div className="flex mt-10">
           <div
-            onClick={() => setcheckbock(1)}
+            onClick={() => setIsChoise(1)}
             className="mr-10 cursor-pointer text-[1.4rem]"
           >
             <input
               type="radio"
               className="mr-5 cursor-pointer"
-              checked={checkbock === 1}
+              checked={isChoise === 1}
             />
             Miễn phí
           </div>
           <div
             className=" cursor-pointer text-[1.4rem]"
-            onClick={() => setcheckbock(2)}
+            onClick={() => setIsChoise(2)}
           >
             <input
               type="radio"
               className="mr-5 cursor-pointer"
-              checked={checkbock === 2}
+              checked={isChoise === 2}
             />
             Trả phí
           </div>
         </div>
-        {checkbock === 2 && (
+        {isChoise === 2 && (
           <>
             <div className="text-[1.6rem] font-medium">Giá</div>
             <input

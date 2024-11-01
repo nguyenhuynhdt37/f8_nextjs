@@ -6,6 +6,7 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { IoIosImages } from "react-icons/io";
 import Banner from "./Banner";
+import CoursePrice from "./CoursePrice";
 
 interface ICourseCreate {
   title: string;
@@ -64,18 +65,24 @@ const CreateCourse = () => {
         <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
           Mô tả
           <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
-          <div className="pt-10">{/* <RichTextEditor /> */}</div>
+          <div className="pt-10">
+            <RichTextEditor />
+          </div>
         </div>
         <div className="grid grid-cols-2">
           <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
             Gợi ý khoá học
             <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
-            <div className="pt-10">{/* <RichTextEditor /> */}</div>
+            <div className="pt-10">
+              <RichTextEditor />
+            </div>
           </div>
           <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
             Kết quả sau khi học xong khoá học
             <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
-            <div className="pt-10">{/* <RichTextEditor /> */}</div>
+            <div className="pt-10">
+              <RichTextEditor />
+            </div>
           </div>
         </div>
       </div>

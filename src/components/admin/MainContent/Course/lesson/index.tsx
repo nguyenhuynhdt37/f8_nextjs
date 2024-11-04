@@ -20,7 +20,7 @@ const Lesson = ({ id }: any) => {
   const [loadData, setLoadData] = useState<number>(0);
   const [data, setData] = useState<any>();
   const [params, setParams] = useState<IpageEdit>({
-    pageSize: 4,
+    pageSize: 10,
     pageNumber: 1,
     totalPage: 1,
     totalCount: 0,

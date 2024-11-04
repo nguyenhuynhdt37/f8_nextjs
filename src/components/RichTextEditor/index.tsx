@@ -14,8 +14,9 @@ const RichTextEditor = ({
     <ReactQuill
       value={value}
       onChange={onChange}
-      className="custom-quill text-[3rem] border-[#e5bda7] border-2 rounded-lg pb-5 min-h-[20rem] max-h-[45rem] overflow-y-hidden scrollbar-custom"
+      className="custom-quill  text-[3rem] border-[#ffffff] overflow-hidden border-2 rounded-lg min-h-[20rem] max-h-[45rem] scrollbar-custom"
       theme="snow"
+      style={{ padding: "0px" }}
       placeholder="Viết văn bản ở đây..."
       modules={{
         toolbar: [

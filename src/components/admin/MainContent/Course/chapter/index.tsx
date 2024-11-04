@@ -4,14 +4,14 @@ import Table from "./Table";
 import Search from "./Search";
 import Filter from "./Filter";
 import Pagination from "../../Pagination";
-import { getAllCourses } from "@/api/api";
+import { getAllCourses, getLesonGroupById } from "@/api/api";
 import { IpageEdit } from "@/types/next-auth";
 import LoadingPage from "@/components/client/LoadingPage";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LoadingBar from "react-top-loading-bar";
 
-const Course = () => {
+const Chapter = ({ id }: any) => {
   const ref = useRef<any>(null);
   const [loadData, setLoadData] = useState<number>(0);
   const [data, setData] = useState<any>();
@@ -29,7 +29,7 @@ const Course = () => {
   useEffect(() => {
     const handleGetData = async () => {
       ref.current.continuousStart();
-      const res = await getAllCourses({ config: params });
+      const res = await getLesonGroupById({ id, config: params });
       ref.current.complete();
       if (res?.statusCode === 200 || res?.statusCode === 201) {
         setData(res?.data);
@@ -48,7 +48,7 @@ const Course = () => {
     <div className="p-10 text-[1.4rem]">
       <LoadingBar color="#0066df" ref={ref} />
       <div className="flex justify-between">
-        <div className="font-bold text-[2rem]">Quản lý Khoá học</div>
+        <div className="font-bold text-[2rem]">Quản lý chương học</div>
         <Search
           pageEdit={params}
           setPageEdit={setParams}
@@ -56,7 +56,7 @@ const Course = () => {
         />
         <div className="flex items-center">
           <Filter />
-          <Link href={"/admin/course/create"}>
+          <Link href={`/admin/course/chapter/create/${id}`}>
             <button className="px-5 py-3 bg-[#3084d6] rounded-2xl text-[#fff]">
               + Thêm mới
             </button>
@@ -73,4 +73,4 @@ const Course = () => {
   );
 };
 
-export default Course;
+export default Chapter;

@@ -1,4 +1,4 @@
-import { DeleteCourse, DeleteUser } from "@/api/api";
+import { DeleteCourse, DeleteLessonGroup, DeleteUser } from "@/api/api";
 import { message } from "antd";
 import { log } from "console";
 import React from "react";
@@ -11,7 +11,7 @@ const Delete = ({ setLoadData, setShowDelete, id }: any) => {
     event.stopPropagation();
 
     if (id === -1) return;
-    const res = await DeleteCourse({ id });
+    const res = await DeleteLessonGroup({ id });
     if (res?.statusCode === 200 || res?.statusCode === 201) {
       messageApi.open({
         content: "Xoá tài khoản thành công!",
@@ -20,12 +20,12 @@ const Delete = ({ setLoadData, setShowDelete, id }: any) => {
       setLoadData((prev: any) => prev + 1);
     } else if (res?.statusCode === 400 || res?.statusCode === 401) {
       messageApi.open({
-        content: "Khoá học không tồn tại!",
+        content: "Chương học không tồn tại!",
         type: "error",
       });
     } else if (res?.statusCode === 409) {
       messageApi.open({
-        content: "Khoá học tồn tại dữ liệu không thể xoá bỏ!",
+        content: "Chương học tồn tại dữ liệu không thể xoá bỏ!",
         type: "error",
       });
     } else {

@@ -1,8 +1,9 @@
+import { config } from "./../middleware";
 import { log } from "console";
 import axios from "axios";
 import axiosInstance from "./axiosInstance";
 import { headers } from "next/headers";
-import { ICreateUser, IGetWithParam } from "@/types/next-auth";
+import { ICreateUser, IGetWithParam, IpageEdit } from "@/types/next-auth";
 
 interface LoginParams {
   email: string;
@@ -243,9 +244,38 @@ export const DeleteUser = async ({ id }: any): Promise<any> => {
 };
 export const DeleteCourse = async ({ id }: any): Promise<any> => {
   try {
-    const res = await axiosInstance.delete(`/courses/delete?courseId=7`, {
+    const res = await axiosInstance.delete(`/courses/delete`, {
       params: {
         courseId: id,
+      },
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const CreateLessonGroup = async ({ id, name }: any): Promise<any> => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/lesson-group/create`,
+      { courseId: id, name },
+      {
+        withCredentials: true,
+      }
+    );
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const DeleteLessonGroup = async ({ id }: any): Promise<any> => {
+  try {
+    const res = await axiosInstance.delete(`/courses/lesson-group/delete`, {
+      params: {
+        id: id,
       },
       withCredentials: true,
     });
@@ -305,6 +335,89 @@ export const getAllCourses = async ({
         pageSize: config.pageSize,
       },
     });
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getLesonGroupById = async ({
+  id,
+  config,
+}: {
+  id: number;
+  config: IpageEdit;
+}): Promise<any> => {
+  try {
+    const res = await axiosInstance.get(
+      `/courses/group-lesson-by-course/${id}`,
+      {
+        withCredentials: true,
+        params: {
+          searchTerm: config.searchTerm,
+          sortField: config.sortField,
+          sortOrder: config.sortOrder,
+          pageNumber: config.pageNumber,
+          pageSize: config.pageSize,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getLesonpByCourseId = async ({
+  id,
+  config,
+}: {
+  id: number;
+  config: IpageEdit;
+}): Promise<any> => {
+  try {
+    const res = await axiosInstance.get(`/courses/lesson/course/${id}`, {
+      withCredentials: true,
+      params: {
+        searchTerm: config.searchTerm,
+        sortField: config.sortField,
+        sortOrder: config.sortOrder,
+        pageNumber: config.pageNumber,
+        pageSize: config.pageSize,
+      },
+    });
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const CourseCreate = async (formData: any): Promise<any> => {
+  try {
+    const res = await axiosInstance.post("/courses/create", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const QuestionLessonCreate = async (
+  courseId: number,
+  data: any
+): Promise<any> => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/lesson/question/${courseId}`,
+      data,
+      {
+        withCredentials: true,
+      }
+    );
 
     return res.data;
   } catch (error: any) {

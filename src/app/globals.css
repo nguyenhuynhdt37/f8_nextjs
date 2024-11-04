@@ -95,3 +95,24 @@ body {
   background: #fff !important;
   border: 0 !important;
 }
+.custom-quill {
+  border: 2px solid #609fd6;
+  position: relative;
+  scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
+  -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE và Edge */
+  width: 100% !important;
+  padding: 0 !important;
+  .ql-editor {
+    height: 100%;
+    overflow-y: scroll;
+    max-height: 45rem;
+    min-height: 20rem;
+  }
+  .ql-editor::-webkit-scrollbar-thumb {
+    background-color: #d2d2d7;
+    border-radius: 1.2rem;
+  }
+  .ql-tooltip {
+    left: 1rem !important;
+  }
+}

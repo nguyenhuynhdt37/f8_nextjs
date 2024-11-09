@@ -101,7 +101,7 @@ const Question = ({
     ref.current.complete();
     if (res?.statusCode === 200 || res?.statusCode === 201) {
       messageApi.open({
-        type: "error",
+        type: "success",
         content:
           "Thêm câu hỏi thành công, bạn sẽ được chuyển đến trang danh sách câu hỏi",
       });

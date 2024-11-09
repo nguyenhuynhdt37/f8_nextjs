@@ -18,6 +18,12 @@ export const getVideoIdFromUrl = (url: string) => {
   return match ? match[1] : null;
 };
 
+export const isValidYoutubeUrlFunc = (url: string): boolean => {
+  if (url === "") return false;
+  const regex = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
+  return regex.test(url);
+};
+
 export function convertSecondsToYMDHMS(totalSeconds: number) {
   const secondsInMinute = 60;
   const secondsInHour = 3600; // 60 * 60

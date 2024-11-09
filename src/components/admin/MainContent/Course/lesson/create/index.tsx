@@ -5,7 +5,7 @@ import Lesson from "./Lesson";
 import Question from "./Question";
 
 const LessonCreate = ({ courseId, grouplessons, lessonType }: any) => {
-  const [lessonTypeIsChoise, setLessonTypeIsChoise] = useState(lessonType[2]);
+  const [lessonTypeIsChoise, setLessonTypeIsChoise] = useState(lessonType[0]);
   const [grouplessonIsChoise, setGrouplessonIsChoise] = useState(
     grouplessons[0]
   );
@@ -50,7 +50,16 @@ const LessonCreate = ({ courseId, grouplessons, lessonType }: any) => {
           />
         </div>
       </div>
-      {lessonTypeIsChoise?.id === 1 && <Lesson />}
+      {lessonTypeIsChoise?.id === 1 && (
+        <Lesson
+          courseId={courseId}
+          titleError={error}
+          setTitleErrror={setError}
+          lessonType={lessonTypeIsChoise?.id}
+          grouplesson={grouplessonIsChoise?.id}
+          title={title}
+        />
+      )}
       {lessonTypeIsChoise?.id === 2 && <Lesson />}
       {lessonTypeIsChoise?.id === 3 && (
         <Question

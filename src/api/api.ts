@@ -424,3 +424,17 @@ export const QuestionLessonCreate = async (
     return error?.response?.data;
   }
 };
+export const LessonCreateAsync = async (
+  courseId: number,
+  data: any
+): Promise<any> => {
+  try {
+    const res = await axiosInstance.post(`/courses/lesson/${courseId}`, data, {
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};

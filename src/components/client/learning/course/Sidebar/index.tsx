@@ -36,22 +36,28 @@ const SideBar = ({
     }
   };
   return (
-    <div className={`${isShowSideBar ? "col-span-1" : "hidden"}`}>
-      <div className="text-[1.5rem] bg-[#fff] scrollbar-custom">
-        <div className="py-7  px-8 font-medium text-2xl">Nội dung khoá học</div>
-        <div className="overflow-hidden">
+    <div
+      className={`${
+        isShowSideBar ? "col-span-1" : "hidden"
+      }  scrollbar-custom mb-[5rem] relative overflow-y-scroll`}
+    >
+      <div className="py-7 sticky bg-[#fff] z-20 top-0 left-0 px-8 font-medium text-2xl">
+        Nội dung khoá học
+      </div>
+      <div className="text-[1.5rem] pt-[2rem] bg-[#fff]">
+        <div className="">
           {lessonGroups?.map((groupLesson: any, index: number) => (
             <div key={groupLesson?.id} className="courses border-b-[0.1rem]">
               <div
                 onClick={() => handleShowLesson(groupLesson?.id)}
-                className="flex cursor-pointer justify-between px-8 py-5   bg-[#f7f8fa]"
+                className="flex cursor-pointer justify-between px-8 py-5 bg-[#f7f8fa]"
               >
                 <div className="">
                   <div className="font-medium text-[1.4rem] pb-2">
                     {groupLesson?.level}. {groupLesson?.name}
                   </div>
                   <div className="text-[1.3rem] text-[#29303b]">
-                    3/3 |{" "}
+                    {groupLesson?.length || 0} |{" "}
                     {convertSecondsToYMDHMS(
                       groupLesson?.lectureDetails?.reduce(
                         (data: number, item: any) => {

@@ -24,6 +24,13 @@ export const isValidYoutubeUrlFunc = (url: string): boolean => {
   return regex.test(url);
 };
 
+export function getCurrentMonthAndYear(d: any): string {
+  const date = new Date(d);
+  const month = date.getMonth() + 1; // Tháng trong JS bắt đầu từ 0 (0 - 11)
+  const year = date.getFullYear();
+  return `Tháng ${month} Năm ${year}`;
+}
+
 export function convertSecondsToYMDHMS(totalSeconds: number) {
   const secondsInMinute = 60;
   const secondsInHour = 3600; // 60 * 60

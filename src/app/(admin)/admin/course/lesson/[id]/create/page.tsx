@@ -1,6 +1,7 @@
 import { Breadcrumbs } from "@/components/admin/MainContent/Breadcrumbs";
 import CreateCourse from "@/components/admin/MainContent/Course/create";
 import LessonCreate from "@/components/admin/MainContent/Course/lesson/create";
+import { useCookie } from "@/hook/useCookie";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -16,10 +17,7 @@ const LessonCreatePage = async (context: CoursePageProps) => {
   const { id } = (await context.params) || {};
   const cookieStore = cookies();
 
-  const cookieHeader = cookieStore
-    .getAll()
-    .map(({ name, value }) => `${name}=${value}`)
-    .join("; ");
+  const cookieHeader = useCookie();
 
   const resLessonType = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/lesson-type`,

@@ -3,6 +3,7 @@ import React, { memo, useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import Lesson from "./Lessson";
 import { getdataLesson } from "@/api/api";
+import Note from "./Note";
 const LessonContent = ({
   isShowSideBar,
   lessonActive,
@@ -12,10 +13,7 @@ const LessonContent = ({
   lessonActive: any;
   courseSuggestion: any;
 }) => {
-  console.log("couse", courseSuggestion);
-
   const [data, setdata] = useState<any>();
-  console.log("data lesson", data);
 
   useEffect(() => {
     const handleGetLesson = async () => {
@@ -29,18 +27,16 @@ const LessonContent = ({
     };
     handleGetLesson();
   }, [lessonActive]);
-  // const videoId = getVideoIdFromUrl(
-  //   "https://www.youtube.com/watch?v=0SJE9dYdpps&list=PL_-VfJajZj0VgpFpEVFzS5Z-lkXtBe-x5"
-  // );
   return (
     <div
       className={`${
         isShowSideBar ? "col-span-3" : "col-span-full"
-      } mb-[5rem] overflow-y-scroll scrollbar-custom`}
+      } scrollbar-custom mb-[5rem] overflow-y-scroll`}
     >
       {data?.lessonType?.id === 1 && (
         <Lesson courseSuggestion={courseSuggestion} data={data} />
       )}
+      {data?.lessonType?.id === 4 && <Note id={data?.id} />}
     </div>
   );
 };

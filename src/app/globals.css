@@ -76,6 +76,12 @@ body {
   p {
     padding: 1rem 0;
   }
+  a {
+    color: #f05123;
+  }
+  img {
+    border-radius: 1rem;
+  }
   ul {
     padding-top: 1rem;
     padding-left: 2rem;

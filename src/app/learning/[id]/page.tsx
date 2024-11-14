@@ -1,19 +1,23 @@
 import { redirect } from "next/navigation";
 import { message } from "antd";
 import Learning from "@/components/client/Learning";
+import { useCookie } from "@/hook/useCookie";
 
 interface Iprops {
   params: { id: string };
 }
 const CourseDetail = async ({ params }: Iprops) => {
   const { id } = params;
+  const cookieHeader = useCookie();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/get-course-is-register-${id}`,
     {
       method: "GET",
-      credentials: "include",
+      headers: { "Content-Type": "application/json", Cookie: cookieHeader },
     }
   );
+  console.log(res);
+
   if (!res.ok) {
     redirect(`/courses/get-course-is-register-${id}`);
   }

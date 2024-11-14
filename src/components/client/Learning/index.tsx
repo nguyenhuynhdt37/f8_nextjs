@@ -46,7 +46,7 @@ const Learning = ({ data }: { data: any }) => {
       <Header data={data} />
       <div className="">
         {isLoading && <LoadingPage />}
-        <div className="grid grid-cols-4 h-[100vh] pt-[5rem]">
+        <div className="grid grid-cols-4 h-[100vh] overflow-hidden pt-[5rem]">
           <LessonContent
             courseSuggestion={data?.courseDetail}
             lessonActive={lessonActive}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import OptionType from "./OptionType";
 import Lesson from "./Lesson";
 import Question from "./Question";
+import Note from "./Note";
 
 const LessonCreate = ({ courseId, grouplessons, lessonType }: any) => {
   const [lessonTypeIsChoise, setLessonTypeIsChoise] = useState(lessonType[0]);
@@ -71,7 +72,16 @@ const LessonCreate = ({ courseId, grouplessons, lessonType }: any) => {
           title={title}
         />
       )}
-      {lessonTypeIsChoise?.id === 4 && <Lesson />}
+      {lessonTypeIsChoise?.id === 4 && (
+        <Note
+          courseId={courseId}
+          titleError={error}
+          setTitleErrror={setError}
+          lessonType={lessonTypeIsChoise?.id}
+          grouplesson={grouplessonIsChoise?.id}
+          title={title}
+        />
+      )}
     </div>
   );
 };

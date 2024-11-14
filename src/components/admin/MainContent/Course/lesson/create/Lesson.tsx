@@ -2,6 +2,7 @@ import { LessonCreateAsync } from "@/api/api";
 import RichTextEditor from "@/components/RichTextEditor";
 import { getVideoIdFromUrl, isValidYoutubeUrlFunc } from "@/Utils/functions";
 import { message } from "antd";
+import { log } from "console";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import LoadingBar from "react-top-loading-bar";
@@ -80,14 +81,13 @@ const Lesson = ({
         },
       };
       ref.current.continuousStart();
+      console.log(dataPost);
+
       const res = await LessonCreateAsync(courseId, dataPost);
       ref.current.complete();
       if (res?.statusCode === 200 || res?.statusCode === 201) {
-        messageApi.open({
-          type: "success",
-          content:
-            "Thêm câu hỏi thành công, bạn sẽ được chuyển đến trang danh sách câu hỏi",
-        });
+        messageApi.success("Tạo bài học thành công");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         router.push(`/admin/course/lesson/${courseId}`);
       } else {
         messageApi.open({

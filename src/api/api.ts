@@ -429,7 +429,40 @@ export const LessonCreateAsync = async (
   data: any
 ): Promise<any> => {
   try {
-    const res = await axiosInstance.post(`/courses/lesson/${courseId}`, data, {
+    const res = await axiosInstance.post(
+      `/courses/lesson/create/${courseId}`,
+      data,
+      {
+        withCredentials: true,
+      }
+    );
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const NoteCreateAsync = async (
+  courseId: number,
+  data: any
+): Promise<any> => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/lesson/note/create/${courseId}`,
+      data,
+      {
+        withCredentials: true,
+      }
+    );
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const ViewNoteLesson = async (lessonId: number): Promise<any> => {
+  try {
+    const res = await axiosInstance.get(`/courses/lesson/note/${lessonId}`, {
       withCredentials: true,
     });
 

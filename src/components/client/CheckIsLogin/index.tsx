@@ -1,42 +1,33 @@
 "use client";
+import { logoutApi } from "@/api/api";
 import { useAppDispatch } from "@/redux/hook/hook";
-import {
-  GetUserInfoByTokenRedux,
-  setToken,
-} from "@/redux/reducers/slices/AuthSlice";
+import { getInfoRedux } from "@/redux/reducers/slices/AuthSlice";
 import { message } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const CheckIsLogin = () => {
+const CheckIsLogin = ({ cookie }: any) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const handleCheck = async () => {
-      if (!token) {
-        return;
-      }
-      dispatch(GetUserInfoByTokenRedux(token))
+    if (cookie?.length === 0) {
+      return;
+    } else {
+      dispatch(getInfoRedux())
         .unwrap()
-        .then((data: any) => {
-          // alert();
-          dispatch(setToken(token));
-          // router.push("/");
-          return;
-        })
+        .then((data: any) => {})
         .catch(() => {
+          logoutApi();
           messageApi.open({
             type: "error",
             content: "Hết phiên đăng nhập, vui lòng đăng nhập lại",
           });
-          localStorage.removeItem("token");
           return;
         });
-    };
-    handleCheck();
-  }, []);
+    }
+  }, [cookie]);
+
+  const [messageApi, contextHolder] = message.useMessage();
   return <>{contextHolder}</>;
 };
 

@@ -25,11 +25,25 @@ const fetchCourseData = async (id: string) => {
   const data = await res.json();
   return data?.data;
 };
+const fetchIsRegister = async (id: string) => {
+  const cookieHeader = useCookie();
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/user/check-course-is-register/${id}`,
+    {
+      cache: "no-store",
+      headers: { "Content-Type": "application/json", Cookie: cookieHeader },
+    }
+  );
+  if (res.ok) {
+    redirect("/learning/" + id);
+    return;
+  }
+};
 
 const CoursePage = async ({ params }: CoursePageProps) => {
   const { id } = params || {};
+  await fetchIsRegister(id);
   const content = await fetchCourseData(id);
-
   const totalSecconsCourse = content?.lessonGroups?.reduce(
     (store: number, group: any) => {
       group?.lectureDetail?.forEach((item: any) => {
@@ -53,12 +67,6 @@ const CoursePage = async ({ params }: CoursePageProps) => {
   );
 
   const fomartTimeCourse = convertSecondsToYMDHMS(totalSecconsCourse || 0);
-
-  // Kiểm tra các giá trị được tính toán
-  console.log("id:", id);
-  console.log("totalLesson:", totalLesson);
-  console.log("fomartTimeCourse:", fomartTimeCourse);
-
   return (
     <div className="container pb-20 mx-auto pt-5 grid grid-cols-3">
       <Content

@@ -1,12 +1,7 @@
 import { login } from "@/api/api";
 import Loading from "@/components/client/Loading";
 import { useAppDispatch } from "@/redux/hook/hook";
-import {
-  GetUserInfoByTokenRedux,
-  loginRedux,
-  setEmailRedux,
-  setToken,
-} from "@/redux/reducers/slices/AuthSlice";
+import { getInfoRedux, setEmailRedux } from "@/redux/reducers/slices/AuthSlice";
 import { isValidEmail } from "@/Utils/functions";
 import { message, notification } from "antd";
 import { log } from "console";
@@ -70,6 +65,7 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
         type: "success",
         content: "Đăng nhập thành công",
       });
+      dispatch(getInfoRedux());
       setOpen(false);
     }
     if (res?.statusCode === 401) {

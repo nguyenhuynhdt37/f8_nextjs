@@ -30,8 +30,6 @@ const Banner = ({ data, setData }: any) => {
   return (
     <>
       <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
-        Banner khoá học
-        <span className=" absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
         <div>
           <div
             {...getRootProps()}

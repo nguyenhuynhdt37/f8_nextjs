@@ -1,15 +1,19 @@
 import React from "react";
 import Course from "./Course";
 
-const Category = () => {
+const Category = ({ data }: any) => {
+  console.log(data);
+
   return (
     <div className="pb-10">
-      <div className="text-[2.5rem] font-bold">Khoá học Pro</div>
+      <div className="text-[2.5rem] font-bold">
+        {data?.length > 0 && data[0]?.level?.name}
+      </div>
       <div className="grid grid-cols-4 pt-10 gap-8">
-        <Course />
-        <Course />
-        <Course />
-        <Course />
+        {data &&
+          data?.map((course: any, index: any) => (
+            <Course key={index} data={course} />
+          ))}
       </div>
     </div>
   );

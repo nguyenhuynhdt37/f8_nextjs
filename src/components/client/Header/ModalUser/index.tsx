@@ -1,19 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaBell } from "react-icons/fa";
-import ModalInfo from "./ModaInfo";
-import { Modal } from "antd";
-import Tippy from "@tippyjs/react";
-
 import "tippy.js/dist/tippy.css";
-const ModalUser = () => {
-  const [visible, setVisible] = useState(false);
+import ModalInfo from "./ModaInfo";
+import { useOutsideClick } from "@/hook/useOutsideClick";
 
-  const handleShowModal = () => {
-    setVisible(!visible);
-  };
-  const hideTooltip = () => {
+const ModalUser = ({ data }: any) => {
+  const [visible, setVisible] = useState(false);
+  const handleCloseMenu = () => {
     setVisible(false);
+  };
+  const menuRef = useOutsideClick(handleCloseMenu);
+  const handleToggleMenu = () => {
+    setVisible((prevVisible) => !prevVisible);
   };
   return (
     <div className="flex text-[1.4rem] items-center text-[#333333] ">
@@ -23,23 +22,20 @@ const ModalUser = () => {
       <div className="">
         <FaBell className="text-3xl mr-8 text-[#707070] hover:text-[#333333] cursor-pointer" />
       </div>
-      <div className="pr-2 cursor-pointer relative">
-        <Tippy
-          content={<ModalInfo />}
-          className="hello"
-          arrow={false}
-          interactive={true}
-          trigger="click"
-          placement="bottom"
-          theme="light"
-        >
-          <img
-            className="object-cover w-12 rounded-full"
-            src="https://files.fullstack.edu.vn/f8-prod/user_photos/299093/63fc362173671.jpg"
-            alt=""
-          />
-        </Tippy>
-      </div>
+      <img
+        onClick={handleToggleMenu}
+        className="object-cover cursor-pointer h-12 w-12 rounded-full"
+        src={
+          data?.user?.avatar ||
+          "https://i.pinimg.com/736x/89/80/03/898003800fdc5dac3c0ce7d3d4447f01.jpg"
+        }
+        alt=""
+      />
+      {visible && (
+        <div ref={menuRef} className="transition ease-in-out duration-500">
+          <ModalInfo data={data} />
+        </div>
+      )}
     </div>
   );
 };

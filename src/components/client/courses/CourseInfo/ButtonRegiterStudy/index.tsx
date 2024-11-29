@@ -5,33 +5,39 @@ import { useAppSelector } from "@/redux/hook/hook";
 import { message } from "antd";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
-
+import { useRef, useState } from "react";
+import LoadingBar from "react-top-loading-bar";
+import Swal from "sweetalert2";
 const ButtonRegiterStudy = ({ idCourse }: { idCourse: number }) => {
+  const auth = useAppSelector((p) => p.auth?.user);
   const router = useRouter();
-  const { accessToken } = useAppSelector((p) => p.auth);
-  const { enqueueSnackbar } = useSnackbar();
+  const ref = useRef<any>(null);
   const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
   const handleSubmit = async () => {
-    if (!accessToken) {
+    if (!auth) {
       setIsLoginOpen(true);
       return;
     } else {
       const result = await RegiterCourseFree({
         idCourse: idCourse,
-        token: accessToken,
       });
       if (result?.statusCode === 200 || result?.statusCode === 201) {
-        messageApi.open({
-          type: "success",
-          content: "Đăng ký khoá học thành công",
+        Swal.fire({
+          icon: "success",
+          title: "Thành công!",
+          text: "Bạn đã đăng ký thành công.",
+          confirmButtonText: "Đóng",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            ref.current.continuousStart();
+            router.push(`/learning/${idCourse}`);
+          }
         });
-        router.push(`/learning/${idCourse}`);
       } else {
         messageApi.open({
           type: "error",
-          content: "This is an error message",
+          content: "Lỗi khi đăng ký khoá học, vui lòng thử lại cho",
         });
       }
     }
@@ -39,6 +45,7 @@ const ButtonRegiterStudy = ({ idCourse }: { idCourse: number }) => {
   return (
     <>
       {contextHolder}
+      <LoadingBar color="#0066df" ref={ref} />
       <div className="px-5 py-5">
         <button
           onClick={handleSubmit}

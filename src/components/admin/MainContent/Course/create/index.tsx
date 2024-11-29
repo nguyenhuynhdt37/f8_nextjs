@@ -26,6 +26,7 @@ const CreateCourse = ({ levels }: any) => {
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<any>();
   const [courseSuggestions, setCourseSuggestions] = useState<string>("");
+  const [introduce, setIntroduce] = useState<string>("");
   const [data, setData] = useState<ICourseCreate>({
     title: "",
     banner: null,
@@ -106,6 +107,7 @@ const CreateCourse = ({ levels }: any) => {
     formData.append("CourseCreate.LevelId", data?.levelId?.toString() || "");
     formData.append("CourseCreate.Title", data?.title || "");
     formData.append("CourseCreate.Image", data?.banner || "");
+    formData.append("CourseCreate.introduce", introduce || "");
     formData.append(
       "CourseDetailCreate.IsFree",
       data?.isFree ? "true" : "false"
@@ -215,7 +217,16 @@ const CreateCourse = ({ levels }: any) => {
               ))}
           </div>
         </div>
+        Banner khoá học
+        <span className=" absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
         <Banner data={data?.banner} setData={setData} />
+        <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
+          Thông tin khoá học
+          <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
+          <div className="pt-10">
+            <RichTextEditor value={introduce} onChange={setIntroduce} />
+          </div>
+        </div>
         <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
           Mô tả
           <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>

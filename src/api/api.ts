@@ -137,19 +137,15 @@ export const getCourseLearningById = async ({
 
 export const RegiterCourseFree = async ({
   idCourse,
-  token,
 }: {
   idCourse: number;
-  token: string;
 }): Promise<any> => {
   try {
     const res = await axiosInstance.post(
       `/courses/user/register/free`,
       idCourse,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        withCredentials: true,
       }
     );
 
@@ -466,6 +462,87 @@ export const ViewNoteLesson = async (lessonId: number): Promise<any> => {
       withCredentials: true,
     });
 
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const ViewQuestionLesson = async (lessonId: number): Promise<any> => {
+  try {
+    const res = await axiosInstance.get(
+      `/courses/lesson/question/${lessonId}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const logoutApi = async () => {
+  try {
+    const res = await axiosInstance.post(`/auth/logout`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getInfoUser = async () => {
+  try {
+    const res = await axiosInstance.get(`/auth/getinfo`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const uploadImage = async (formData: any) => {
+  try {
+    const res = await axiosInstance.post(`/upload`, formData, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const CreatePost = async (formData: any) => {
+  try {
+    const res = await axiosInstance.post(`/post/create`, formData, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getAllPostType = async (formData: any) => {
+  try {
+    const res = await axiosInstance.post(`/post/all/type`, formData, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+
+export const getAllCourseByLevel = async (id: number) => {
+  try {
+    const res = await axiosInstance.get(`/courses/level/${id}`, {
+      withCredentials: true,
+    });
     return res.data;
   } catch (error: any) {
     return error?.response?.data;

@@ -15,7 +15,6 @@ interface IAuthSlice {
   user: any | null;
   loading: boolean;
   error: string | null;
-  accessToken: string | null;
 }
 
 declare module "next-auth/jwt" {

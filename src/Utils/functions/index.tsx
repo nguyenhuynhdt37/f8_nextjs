@@ -129,3 +129,58 @@ export function hasWhitespace(str: string): boolean {
 export const hasValue = (obj: Record<string, any>): boolean => {
   return Object.values(obj).some((value) => value !== "");
 };
+
+export function getCookieValue(cookieName: string) {
+  if (typeof document !== "undefined") {
+    let cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.indexOf(cookieName + "=") === 0) {
+        return cookie.substring(cookieName.length + 1);
+      }
+    }
+  }
+  return null;
+}
+export function calculateYearsAgo(pastDate: any) {
+  const currentDate = new Date();
+  const past = new Date(pastDate);
+
+  // Tính chênh lệch năm
+  let yearsDifference = currentDate.getFullYear() - past.getFullYear();
+
+  // Điều chỉnh nếu tháng/ngày chưa tới
+  if (
+    currentDate.getMonth() < past.getMonth() ||
+    (currentDate.getMonth() === past.getMonth() &&
+      currentDate.getDate() < past.getDate())
+  ) {
+    yearsDifference--;
+  }
+
+  // Đảm bảo trả về ít nhất là 1
+  return Math.max(yearsDifference, 1);
+}
+
+export const getFileFromUrl = async (url: string): Promise<File> => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+
+    // Lấy tên file từ URL (nếu có)
+    const filename = url.split("/").pop() || "unknown";
+
+    const file = new File([blob], filename, { type: blob.type });
+    return file;
+  } catch (error) {
+    console.error("Error fetching file:", error);
+    throw error;
+  }
+};
+
+export function formatCurrency2(value: any) {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
+}

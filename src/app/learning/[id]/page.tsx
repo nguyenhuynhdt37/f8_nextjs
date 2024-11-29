@@ -16,10 +16,9 @@ const CourseDetail = async ({ params }: Iprops) => {
       headers: { "Content-Type": "application/json", Cookie: cookieHeader },
     }
   );
-  console.log(res);
 
   if (!res.ok) {
-    redirect(`/courses/get-course-is-register-${id}`);
+    redirect(`/courses/${id}`);
   }
   const result = await res?.json();
   const data = result?.data;

@@ -4,6 +4,8 @@ import "react-quill/dist/quill.snow.css";
 import Lesson from "./Lessson";
 import { getdataLesson } from "@/api/api";
 import Note from "./Note";
+import Question from "./Question";
+import MyEditor from "./QuestionCode";
 const LessonContent = ({
   isShowSideBar,
   lessonActive,
@@ -36,7 +38,9 @@ const LessonContent = ({
       {data?.lessonType?.id === 1 && (
         <Lesson courseSuggestion={courseSuggestion} data={data} />
       )}
+      {data?.lessonType?.id === 3 && <Question id={data?.id} />}
       {data?.lessonType?.id === 4 && <Note id={data?.id} />}
+      {/* {data?.lessonType?.id === 4 && <MyEditor />} */}
     </div>
   );
 };

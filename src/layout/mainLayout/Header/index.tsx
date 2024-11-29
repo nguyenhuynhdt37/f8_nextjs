@@ -1,8 +1,15 @@
+"use client";
 import ModalAuth from "@/components/client/Header/ModalAuth";
+import ModalUser from "@/components/client/Header/ModalUser";
 import Search from "@/components/client/Header/Search";
+import { useClientCookie } from "@/hook/cookieHeaderClient";
+import { useCookie } from "@/hook/useCookie";
+import { useAppSelector } from "@/redux/hook/hook";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 const Header = () => {
+  const user = useAppSelector((state) => state.auth.user);
   return (
     <header>
       <div className="px-[2.8rem] z-50 fixed top-0 left-0 right-0 h-[6.6rem] border border-bottom-[0.1rem] bg-[#fff] flex items-center justify-between">
@@ -25,8 +32,7 @@ const Header = () => {
           </div>
         </div>
         <Search />
-        <ModalAuth />
-        {/* <ModalUser /> */}
+        {!user ? <ModalAuth /> : <ModalUser data={user} />}
       </div>
     </header>
   );

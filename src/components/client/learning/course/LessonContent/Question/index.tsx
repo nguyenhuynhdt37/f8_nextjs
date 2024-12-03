@@ -32,7 +32,7 @@ const Question = ({ id }: any) => {
         const rect = buttonRef.current.getBoundingClientRect();
         confetti({
           particleCount: 300,
-          spread: 70,
+          spread: 1,
           origin: {
             x: 0.5,
             y: 1,
@@ -66,14 +66,14 @@ const Question = ({ id }: any) => {
               onClick={() => handleClick(answer)}
               className={`px-5 my-8 py-6 cursor-pointer ${
                 isAnswer?.error && isAnswer?.id === answer?.id
-                  ? "border-[#d06868] bg-[#f5e5e5]"
+                  ? "border-[#d06868] bg-[#f2d7d7]"
                   : answer?.id !== isAnswer?.id
                   ? "border-[#f6f7f9]"
                   : "border-[#0093fc]"
               } ${
                 isAnswer?.error === false &&
                 isAnswer?.id === answer?.id &&
-                "border-[#48bd79] bg-[#effaef]"
+                "border-[#48bd79] bg-[#dbf7db]"
               } border-2 rounded-2xl bg-[#f6f7f9] focus:outline-none
             w-full`}
             >

@@ -5,6 +5,7 @@ import { getInfoRedux } from "@/redux/reducers/slices/AuthSlice";
 import { message } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Swal from "sweetalert2";
 
 const CheckIsLogin = ({ cookie }: any) => {
   const dispatch = useAppDispatch();
@@ -18,9 +19,11 @@ const CheckIsLogin = ({ cookie }: any) => {
         .then((data: any) => {})
         .catch(() => {
           logoutApi();
-          messageApi.open({
-            type: "error",
-            content: "Hết phiên đăng nhập, vui lòng đăng nhập lại",
+          Swal.fire({
+            icon: "info",
+            title: "Thông tin!",
+            text: "Hết phiên đăng nhập.",
+            confirmButtonText: "Đóng",
           });
           return;
         });

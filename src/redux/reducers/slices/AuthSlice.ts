@@ -9,14 +9,13 @@ export const getInfoRedux = createAsyncThunk(
   "auth/getinfo",
   async (_, thunkAPI) => {
     const res = await getInfoUser();
-    if (
-      res?.data?.statusCode === 400 ||
-      res?.data?.statusCode === 401 ||
-      res?.data?.statusCode === 500
-    ) {
-      return thunkAPI.rejectWithValue(res?.data);
+    console.log("resssss", res);
+
+    if (res?.statusCode === 200) {
+      return res?.data;
+    } else {
+      return thunkAPI.rejectWithValue(res);
     }
-    return res?.data;
   }
 );
 const initialState: any = {

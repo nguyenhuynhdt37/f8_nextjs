@@ -1,6 +1,6 @@
 "use client";
 import { convertSecondsToYMDHMS } from "@/Utils/functions";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa6";
 import { FaCircleCheck } from "react-icons/fa6";
 import { FaCirclePlay } from "react-icons/fa6";
@@ -8,6 +8,7 @@ import { GiBeastEye } from "react-icons/gi";
 import { FaCode } from "react-icons/fa";
 import { MdEventNote } from "react-icons/md";
 import { FaBluesky } from "react-icons/fa6";
+import LoadingBar from "react-top-loading-bar";
 
 interface IProps {
   isShowSideBar: boolean;
@@ -21,6 +22,7 @@ const SideBar = ({
   lessonActive,
   onShowLesson,
 }: IProps) => {
+  const ref = useRef<any>(null);
   const [activeShowGroupLesson, setActiveShowGroupLesson] = useState<number[]>([
     lessonActive?.groupId || lessonGroups[0]?.id,
   ]);
@@ -41,6 +43,7 @@ const SideBar = ({
         isShowSideBar ? "col-span-1" : "hidden"
       }  scrollbar-custom mb-[5rem] relative overflow-y-scroll`}
     >
+      <LoadingBar color="#0066df" ref={ref} />
       <div className="py-7 sticky bg-[#fff] z-20 top-0 left-0 px-8 font-medium text-2xl">
         Nội dung khoá học
       </div>

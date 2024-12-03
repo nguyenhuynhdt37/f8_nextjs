@@ -1,6 +1,6 @@
 "use client";
 import MarkdownIt from "markdown-it";
-import React from "react";
+import React, { useEffect } from "react";
 import { FaTwitter } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FaLink } from "react-icons/fa6";
@@ -14,8 +14,13 @@ import { FaPencil } from "react-icons/fa6";
 import "github-markdown-css";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
+import { useAppDispatch } from "@/redux/hook/hook";
+import { setStateNav } from "@/redux/reducers/slices/NavbarSlice";
 const PostById = ({ data }: any) => {
-  console.log(data);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(setStateNav(3));
+  }, []);
   const mdParser: any = new MarkdownIt({
     highlight: (code, lang) => {
       if (lang && hljs.getLanguage(lang)) {

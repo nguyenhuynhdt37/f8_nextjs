@@ -498,7 +498,7 @@ export const getInfoUser = async () => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    return error?.response?.status;
   }
 };
 export const uploadImage = async (formData: any) => {

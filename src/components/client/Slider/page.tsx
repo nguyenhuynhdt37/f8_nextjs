@@ -1,11 +1,38 @@
 "use client";
 import MyContext from "@/hook/context";
-import { useContext, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hook/hook";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
+import LoadingBar from "react-top-loading-bar";
 const Slider = () => {
-  const context = useContext(MyContext);
-  const { state, setState }: any = context;
+  const router = useRouter();
+  const ref = useRef<any>(null);
+  const state = useAppSelector((state) => state.nav.state);
+  const handleRedirect = async (id: number) => {
+    switch (id) {
+      case 1:
+        ref.current.continuousStart();
+        router.push("/");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        ref.current.complete();
+        break;
+      case 2:
+        ref.current.continuousStart();
+        router.push("/learning-paths");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        ref.current.complete();
+        break;
+      case 3:
+        ref.current.continuousStart();
+        router.push("/postrà");
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        ref.current.complete();
+        break;
+    }
+  };
   return (
     <div className="">
+      <LoadingBar color="#0066df" ref={ref} />
       <div className="w-[9.6rem] sticky top-[9rem] items-center flex text-[1.15rem] text-[#404040] font-medium flex-col">
         <button
           className={`${
@@ -13,7 +40,7 @@ const Slider = () => {
               ? "bg-[#e8ebed] text-[#252525]"
               : "hover:bg-[#f2f0f0] hover:text-[#252525]"
           } flex w-[7.2rem] h-[7.2rem]  my-1 justify-center items-center  rounded-[1.8rem] py-2 flex-col`}
-          onClick={() => setState(1)}
+          onClick={() => handleRedirect(1)}
         >
           <svg
             aria-hidden="true"
@@ -38,7 +65,7 @@ const Slider = () => {
               ? "bg-[#e8ebed] text-[#252525]"
               : "hover:bg-[#f2f0f0] hover:text-[#252525]"
           } flex w-[7.2rem] h-[7.2rem] hover:bg-[#f2f0f0] hover:text-[#252525] my-1 justify-center items-center  rounded-[1.8rem] py-2 flex-col`}
-          onClick={() => setState(2)}
+          onClick={() => handleRedirect(2)}
         >
           <svg
             aria-hidden="true"
@@ -63,7 +90,7 @@ const Slider = () => {
               ? "bg-[#e8ebed] text-[#252525]"
               : "hover:bg-[#f2f0f0] hover:text-[#252525]"
           } flex w-[7.2rem] h-[7.2rem] hover:bg-[#f2f0f0] hover:text-[#252525] my-1 justify-center items-center  rounded-[1.8rem] py-2 flex-col`}
-          onClick={() => setState(3)}
+          onClick={() => handleRedirect(3)}
         >
           <svg
             aria-hidden="true"

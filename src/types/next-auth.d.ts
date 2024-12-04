@@ -15,7 +15,6 @@ interface IAuthSlice {
   user: any | null;
   loading: boolean;
   error: string | null;
-  accessToken: string | null;
 }
 
 declare module "next-auth/jwt" {
@@ -40,4 +39,59 @@ declare module "next-auth" {
     access_expire: number;
     error: string;
   }
+}
+interface ICheckCode {
+  email: string;
+  codeID: string;
+}
+interface LoginParams {
+  email: string;
+  password: string;
+}
+interface IAuthSlice {
+  user: any;
+  loading: boolean;
+  error: any;
+  accessToken: string;
+}
+interface ICreateUser {
+  fullName: string;
+  email: string;
+  password: string;
+  isActive: number;
+}
+
+interface IUser {
+  id: string;
+  fullName: string;
+  email: string;
+  isActive: number;
+  avatar: string;
+}
+
+interface IPageListProps<T> {
+  data: T[] | undefined;
+}
+
+interface IUpdateUser {
+  fullName: string;
+  password: string;
+  githubLink: string;
+  facebookLink: string;
+  youtubeLink: string;
+  userName: string;
+  personalWebsite: string;
+}
+
+interface IpageEdit {
+  pageSize: number;
+  pageNumber: number;
+  totalPage: number;
+  totalCount: number;
+  searchTerm: string;
+  sortField: string;
+  sortOrder: string;
+}
+interface IGetWithParam {
+  config: IpageEdit;
 }

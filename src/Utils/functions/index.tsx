@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -15,6 +17,19 @@ export const getVideoIdFromUrl = (url: string) => {
   );
   return match ? match[1] : null;
 };
+
+export const isValidYoutubeUrlFunc = (url: string): boolean => {
+  if (url === "") return false;
+  const regex = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
+  return regex.test(url);
+};
+
+export function getCurrentMonthAndYear(d: any): string {
+  const date = new Date(d);
+  const month = date.getMonth() + 1; // Tháng trong JS bắt đầu từ 0 (0 - 11)
+  const year = date.getFullYear();
+  return `Tháng ${month} Năm ${year}`;
+}
 
 export function convertSecondsToYMDHMS(totalSeconds: number) {
   const secondsInMinute = 60;
@@ -51,4 +66,121 @@ export function convertSecondsToYMDHMS(totalSeconds: number) {
 
   // Trả về kết quả dưới dạng chuỗi
   return parts.length > 0 ? parts.join(", ") : "0 giây";
+}
+
+export const formatDateConfig = (dateString: string): string => {
+  if (dateString === null) {
+    return "Invalid date";
+  }
+
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date");
+    }
+    return format(date, "dd/MM/yyyy HH:mm:ss");
+  } catch (error) {
+    return "Invalid date";
+  }
+};
+
+export const createValidData = (editorValue: any, data: any) => {
+  const validData: any = [];
+
+  for (const key in editorValue) {
+    if (
+      editorValue[key] !== null &&
+      editorValue[key] !== "" &&
+      editorValue[key] !== undefined &&
+      editorValue[key] !== "null" &&
+      editorValue[key] !== data[key]
+    ) {
+      const item = {
+        path: `/${key}`,
+        op: "replace",
+        value: editorValue[key],
+      };
+      validData.push(item);
+    }
+  }
+
+  return validData;
+};
+export const UpdateData = (data: any, editData: any) => {
+  const dataUpdate = { ...data };
+  for (const key in data) {
+    if (data[key] !== editData[key]) {
+      dataUpdate[key] = editData[key];
+    }
+  }
+  return dataUpdate;
+};
+
+export function checkIsEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+export function hasWhitespace(str: string): boolean {
+  console.log("sss", str);
+
+  return /\s/.test(str);
+}
+
+export const hasValue = (obj: Record<string, any>): boolean => {
+  return Object.values(obj).some((value) => value !== "");
+};
+
+export function getCookieValue(cookieName: string) {
+  if (typeof document !== "undefined") {
+    let cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.indexOf(cookieName + "=") === 0) {
+        return cookie.substring(cookieName.length + 1);
+      }
+    }
+  }
+  return null;
+}
+export function calculateYearsAgo(pastDate: any) {
+  const currentDate = new Date();
+  const past = new Date(pastDate);
+
+  // Tính chênh lệch năm
+  let yearsDifference = currentDate.getFullYear() - past.getFullYear();
+
+  // Điều chỉnh nếu tháng/ngày chưa tới
+  if (
+    currentDate.getMonth() < past.getMonth() ||
+    (currentDate.getMonth() === past.getMonth() &&
+      currentDate.getDate() < past.getDate())
+  ) {
+    yearsDifference--;
+  }
+
+  // Đảm bảo trả về ít nhất là 1
+  return Math.max(yearsDifference, 1);
+}
+
+export const getFileFromUrl = async (url: string): Promise<File> => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+
+    // Lấy tên file từ URL (nếu có)
+    const filename = url.split("/").pop() || "unknown";
+
+    const file = new File([blob], filename, { type: blob.type });
+    return file;
+  } catch (error) {
+    console.error("Error fetching file:", error);
+    throw error;
+  }
+};
+
+export function formatCurrency2(value: any) {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
 }

@@ -1,5 +1,5 @@
-import Image from "next/image";
+import Home from "@/components/client/Home";
 
-export default function Home() {
-  return <div>jashdk</div>;
+export default async function HomePage() {
+  return <Home />;
 }

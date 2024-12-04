@@ -1,5 +1,5 @@
 import { CheckCodeActive, sendEmailAsync } from "@/api/api";
-import Loading from "@/components/Loading";
+import Loading from "@/components/client/Loading";
 import { RootState } from "@/redux/store";
 import { error } from "console";
 import { useSnackbar } from "notistack";
@@ -22,7 +22,6 @@ const SentEmail = ({
   setStep: Dispatch<SetStateAction<number>>;
 }) => {
   const { emailSentEmail } = useSelector((state: RootState) => state.auth);
-  console.log("email", emailSentEmail);
   const ref = useRef(null);
   const [sendEmail, setSentEmail] = useState<number>(100);
   const [isCounting, setIsCounting] = useState<boolean>(false);
@@ -47,13 +46,11 @@ const SentEmail = ({
     setIsDistable(true);
     try {
       var result = await sendEmailAsync(emailSentEmail);
-      console.log("result", result);
       setIsCounting(true);
       if (result?.statusCode === 400 || result?.statusCode === 401) {
         setIsDistable(true);
       }
     } catch (e) {
-      console.log(e);
       setCodeError("Có lỗi xẩy ra, vui lòng thử lại sau");
     } finally {
       setLoading(false);

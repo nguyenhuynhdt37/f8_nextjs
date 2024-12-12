@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ProviderWrap from "@/redux/middleware/Provider.wrapper";
-import { MyProvider } from "@/hook/context";
-import "react-toastify/dist/ReactToastify.css";
 import CheckIsLogin from "@/components/client/CheckIsLogin";
 import { Lexend } from "@next/font/google";
 import { cookies } from "next/headers";
@@ -26,12 +24,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className={lexend.className}>
         <ProviderWrap>
-          <MyProvider>
-            <main>
-              {children}
-              <CheckIsLogin cookie={cookieStore} />
-            </main>
-          </MyProvider>
+          <main>
+            {children}
+            <CheckIsLogin cookie={cookieStore} />
+          </main>
         </ProviderWrap>
       </body>
     </html>

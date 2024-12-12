@@ -24,7 +24,7 @@ const SideBar = ({
 }: IProps) => {
   const ref = useRef<any>(null);
   const [activeShowGroupLesson, setActiveShowGroupLesson] = useState<number[]>([
-    lessonActive?.groupId || lessonGroups[0]?.id,
+    lessonActive?.groupId || (lessonGroups && lessonGroups[0]?.id) || null,
   ]);
   console.log("lessonactive", lessonActive);
 
@@ -93,51 +93,61 @@ const SideBar = ({
                     : "hidden"
                 }`}
               >
-                {groupLesson?.lectureDetails?.map((lesson: any) => (
-                  <div
-                    onClick={() => onShowLesson(lesson?.id, groupLesson?.id)}
-                    key={lesson?.id}
-                    className={`flex justify-between cursor-pointer pr-10 ps-14 py-4 ${
-                      lessonActive?.lessonId === lesson?.id
-                        ? "bg-[#fcdcd3]"
-                        : "hover:bg-[#f7f8fa]"
-                    }`}
-                  >
-                    <div className="">
-                      <div className="font-medium pb-2">
-                        {lesson?.level}. {lesson?.title}
+                {groupLesson?.lectureDetails?.map((lesson: any) => {
+                  return (
+                    <div
+                      onClick={() =>
+                        onShowLesson(
+                          lesson?.id,
+                          groupLesson?.id,
+                          lesson?.userLessons?.length > 0 ? true : false
+                        )
+                      }
+                      key={lesson?.id}
+                      className={`flex justify-between cursor-pointer pr-10 ps-14 py-4 ${
+                        lessonActive?.lessonId === lesson?.id
+                          ? "bg-[#fcdcd3]"
+                          : "hover:bg-[#f7f8fa]"
+                      }`}
+                    >
+                      <div className="">
+                        <div className="font-medium pb-2">
+                          {lesson?.level}. {lesson?.title}
+                        </div>
+                        <div className="text-[1.3rem] text-[#29303] items-center flex">
+                          {lessonActive?.lessonId === lesson?.id && (
+                            <GiBeastEye className="mr-2 text-[#f26d46]" />
+                          )}
+                          {lessonActive?.lessonId !== lesson?.id &&
+                            lesson?.lessonType?.id === 1 && (
+                              <FaCirclePlay className="mr-2 text-[#888]" />
+                            )}
+                          {lessonActive?.lessonId !== lesson?.id &&
+                            lesson?.lessonType?.id === 2 && (
+                              <FaCode className="mr-2 text-[#888]" />
+                            )}
+                          {lessonActive?.lessonId !== lesson?.id &&
+                            lesson?.lessonType?.id === 3 && (
+                              <FaBluesky className="mr-2 text-[#888]" />
+                            )}
+                          {lessonActive?.lessonId !== lesson?.id &&
+                            lesson?.lessonType?.id === 4 && (
+                              <MdEventNote className="mr-2 text-[#888]" />
+                            )}
+                          {lesson?.lessonType?.id === 1 &&
+                            convertSecondsToYMDHMS(
+                              lesson?.lessonVideo?.duration
+                            )}
+                        </div>
                       </div>
-                      <div className="text-[1.3rem] text-[#29303] items-center flex">
-                        {lessonActive?.lessonId === lesson?.id && (
-                          <GiBeastEye className="mr-2 text-[#f26d46]" />
-                        )}
-                        {lessonActive?.lessonId !== lesson?.id &&
-                          lesson?.lessonType?.id === 1 && (
-                            <FaCirclePlay className="mr-2 text-[#888]" />
-                          )}
-                        {lessonActive?.lessonId !== lesson?.id &&
-                          lesson?.lessonType?.id === 2 && (
-                            <FaCode className="mr-2 text-[#888]" />
-                          )}
-                        {lessonActive?.lessonId !== lesson?.id &&
-                          lesson?.lessonType?.id === 3 && (
-                            <FaBluesky className="mr-2 text-[#888]" />
-                          )}
-                        {lessonActive?.lessonId !== lesson?.id &&
-                          lesson?.lessonType?.id === 4 && (
-                            <MdEventNote className="mr-2 text-[#888]" />
-                          )}
-                        {lesson?.lessonType?.id === 1 &&
-                          convertSecondsToYMDHMS(lesson?.lessonVideo?.duration)}
-                      </div>
+                      {lesson?.userLessons?.length > 0 && (
+                        <button className="pe-1">
+                          <FaCircleCheck className="text-[#5db85c]" />
+                        </button>
+                      )}
                     </div>
-                    {lesson?.userLessons?.length > 0 && (
-                      <button className="pe-1">
-                        <FaCircleCheck className="text-[#5db85c]" />
-                      </button>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}

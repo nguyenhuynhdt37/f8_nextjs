@@ -24,7 +24,7 @@ const Slider = () => {
         break;
       case 3:
         ref.current.continuousStart();
-        router.push("/postrà");
+        router.push("/post");
         await new Promise((resolve) => setTimeout(resolve, 200));
         ref.current.complete();
         break;

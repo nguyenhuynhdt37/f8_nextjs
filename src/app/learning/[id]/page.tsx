@@ -24,7 +24,7 @@ const CourseDetail = async ({ params }: Iprops) => {
   const data = result?.data;
   return (
     <>
-      <Learning data={data} />
+      <Learning dataLearning={data} />
     </>
   );
 };

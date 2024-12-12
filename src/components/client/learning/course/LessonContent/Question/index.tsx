@@ -31,13 +31,14 @@ const Question = ({ id }: any) => {
       if (buttonRef.current) {
         const rect = buttonRef.current.getBoundingClientRect();
         confetti({
-          particleCount: 300,
-          spread: 1,
+          particleCount: 100,
+          spread: 100,
           origin: {
             x: 0.5,
             y: 1,
           },
         });
+        
       }
       setAnswer({ ...isAnswer, error: false });
     } else {

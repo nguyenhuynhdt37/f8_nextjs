@@ -27,7 +27,7 @@ const ModalUser = ({ data }: any) => {
         className="object-cover cursor-pointer h-12 w-12 rounded-full"
         src={
           data?.user?.avatar ||
-          "https://i.pinimg.com/736x/89/80/03/898003800fdc5dac3c0ce7d3d4447f01.jpg"
+          "https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg"
         }
         alt=""
       />

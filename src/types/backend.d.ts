@@ -13,6 +13,11 @@ declare global {
     email: string;
     password: string;
   }
+  declare global {
+    interface Window {
+      onYouTubeIframeAPIReady: () => void;
+    }
+  }
   interface ICheckCode {
     email: string;
     codeID: string;

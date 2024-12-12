@@ -1,8 +1,4 @@
-import { config } from "./../middleware";
-import { log } from "console";
-import axios from "axios";
 import axiosInstance from "./axiosInstance";
-import { headers } from "next/headers";
 import { ICreateUser, IGetWithParam, IpageEdit } from "@/types/next-auth";
 
 interface LoginParams {
@@ -18,6 +14,18 @@ export const login = async ({ email, password }: LoginParams): Promise<any> => {
         email,
         password,
       },
+      { withCredentials: true }
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const AddCourseComplete = async (idLesson: any): Promise<any> => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/lesson/complete/${idLesson}`,
+      {},
       { withCredentials: true }
     );
     return res.data;
@@ -531,6 +539,42 @@ export const getAllPostType = async (formData: any) => {
   try {
     const res = await axiosInstance.post(`/post/all/type`, formData, {
       withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getAllPost = async ({ config }: IGetWithParam): Promise<any> => {
+  try {
+    const res = await axiosInstance.get("/post", {
+      withCredentials: true,
+      params: {
+        searchTerm: config.searchTerm,
+        sortField: config.sortField,
+        sortOrder: config.sortOrder,
+        pageNumber: config.pageNumber,
+        pageSize: config.pageSize,
+      },
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getAllPostByType = async ({ config, id }: any): Promise<any> => {
+  try {
+    console.log(id);
+
+    const res = await axiosInstance.get(`/post/type/${id}`, {
+      withCredentials: true,
+      params: {
+        searchTerm: config.searchTerm,
+        sortField: config.sortField,
+        sortOrder: config.sortOrder,
+        pageNumber: config.pageNumber,
+        pageSize: config.pageSize,
+      },
     });
     return res.data;
   } catch (error: any) {

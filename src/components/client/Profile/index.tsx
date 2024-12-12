@@ -8,8 +8,16 @@ import { useAppSelector } from "@/redux/hook/hook";
 import { calculateYearsAgo } from "@/Utils/functions";
 import RichTextEditor from "@/components/RichTextEditor";
 import { useRouter } from "next/navigation";
-const Profile = () => {
-  const data = useAppSelector((state) => state.auth.user);
+const Profile = ({ user }: any) => {
+  const userRedux = useAppSelector((state) => state.auth.user);
+  const [data, setData] = useState<any>(null);
+  useEffect(() => {
+    if (user === null) {
+      setData(userRedux);
+    } else {
+      setData(user);
+    }
+  }, []);
   const router = useRouter();
   const handleRouter = (id: number) => {
     router.push("/learning/" + id);
@@ -28,7 +36,7 @@ const Profile = () => {
               className="rounded-full w-[16rem]"
               src={
                 data?.user?.avatar ||
-                "https://www.ldg.com.vn/media/uploads/uploads/27150036-27-hinh-gai-xinh-che-mat-lam-avt.jpg"
+                "https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg"
               }
               alt=""
             />

@@ -37,19 +37,21 @@ const PostById = ({ data }: any) => {
   });
   return (
     <div>
-      <div className="grid grid-cols-9 text-[1.4rem]">
+      <div className="grid grid-cols-9 text-[1.4rem] pb-32">
         <div className=""></div>
-        <div className="">
-          <div className="border-b-[0.1rem] py-2">Nguyễn Xuân Huỳnh</div>
-          <div className="flex text-[#757575] pe-[6rem] justify-between mt-5">
-            <div className="flex items-center">
-              <FaRegHeart className="text-[1.6rem] cursor-pointer mr-5" />1
+        <div>
+          <div className="sticky top-[9rem]">
+            <div className="border-b-[0.1rem] py-2">Nguyễn Xuân Huỳnh</div>
+            <div className="flex text-[#757575] pe-[6rem] justify-between mt-5">
+              <div className="flex items-center">
+                <FaRegHeart className="text-[1.6rem] cursor-pointer mr-5" />1
+              </div>
+              <div className="flex items-center">
+                <FaRegComment className="text-[1.6rem] cursor-pointer mr-5" />1
+              </div>
             </div>
-            <div className="flex items-center">
-              <FaRegComment className="text-[1.6rem] cursor-pointer mr-5" />1
-            </div>
+            <div className=""></div>
           </div>
-          <div className=""></div>
         </div>
         <div className="col-span-5 px-20">
           <div className="title font-bold text-[3rem]">Hello cả nhà</div>

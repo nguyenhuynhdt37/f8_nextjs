@@ -2,7 +2,7 @@ import { getVideoIdFromUrl } from "@/Utils/functions";
 import React, { memo, useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import Lesson from "./Lessson";
-import { getdataLesson } from "@/api/api";
+import { AddCourseComplete, getdataLesson } from "@/api/api";
 import Note from "./Note";
 import Question from "./Question";
 import MyEditor from "./QuestionCode";
@@ -10,13 +10,30 @@ const LessonContent = ({
   isShowSideBar,
   lessonActive,
   courseSuggestion,
-}: {
-  isShowSideBar: boolean;
-  lessonActive: any;
-  courseSuggestion: any;
-}) => {
+  isCompleteLesson,
+  setIsCompletedLesson,
+}: any) => {
   const [data, setdata] = useState<any>();
-
+  useEffect(() => {
+    if (
+      isCompleteLesson?.lessonId &&
+      isCompleteLesson.isCompleted &&
+      !isCompleteLesson?.isOldCompleted &&
+      isCompleteLesson?.groupId &&
+      !isCompleteLesson?.isPostReq
+    ) {
+      const completeData = async () => {
+        const res = await AddCourseComplete(data?.id);
+        if (res?.statusCode === 200 || res?.statusCode === 201) {
+          setIsCompletedLesson({
+            ...isCompleteLesson,
+            isPostReq: true,
+          });
+        }
+      };
+      completeData();
+    }
+  }, [isCompleteLesson]);
   useEffect(() => {
     const handleGetLesson = async () => {
       if (lessonActive) {
@@ -35,12 +52,17 @@ const LessonContent = ({
         isShowSideBar ? "col-span-3" : "col-span-full"
       } scrollbar-custom mb-[5rem] overflow-y-scroll`}
     >
-      {data?.lessonType?.id === 1 && (
-        <Lesson courseSuggestion={courseSuggestion} data={data} />
+      {data?.lesson?.lessonType?.id === 1 && (
+        <Lesson
+          isCompleteLesson={isCompleteLesson}
+          setIsCompletedLesson={setIsCompletedLesson}
+          courseSuggestion={courseSuggestion}
+          data={data?.lesson}
+        />
       )}
-      {data?.lessonType?.id === 3 && <Question id={data?.id} />}
-      {data?.lessonType?.id === 4 && <Note id={data?.id} />}
-      {/* {data?.lessonType?.id === 4 && <MyEditor />} */}
+      {data?.lesson?.lessonType === 3 && <Question id={data?.id} />}
+      {data?.lesson?.lessonType === 4 && <Note id={data?.id} />}
+      {/* {data?.lesson?.lessonType === 4 && <MyEditor />} */}
     </div>
   );
 };

@@ -11,18 +11,60 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { message } from "antd";
 import { activeShowLesson } from "@/api/api";
 import LoadingBar from "react-top-loading-bar";
-const Learning = ({ data }: { data: any }) => {
+import { group } from "console";
+const Learning = ({ dataLearning }: any) => {
+  console.log("data Learning", dataLearning);
+
+  const [data, setData] = useState<any>(dataLearning);
   const [messageApi, contextHolder] = message.useMessage();
   const [lessonActive, setLessonActive] = useState<any>(
     data?.userActiveLessonByCourses[0]
   );
+  const [isCompleteLesson, setIsCompletedLesson] = useState<any>({
+    isCompleted: false,
+    lessonId: null,
+    groupId: null,
+    isPostReq: false,
+    isOldCompleted: false,
+  });
+  useEffect(() => {
+    if (
+      isCompleteLesson?.isCompleted === true &&
+      isCompleteLesson?.groupId &&
+      isCompleteLesson?.lessonId
+    ) {
+      var dataCopy = { ...data };
+      dataCopy?.lessonGroups?.forEarch((lessonGroup: any) => {
+        if (lessonGroup?.id === isCompleteLesson?.groupId) {
+          lessonGroup?.lectureDetails?.forEarch((lesson: any) => {
+            lesson?.userLessons?.push(lessonActive);
+          });
+        }
+        setData(dataCopy);
+      });
+    }
+  }, [isCompleteLesson]);
   const [isShowSideBar, setIsShowSideBar] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const ref = useRef<any>(null);
-  console.log("data dsjhfdshfks", data);
+  useEffect(() => {
+    if (lessonActive?.groupId && lessonActive?.lessonId) {
+      setIsCompletedLesson({
+        ...isCompleteLesson,
+        groupId: lessonActive?.groupId,
+        lessonId: lessonActive?.lessonId,
+        isPostReq: false,
+        isCompleted: false,
+      });
+    }
+  }, [lessonActive]);
 
+  const ref = useRef<any>(null);
   const handleShowLesson = useCallback(
-    async (idLesson: number, groupId: number) => {
+    async (
+      idLesson: number,
+      groupId: number,
+      isOldCompletedLesson: boolean
+    ) => {
       if (idLesson && data?.id) {
         ref.current.continuousStart();
         const result = await activeShowLesson({
@@ -32,7 +74,11 @@ const Learning = ({ data }: { data: any }) => {
         });
         ref.current.complete();
         if (result?.statusCode === 200 || result?.statusCode === 201) {
-          setLessonActive(result?.data || null);
+          const dataActive = result?.data || {};
+          setLessonActive({
+            ...dataActive,
+            isOldCompletedLesson,
+          });
         }
       } else {
         messageApi.open({
@@ -52,6 +98,8 @@ const Learning = ({ data }: { data: any }) => {
         {isLoading && <LoadingPage />}
         <div className="grid grid-cols-4 h-[100vh] overflow-hidden pt-[5rem]">
           <LessonContent
+            isCompleteLesson={isCompleteLesson}
+            setIsCompletedLesson={setIsCompletedLesson}
             courseSuggestion={data?.courseDetail}
             lessonActive={lessonActive}
             isShowSideBar={isShowSideBar}
@@ -64,6 +112,8 @@ const Learning = ({ data }: { data: any }) => {
           />
         </div>
         <FooterBar
+          isCompleteLesson={isCompleteLesson}
+          setIsCompletedLesson={setIsCompletedLesson}
           isShowSideBar={isShowSideBar}
           setIsShowSideBar={setIsShowSideBar}
         />

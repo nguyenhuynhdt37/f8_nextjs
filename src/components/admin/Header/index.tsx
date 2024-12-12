@@ -11,7 +11,7 @@ const Header = () => {
           <div className="p-[0.1rem] inline-flex bg-[#e1b199] rounded-full">
             <img
               className="w-14 rounded-full"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3UIdzHGPJCrzSQnmHJpla9wMzEQONgAxbcDlXYQBlYk5VYt5sxBdj-_JvzTdk-pARe4&usqp=CAU"
+              src="https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg"
               alt=""
             />
           </div>

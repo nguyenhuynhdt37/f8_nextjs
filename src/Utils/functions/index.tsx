@@ -1,5 +1,6 @@
 import { format } from "date-fns";
-
+import remarkGfm from "remark-gfm";
+import ReactMarkdown from "react-markdown";
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -184,3 +185,14 @@ export const getFileFromUrl = async (url: string): Promise<File> => {
 export function formatCurrency2(value: any) {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
 }
+
+export const TruncateMarkdown = ({ content, limit }: any) => {
+  const truncatedContent =
+    content.length > limit ? `${content.substring(0, limit)}...` : content;
+
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      {truncatedContent}
+    </ReactMarkdown>
+  );
+};

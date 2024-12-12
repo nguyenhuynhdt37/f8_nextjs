@@ -1,10 +1,24 @@
 import { getCurrentMonthAndYear, getVideoIdFromUrl } from "@/Utils/functions";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import VideoPlayer from "./VideoPlayer";
 
-const Lesson = ({ data, courseSuggestion }: any) => {
+const Lesson = ({
+  data,
+  courseSuggestion,
+  isCompleteLesson,
+  setIsCompletedLesson,
+}: any) => {
+  console.log("completed", isCompleteLesson);
+
   return (
     <>
-      <div className="h-[65rem] border-r-5">
+      {!isCompleteLesson?.isOldCompleted ? (
+        <VideoPlayer
+          data={data}
+          isCompleted={isCompleteLesson}
+          setIsCompleted={setIsCompletedLesson}
+        />
+      ) : (
         <iframe
           src={`https://www.youtube.com/embed/${getVideoIdFromUrl(
             data?.lessonVideo?.videoLink
@@ -14,7 +28,7 @@ const Lesson = ({ data, courseSuggestion }: any) => {
           allowFullScreen
           className="w-full h-full"
         />
-      </div>
+      )}
       <div className="px-20 text-[1.3rem] pt-20 mx-auto  container mb-[2rem]">
         <div className="">
           <div className="text-[2.5rem] font-medium">{data?.title}</div>

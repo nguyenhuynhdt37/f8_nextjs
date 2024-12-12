@@ -6,6 +6,8 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 interface IProps {
   isShowSideBar: boolean;
   setIsShowSideBar: any;
+  isCompleteLesson: any;
+  setIsCompletedLesson: any;
 }
 const FooterBar = ({ isShowSideBar, setIsShowSideBar }: IProps) => {
   return (

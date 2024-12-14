@@ -6,8 +6,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { GoHeartFill } from "react-icons/go";
 import CodeBlock from "./CodeBlock";
 import confetti from "canvas-confetti";
-const Question = ({ id }: any) => {
-  const [quesstion, setQuestion] = useState<any>(null);
+import { motion } from "framer-motion";
+const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
+  console.log("ckzdjcfkoasdjc", isCompleteLesson);
+
+  const [question, setQuestion] = useState<any>(null);
   const [isAnswer, setAnswer] = useState<any>();
   const router = useRouter();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -15,14 +18,19 @@ const Question = ({ id }: any) => {
     const getData = async () => {
       const data = await ViewQuestionLesson(id);
       if (data?.statusCode === 200) {
-        setQuestion(data?.data);
+        let dataCopy = { ...data?.data };
+        dataCopy.tblQuestionsLesson.tblQuestionsLessonDetails =
+          dataCopy.tblQuestionsLesson.tblQuestionsLessonDetails
+            ?.slice()
+            .sort(() => Math.random() - 0.5);
+        setQuestion(dataCopy);
       } else {
         router.push("/404");
       }
     };
     getData();
   }, []);
-  console.log(quesstion);
+  console.log(question);
   const handleClick = (answer: any) => {
     setAnswer(answer);
   };
@@ -38,7 +46,10 @@ const Question = ({ id }: any) => {
             y: 1,
           },
         });
-        
+        setIsCompletedLesson({
+          ...isCompleteLesson,
+          isCompleted: true,
+        });
       }
       setAnswer({ ...isAnswer, error: false });
     } else {
@@ -47,39 +58,47 @@ const Question = ({ id }: any) => {
   };
   return (
     <div className="container mx-auto px-[30rem] pt-[5rem] text-[1.4rem]">
-      <div className="text-[2.5rem] font-medium">{quesstion?.title}</div>
+      <div className="text-[2.5rem] font-medium">{question?.title}</div>
       <div className="text-[1.3rem] pt-3 text-[#6d6d6d]">
-        Cập nhật {getCurrentMonthAndYear(quesstion?.updatedAt)}
+        Cập nhật {getCurrentMonthAndYear(question?.updatedAt)}
       </div>
       <div className="my-10">
-        {quesstion?.tblQuestionsLesson?.question ? (
-          <CodeBlock code={quesstion?.tblQuestionsLesson?.question} />
+        {question?.tblQuestionsLesson?.question ? (
+          <CodeBlock code={question?.tblQuestionsLesson?.question} />
         ) : (
           <div className="font-medium text-center">Chưa cập nhật</div>
         )}
       </div>
       <div className="">Chọn câu trả lời đúng</div>
-      <div className="">
-        {quesstion?.tblQuestionsLesson?.tblQuestionsLessonDetails?.map(
-          (answer: any) => (
-            <div
-              key={answer?.id}
-              onClick={() => handleClick(answer)}
-              className={`px-5 my-8 py-6 cursor-pointer ${
-                isAnswer?.error && isAnswer?.id === answer?.id
-                  ? "border-[#d06868] bg-[#f2d7d7]"
-                  : answer?.id !== isAnswer?.id
+      <div className="mb-5">
+        {question?.tblQuestionsLesson?.tblQuestionsLessonDetails.map(
+          (detail: any) => (
+            <motion.button
+              key={detail.id}
+              onClick={() => handleClick(detail)}
+              className={`px-5 my-4 py-6 cursor-pointer ${
+                isAnswer?.error && isAnswer?.id === detail?.id
+                  ? "border-[#d06868] bg-[#ea8787]"
+                  : detail?.id !== isAnswer?.id
                   ? "border-[#f6f7f9]"
                   : "border-[#0093fc]"
               } ${
                 isAnswer?.error === false &&
-                isAnswer?.id === answer?.id &&
-                "border-[#48bd79] bg-[#dbf7db]"
-              } border-2 rounded-2xl bg-[#f6f7f9] focus:outline-none
-            w-full`}
+                isAnswer?.id === detail?.id &&
+                "border-[#48bd79] bg-[#b0f4b0]"
+              } border-2 rounded-2xl bg-[#f6f7f9] focus:outline-none w-full`}
+              animate={
+                isAnswer?.error && isAnswer?.id === detail?.id
+                  ? { x: [-10, 10, -10, 10, 0] }
+                  : {}
+              }
+              transition={{
+                duration: 0.3,
+                ease: "easeInOut",
+              }}
             >
-              {answer?.answer}
-            </div>
+              {detail.answer}
+            </motion.button>
           )
         )}
       </div>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { GoHeartFill } from "react-icons/go";
 
-const Note = ({ id }: any) => {
+const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
   const [note, setNote] = useState<any>(null);
   const router = useRouter();
   useEffect(() => {
@@ -18,6 +18,15 @@ const Note = ({ id }: any) => {
       }
     };
     getData();
+  }, []);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsCompletedLesson({
+        ...isCompleteLesson,
+        isCompleted: true,
+      });
+      clearTimeout(timeout);
+    }, 10000);
   }, []);
   console.log(note);
 

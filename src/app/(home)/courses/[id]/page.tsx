@@ -19,7 +19,7 @@ const fetchCourseData = async (id: string) => {
     }
   );
   if (!res.ok) {
-    redirect("/404");
+    // redirect("/404");
   }
 
   const data = await res.json();

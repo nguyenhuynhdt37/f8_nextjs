@@ -21,12 +21,21 @@ export const login = async ({ email, password }: LoginParams): Promise<any> => {
     return error?.response?.data;
   }
 };
-export const AddCourseComplete = async (idLesson: any): Promise<any> => {
+export const AddCourseComplete = async (
+  idLesson: number,
+  idCourse: number
+): Promise<any> => {
   try {
     const res = await axiosInstance.post(
-      `/courses/lesson/complete/${idLesson}`,
+      `/courses/lesson/complete`,
       {},
-      { withCredentials: true }
+      {
+        params: {
+          lessonId: idLesson,
+          courseId: idCourse,
+        },
+        withCredentials: true,
+      }
     );
     return res.data;
   } catch (error: any) {
@@ -585,6 +594,39 @@ export const getAllPostByType = async ({ config, id }: any): Promise<any> => {
 export const getAllCourseByLevel = async (id: number) => {
   try {
     const res = await axiosInstance.get(`/courses/level/${id}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const CheckLessonComplete = async (lessonId: number) => {
+  try {
+    const res = await axiosInstance.get(
+      `/courses/lesson/complete/${lessonId}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getNextLesson = async (lessonId: number) => {
+  try {
+    const res = await axiosInstance.get(`/courses/lesson/next/${lessonId}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getPrevLesson = async (lessonId: number) => {
+  try {
+    const res = await axiosInstance.get(`/courses/lesson/prev/${lessonId}`, {
       withCredentials: true,
     });
     return res.data;

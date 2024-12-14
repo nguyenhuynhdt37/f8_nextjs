@@ -12,12 +12,13 @@ const Lesson = ({
 
   return (
     <>
-      {!isCompleteLesson?.isOldCompleted ? (
-        <VideoPlayer
-          data={data}
-          isCompleted={isCompleteLesson}
-          setIsCompleted={setIsCompletedLesson}
-        />
+      <VideoPlayer
+        data={data}
+        isCompleted={isCompleteLesson}
+        setIsCompleted={setIsCompletedLesson}
+      />
+      {/* {!isCompleteLesson?.isOldCompleted ? (
+        
       ) : (
         <iframe
           src={`https://www.youtube.com/embed/${getVideoIdFromUrl(
@@ -28,7 +29,7 @@ const Lesson = ({
           allowFullScreen
           className="w-full h-full"
         />
-      )}
+      )} */}
       <div className="px-20 text-[1.3rem] pt-20 mx-auto  container mb-[2rem]">
         <div className="">
           <div className="text-[2.5rem] font-medium">{data?.title}</div>

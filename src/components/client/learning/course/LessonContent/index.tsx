@@ -14,6 +14,8 @@ const LessonContent = ({
   setIsCompletedLesson,
 }: any) => {
   const [data, setdata] = useState<any>();
+  console.log("data", data);
+
   useEffect(() => {
     if (
       isCompleteLesson?.lessonId &&
@@ -23,7 +25,8 @@ const LessonContent = ({
       !isCompleteLesson?.isPostReq
     ) {
       const completeData = async () => {
-        const res = await AddCourseComplete(data?.id);
+        alert();
+        const res = await AddCourseComplete(data?.lesson?.id);
         if (res?.statusCode === 200 || res?.statusCode === 201) {
           setIsCompletedLesson({
             ...isCompleteLesson,
@@ -46,6 +49,8 @@ const LessonContent = ({
     };
     handleGetLesson();
   }, [lessonActive]);
+  console.log("data lesson type", data?.lesson?.lessonType);
+
   return (
     <div
       className={`${
@@ -60,8 +65,20 @@ const LessonContent = ({
           data={data?.lesson}
         />
       )}
-      {data?.lesson?.lessonType === 3 && <Question id={data?.id} />}
-      {data?.lesson?.lessonType === 4 && <Note id={data?.id} />}
+      {data?.lesson?.lessonType?.id === 3 && (
+        <Question
+          id={data?.lesson?.id}
+          isCompleteLesson={isCompleteLesson}
+          setIsCompletedLesson={setIsCompletedLesson}
+        />
+      )}
+      {data?.lesson?.lessonType?.id === 4 && (
+        <Note
+          id={data?.lesson?.id}
+          isCompleteLesson={isCompleteLesson}
+          setIsCompletedLesson={setIsCompletedLesson}
+        />
+      )}
       {/* {data?.lesson?.lessonType === 4 && <MyEditor />} */}
     </div>
   );

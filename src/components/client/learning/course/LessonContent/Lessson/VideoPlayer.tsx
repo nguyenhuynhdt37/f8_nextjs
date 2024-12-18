@@ -19,7 +19,6 @@ const VideoIframe: React.FC<any> = ({
   console.log("watch", watchTime / duration, isCompleted?.isCompleted);
   useEffect(() => {
     if (watchTime / duration >= 0.75 && !isCompleted?.isCompleted) {
-      alert();
       setIsCompleted({
         ...isCompleted,
         isCompleted: true,

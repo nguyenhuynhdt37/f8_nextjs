@@ -25,7 +25,6 @@ const LessonContent = ({
       !isCompleteLesson?.isPostReq
     ) {
       const completeData = async () => {
-        alert();
         const res = await AddCourseComplete(data?.lesson?.id);
         if (res?.statusCode === 200 || res?.statusCode === 201) {
           setIsCompletedLesson({
@@ -72,14 +71,14 @@ const LessonContent = ({
           setIsCompletedLesson={setIsCompletedLesson}
         />
       )}
-      {data?.lesson?.lessonType?.id === 4 && (
+      {/* {data?.lesson?.lessonType?.id === 4 && (
         <Note
           id={data?.lesson?.id}
           isCompleteLesson={isCompleteLesson}
           setIsCompletedLesson={setIsCompletedLesson}
         />
-      )}
-      {/* {data?.lesson?.lessonType === 4 && <MyEditor />} */}
+      )} */}
+      {data?.lesson?.lessonType?.id === 4 && <MyEditor />}
     </div>
   );
 };

@@ -10,8 +10,6 @@ const breadcrumbItems = [
 type TEmployeeListingPage = {};
 
 export default async function EmployeeListingPage({}: any) {
-  console.log("render EmployeeListingPage");
-
   return (
     <div className="p-10">
       <div className="space-y-4">

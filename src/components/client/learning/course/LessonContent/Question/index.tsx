@@ -8,8 +8,6 @@ import CodeBlock from "./CodeBlock";
 import confetti from "canvas-confetti";
 import { motion } from "framer-motion";
 const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
-  console.log("ckzdjcfkoasdjc", isCompleteLesson);
-
   const [question, setQuestion] = useState<any>(null);
   const [isAnswer, setAnswer] = useState<any>();
   const router = useRouter();
@@ -30,7 +28,6 @@ const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
     };
     getData();
   }, []);
-  console.log(question);
   const handleClick = (answer: any) => {
     setAnswer(answer);
   };

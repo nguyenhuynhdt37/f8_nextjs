@@ -15,7 +15,6 @@ const FooterBar = ({
 }: any) => {
   const [is, setIs] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-  console.log(lessonActive?.lessonId);
 
   const handleNextLesson = async () => {
     if (lessonActive?.lessonId) {

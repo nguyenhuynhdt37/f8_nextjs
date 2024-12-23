@@ -60,7 +60,6 @@ const PostList = ({ types }: any) => {
     };
     handleGetData();
   }, [loadData]);
-  console.log("data", data);
   const handleRedirectProfile = (id: number) => {
     ref.current.continuousStart();
     router.push(`/profile/${id}`);
@@ -72,7 +71,6 @@ const PostList = ({ types }: any) => {
   };
   const handleEdit = () => {
     // Xử lý khi người dùng chọn sửa bài viết
-    console.log("Sửa bài viết");
     // Thực hiện các hành động cần thiết như điều hướng hoặc mở modal
   };
 

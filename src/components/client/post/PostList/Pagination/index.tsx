@@ -2,8 +2,6 @@ import React from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi";
 const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
-  console.log(pageEdit);
-
   const handlePageChange = (pageNumber: number) => {
     setLoadData((prev: any) => prev + 1);
     setPageEdit({

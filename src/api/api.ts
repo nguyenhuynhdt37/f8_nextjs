@@ -573,8 +573,6 @@ export const getAllPost = async ({ config }: IGetWithParam): Promise<any> => {
 };
 export const getAllPostByType = async ({ config, id }: any): Promise<any> => {
   try {
-    console.log(id);
-
     const res = await axiosInstance.get(`/post/type/${id}`, {
       withCredentials: true,
       params: {
@@ -629,6 +627,44 @@ export const getPrevLesson = async (lessonId: number) => {
     const res = await axiosInstance.get(`/courses/lesson/prev/${lessonId}`, {
       withCredentials: true,
     });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getQuessonCode = async (lessonId: number) => {
+  try {
+    const res = await axiosInstance.get(`/courses/quesson_code/${lessonId}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const SaveCodeUser = async (lessonId: number, code: string) => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/quesson_code/save_code/${lessonId}`,
+      code,
+      {
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const SubmitCode = async (submitCode: any) => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/quesson_code/submit_code`,
+      submitCode,
+      {
+        withCredentials: true,
+      }
+    );
     return res.data;
   } catch (error: any) {
     return error?.response?.data;

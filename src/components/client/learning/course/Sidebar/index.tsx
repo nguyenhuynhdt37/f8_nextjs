@@ -29,7 +29,6 @@ const SideBar = ({
       (data && data?.lessonGroups && data?.lessonGroups[0]?.id) ||
       null,
   ]);
-  console.log("lessonactive", lessonActive);
 
   const handleShowLesson = (id: number) => {
     const value = activeShowGroupLesson.find((value) => value === id);

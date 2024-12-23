@@ -24,7 +24,6 @@ const Course = () => {
     sortField: "",
     sortOrder: "",
   });
-  console.log(data);
 
   useEffect(() => {
     const handleGetData = async () => {

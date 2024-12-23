@@ -2,8 +2,6 @@ import React from "react";
 import Course from "./Course";
 
 const Category = ({ data }: any) => {
-  console.log(data);
-
   return (
     <div className="pb-10">
       <div className="text-[2.5rem] font-bold">

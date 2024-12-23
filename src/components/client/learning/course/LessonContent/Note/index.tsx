@@ -28,7 +28,6 @@ const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
       clearTimeout(timeout);
     }, 10000);
   }, []);
-  console.log(note);
 
   return (
     <div className="container mx-auto px-[20rem] pt-[5rem] text-[1.4rem]">

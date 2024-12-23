@@ -15,7 +15,6 @@ const CoursePrice = ({ data, setData, error, setError }: any) => {
   const handleSetErrror = (e: any) => {
     const name = e.target.name;
     const value = e.target.value;
-    console.log(name);
 
     if (name === "price" && value.length === 0) {
       setError({

@@ -50,7 +50,6 @@ const PostListByType = ({ types, id }: any) => {
     };
     handleGetData();
   }, [loadData]);
-  console.log("data", data);
   const handleRedirectProfile = (id: number) => {
     ref.current.continuousStart();
     router.push(`/profile/${id}`);

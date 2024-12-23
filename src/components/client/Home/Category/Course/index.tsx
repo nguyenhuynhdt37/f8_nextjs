@@ -7,7 +7,6 @@ import LoadingBar from "react-top-loading-bar";
 import { message } from "antd";
 import { formatCurrency2 } from "@/Utils/functions";
 const Course = ({ data }: any) => {
-  console.log("course", data);
   const router = useRouter();
   const refLoading = useRef<any>(null);
   const [messageApi, contextHolder] = message.useMessage();

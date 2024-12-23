@@ -9,7 +9,6 @@ export const getInfoRedux = createAsyncThunk(
   "auth/getinfo",
   async (_, thunkAPI) => {
     const res = await getInfoUser();
-    console.log("resssss", res);
 
     if (res?.statusCode === 200) {
       return res?.data;

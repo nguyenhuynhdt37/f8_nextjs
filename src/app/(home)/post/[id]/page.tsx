@@ -15,7 +15,6 @@ const PostByIdPage = async ({ params }: Iprops) => {
       headers: { "Content-Type": "application/json", Cookie: cookieHeader },
     }
   );
-  console.log(res);
 
   if (!res.ok) {
     redirect(`/404`);

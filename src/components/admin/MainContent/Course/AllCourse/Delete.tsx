@@ -4,7 +4,6 @@ import { log } from "console";
 import React from "react";
 
 const Delete = ({ setLoadData, setShowDelete, id }: any) => {
-  console.log(id);
   const [messageApi, contextHolder] = message.useMessage();
   const handleDeleteUser = async (id: number, event: any) => {
     event.preventDefault();

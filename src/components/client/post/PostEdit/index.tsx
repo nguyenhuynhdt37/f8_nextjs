@@ -10,7 +10,6 @@ import { CreatePost } from "@/api/api";
 import { useRouter } from "next/navigation";
 import { getFileFromUrl } from "@/Utils/functions";
 const PostEdit = ({ types, post }: any) => {
-  console.log("types", post?.post?.banner);
   const [content, setContent] = useState<string>(post?.post?.content);
   const mdParser = new MarkdownIt();
   const [messageApi, contextHolder] = message.useMessage();

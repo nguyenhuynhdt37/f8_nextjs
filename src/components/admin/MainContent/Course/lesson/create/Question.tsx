@@ -18,7 +18,6 @@ const Question = ({
   setTitleErrror,
 }: any) => {
   const [quesson, setQuestion] = useState<string>("");
-  console.log(quesson);
 
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();

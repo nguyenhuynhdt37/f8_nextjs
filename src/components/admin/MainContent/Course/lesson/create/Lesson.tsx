@@ -33,7 +33,6 @@ const Lesson = ({
   const handleOnchange = (e: any) => {
     const value = e.target.value;
     const name = e.target.name;
-    console.log(value);
 
     if (name === "videoLink") {
       setError({ ...error, errorUrl: false });
@@ -81,7 +80,6 @@ const Lesson = ({
         },
       };
       ref.current.continuousStart();
-      console.log(dataPost);
 
       const res = await LessonCreateAsync(courseId, dataPost);
       ref.current.complete();

@@ -24,7 +24,6 @@ const Chapter = ({ id }: any) => {
     sortField: "",
     sortOrder: "",
   });
-  console.log(data);
 
   useEffect(() => {
     const handleGetData = async () => {

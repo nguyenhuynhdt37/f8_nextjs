@@ -1,6 +1,7 @@
 import { getCurrentMonthAndYear, getVideoIdFromUrl } from "@/Utils/functions";
 import React, { useEffect, useState } from "react";
 import VideoPlayer from "./VideoPlayer";
+import CommentLesson from "../CommentLesson";
 
 const Lesson = ({
   data,
@@ -8,8 +9,6 @@ const Lesson = ({
   isCompleteLesson,
   setIsCompletedLesson,
 }: any) => {
-  console.log("completed", isCompleteLesson);
-
   return (
     <>
       <VideoPlayer

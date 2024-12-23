@@ -37,7 +37,6 @@ const DetailPage = async (context: CoursePageProps) => {
   if (!res.ok) redirect("/404");
 
   const { data } = await res?.json();
-  console.log("resss", data);
   return (
     <>
       <div className="ps-10 pt-10">

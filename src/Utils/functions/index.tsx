@@ -122,8 +122,6 @@ export function checkIsEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 export function hasWhitespace(str: string): boolean {
-  console.log("sss", str);
-
   return /\s/.test(str);
 }
 

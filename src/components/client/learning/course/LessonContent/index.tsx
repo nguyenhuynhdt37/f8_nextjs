@@ -1,21 +1,22 @@
-import { getVideoIdFromUrl } from "@/Utils/functions";
 import React, { memo, useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import Lesson from "./Lessson";
 import { AddCourseComplete, getdataLesson } from "@/api/api";
 import Note from "./Note";
 import Question from "./Question";
-import MyEditor from "./QuestionCode";
+import QuessonCode from "./QuestionCode";
+import { FaComments } from "react-icons/fa6";
+import CommentLesson from "./CommentLesson";
 const LessonContent = ({
   isShowSideBar,
   lessonActive,
   courseSuggestion,
   isCompleteLesson,
   setIsCompletedLesson,
+  courseId,
 }: any) => {
   const [data, setdata] = useState<any>();
-  console.log("data", data);
-
+  const [isShowComment, setIsShowComment] = useState<boolean>(true);
   useEffect(() => {
     if (
       isCompleteLesson?.lessonId &&
@@ -25,7 +26,7 @@ const LessonContent = ({
       !isCompleteLesson?.isPostReq
     ) {
       const completeData = async () => {
-        const res = await AddCourseComplete(data?.lesson?.id);
+        const res = await AddCourseComplete(data?.lesson?.id, courseId);
         if (res?.statusCode === 200 || res?.statusCode === 201) {
           setIsCompletedLesson({
             ...isCompleteLesson,
@@ -48,13 +49,12 @@ const LessonContent = ({
     };
     handleGetLesson();
   }, [lessonActive]);
-  console.log("data lesson type", data?.lesson?.lessonType);
 
   return (
     <div
       className={`${
         isShowSideBar ? "col-span-3" : "col-span-full"
-      } scrollbar-custom mb-[5rem] overflow-y-scroll`}
+      } scrollbar-custom text-[1.4rem] relative mb-[5rem] overflow-y-scroll`}
     >
       {data?.lesson?.lessonType?.id === 1 && (
         <Lesson
@@ -71,14 +71,30 @@ const LessonContent = ({
           setIsCompletedLesson={setIsCompletedLesson}
         />
       )}
-      {/* {data?.lesson?.lessonType?.id === 4 && (
+      {data?.lesson?.lessonType?.id === 4 && (
         <Note
           id={data?.lesson?.id}
           isCompleteLesson={isCompleteLesson}
           setIsCompletedLesson={setIsCompletedLesson}
         />
-      )} */}
-      {data?.lesson?.lessonType?.id === 4 && <MyEditor />}
+      )}
+      {data?.lesson?.lessonType?.id === 2 && (
+        <QuessonCode courseId={courseId} id={data?.lesson?.id} />
+      )}
+      <CommentLesson
+        title={data?.lesson?.title}
+        idLesson={lessonActive?.lessonId}
+        isShowComment={isShowComment}
+        setIsShowComment={setIsShowComment}
+      />
+      <button
+        onClick={() => setIsShowComment(true)}
+        style={{ boxShadow: "0 0 10px #0003;" }}
+        className="flex rounded-full px-10 py-4  fixed top-[88vh] right-[47rem] z-10 bg-[#fff] items-center text-[#f05123]"
+      >
+        <FaComments className="mr-2 text-[2rem]" />
+        Hỏi đáp
+      </button>
     </div>
   );
 };

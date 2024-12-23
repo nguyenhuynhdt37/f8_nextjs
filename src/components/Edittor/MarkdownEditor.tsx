@@ -15,7 +15,6 @@ const MarkdownEditor = ({ value, onChange, height = "400px" }: any) => {
     const formData = new FormData();
     formData.append("avatar", file);
     const res = await uploadImage(formData);
-    console.log(res);
 
     if (res?.statusCode === 200 || res?.statusCode === 201) {
       return res?.data?.url;

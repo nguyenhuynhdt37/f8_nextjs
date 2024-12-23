@@ -12,13 +12,12 @@ import { message } from "antd";
 import { activeShowLesson, CheckLessonComplete } from "@/api/api";
 import LoadingBar from "react-top-loading-bar";
 import { group } from "console";
-const Learning = ({ dataLearning }: any) => {
+const Learning = ({ dataLearning, courseId }: any) => {
   const [data, setData] = useState<any>(dataLearning);
   const [messageApi, contextHolder] = message.useMessage();
   const [lessonActive, setLessonActive] = useState<any>(
     data?.userActiveLessonByCourses[0]
   );
-  console.log("datam đâ", data);
 
   const [isCompleteLesson, setIsCompletedLesson] = useState<any>({
     isCompleted: false,
@@ -117,6 +116,7 @@ const Learning = ({ dataLearning }: any) => {
         {isLoading && <LoadingPage />}
         <div className="grid grid-cols-4 h-[100vh] overflow-hidden pt-[5rem]">
           <LessonContent
+            courseId={courseId}
             isCompleteLesson={isCompleteLesson}
             setIsCompletedLesson={setIsCompletedLesson}
             courseSuggestion={data?.courseDetail}

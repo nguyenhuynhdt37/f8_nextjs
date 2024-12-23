@@ -20,7 +20,6 @@ const ModalIntroduce = ({ isModalOpen, setIsModalOpen, id }: Iprops) => {
     }
   );
   const result = data?.data;
-  console.log("re", data);
 
   return (
     <Modal

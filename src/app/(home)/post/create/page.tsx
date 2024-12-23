@@ -15,7 +15,6 @@ const PostCreatePage = async () => {
       headers: { "Content-Type": "application/json", Cookie: cookieHeader },
     }
   );
-  console.log(res);
 
   if (!res.ok) {
     redirect(`/`);

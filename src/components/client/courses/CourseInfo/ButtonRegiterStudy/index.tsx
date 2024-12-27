@@ -1,14 +1,14 @@
-"use client";
-import { RegiterCourseFree } from "@/api/api";
-import Login from "@/components/client/Login";
-import { useAppSelector } from "@/redux/hook/hook";
-import { message } from "antd";
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import LoadingBar from "react-top-loading-bar";
-import Swal from "sweetalert2";
+'use client';
+import { RegiterCourseFree } from '@/api/api';
+import Login from '@/components/client/Login';
+import { useAppSelector } from '@/redux/hook/hook';
+import { message } from 'antd';
+import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
+import LoadingBar from 'react-top-loading-bar';
+import Swal from 'sweetalert2';
 const ButtonRegiterStudy = ({ idCourse }: { idCourse: number }) => {
-  const auth = useAppSelector((p) => p.auth?.user);
+  const auth = useAppSelector(p => p.auth?.user);
   const router = useRouter();
   const ref = useRef<any>(null);
   const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
@@ -23,11 +23,11 @@ const ButtonRegiterStudy = ({ idCourse }: { idCourse: number }) => {
       });
       if (result?.statusCode === 200 || result?.statusCode === 201) {
         Swal.fire({
-          icon: "success",
-          title: "Thành công!",
-          text: "Bạn đã đăng ký thành công.",
-          confirmButtonText: "Đóng",
-        }).then((result) => {
+          icon: 'success',
+          title: 'Thành công!',
+          text: 'Bạn đã đăng ký thành công.',
+          confirmButtonText: 'Đóng',
+        }).then(result => {
           if (result.isConfirmed) {
             ref.current.continuousStart();
             router.push(`/learning/${idCourse}`);
@@ -35,8 +35,8 @@ const ButtonRegiterStudy = ({ idCourse }: { idCourse: number }) => {
         });
       } else {
         messageApi.open({
-          type: "error",
-          content: "Lỗi khi đăng ký khoá học, vui lòng thử lại cho",
+          type: 'error',
+          content: 'Lỗi khi đăng ký khoá học, vui lòng thử lại cho',
         });
       }
     }

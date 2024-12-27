@@ -1,18 +1,18 @@
-import { login } from "@/api/api";
-import Loading from "@/components/client/Loading";
-import { useAppDispatch } from "@/redux/hook/hook";
-import { getInfoRedux, setEmailRedux } from "@/redux/reducers/slices/AuthSlice";
-import { isValidEmail } from "@/Utils/functions";
-import { message, notification } from "antd";
-import { log } from "console";
-import { useSnackbar } from "notistack";
+import { login } from '@/api/api';
+import Loading from '@/components/client/Loading';
+import { useAppDispatch } from '@/redux/hook/hook';
+import { getInfoRedux, setEmailRedux } from '@/redux/reducers/slices/AuthSlice';
+import { isValidEmail } from '@/Utils/functions';
+import { message, notification } from 'antd';
+
+import { useSnackbar } from 'notistack';
 import React, {
   Dispatch,
   SetStateAction,
   useEffect,
   useRef,
   useState,
-} from "react";
+} from 'react';
 
 interface IError {
   email: string;
@@ -25,15 +25,15 @@ interface IProps {
 const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
   const dispatch = useAppDispatch();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [showPass, setShowPass] = useState<boolean>(false);
   const [showEye, setShowEye] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [error, setError] = useState<IError>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
   const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
     if (
@@ -46,15 +46,15 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
   const handleInputBlur = (e: any) => {
     const value = e.target.value;
     const name = e.target.name;
-    if (value === "") {
-      setError({ ...error, [e.target.name]: "Trường không được để trống" });
+    if (value === '') {
+      setError({ ...error, [e.target.name]: 'Trường không được để trống' });
       return;
     }
-    if (name === "email" && !isValidEmail(value))
-      setError({ ...error, [e.target.name]: "Không đúng định dạng email" });
+    if (name === 'email' && !isValidEmail(value))
+      setError({ ...error, [e.target.name]: 'Không đúng định dạng email' });
   };
   const handleSubmit = async () => {
-    if (email === "" || password === "") return;
+    if (email === '' || password === '') return;
 
     if (error.email || error.password) return;
 
@@ -62,8 +62,8 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
     const res = await login({ email, password });
     if (res?.statusCode === 200 || res?.statusCode === 201) {
       messageApi.open({
-        type: "success",
-        content: "Đăng nhập thành công",
+        type: 'success',
+        content: 'Đăng nhập thành công',
       });
       dispatch(getInfoRedux());
       setOpen(false);
@@ -84,13 +84,13 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
         <input
           type="text"
           className={`${
-            error?.email && "border-[#f33a58] bg-[#eedce4]"
+            error?.email && 'border-[#f33a58] bg-[#eedce4]'
           } px-6 rounded-full border-[0.15rem] my-2 text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
           placeholder="Email của bạn"
           name="email"
           value={email}
-          onFocus={(e) => setError({ ...error, [e.target.name]: "" })}
-          onChange={(e) => setEmail(e.target.value)}
+          onFocus={e => setError({ ...error, [e.target.name]: '' })}
+          onChange={e => setEmail(e.target.value)}
           onBlur={handleInputBlur}
         />
         <div className="pb-2 text-[#f33a58] ps-4 font-medium">
@@ -104,15 +104,15 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
           ref={containerRef}
         >
           <input
-            type={`${showPass ? "text" : "password"}`}
+            type={`${showPass ? 'text' : 'password'}`}
             className={`${
-              error?.password && "border-[#f33a58] bg-[#eedce4]"
+              error?.password && 'border-[#f33a58] bg-[#eedce4]'
             } px-6 rounded-full border-[0.15rem] my-2 text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
             placeholder="Mật khẩu"
             value={password}
             name="password"
-            onFocus={(e) => setError({ ...error, [e.target.name]: "" })}
-            onChange={(e) => setPassword(e.target.value)}
+            onFocus={e => setError({ ...error, [e.target.name]: '' })}
+            onChange={e => setPassword(e.target.value)}
             onBlur={handleInputBlur}
           ></input>
 
@@ -173,7 +173,7 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
           onClick={handleSubmit}
           className={`w-full flex justify-center py-[1.2rem] bg-gradient-to-r from-[#8de0f9] to-[#88eae0] rounded-full mt-9 font-bold text-[#fff]`}
         >
-          {!loading && "Đăng nhập"}
+          {!loading && 'Đăng nhập'}
           {loading && <Loading />}
         </button>
       </div>

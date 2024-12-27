@@ -1,40 +1,40 @@
-"use client";
-import { getUserByID, UpdateImageUser, UpdateUser } from "@/api/api";
-import NotFound from "@/app/not-found";
-import LoadingPage from "@/components/client/LoadingPage";
-import RichTextEditor from "@/components/RichTextEditor";
-import { useAppSelector } from "@/redux/hook/hook";
-import { IUpdateUser } from "@/types/next-auth";
+'use client';
+import { getUserByID, UpdateImageUser, UpdateUser } from '@/api/api';
+import NotFound from '@/app/not-found';
+import LoadingPage from '@/components/client/LoadingPage';
+import RichTextEditor from '@/components/RichTextEditor';
+import { useAppSelector } from '@/redux/hook/hook';
+import { IUpdateUser } from '@/types/next-auth';
 import {
   createValidData,
   formatDateConfig,
   UpdateData,
-} from "@/Utils/functions";
-import { message } from "antd";
-import { useParams } from "next/navigation";
-import { memo, useEffect, useState } from "react";
-import ImageUser from "./ImageUser";
-import UserInfo from "./UserInfo";
+} from '@/Utils/functions';
+import { message } from 'antd';
+import { useParams } from 'next/navigation';
+import { memo, useEffect, useState } from 'react';
+import ImageUser from './ImageUser';
+import UserInfo from './UserInfo';
 
 const EmployeeEdit = () => {
-  const [bio, setBio] = useState<string>("");
+  const [bio, setBio] = useState<string>('');
   const [editorValue, setEditorValue] = useState<IUpdateUser>({
-    fullName: "",
-    password: "",
-    githubLink: "",
-    facebookLink: "",
-    youtubeLink: "",
-    userName: "",
-    personalWebsite: "",
+    fullName: '',
+    password: '',
+    githubLink: '',
+    facebookLink: '',
+    youtubeLink: '',
+    userName: '',
+    personalWebsite: '',
   });
   const [messageApi, contextHolder] = message.useMessage();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<File | null>(null);
   const [dataUser, setDataUser] = useState<any>();
   const { id: idString } = useParams();
-  const { accessToken } = useAppSelector((s) => s.auth);
+  const { accessToken } = useAppSelector(s => s.auth);
   const [error, setError] = useState<boolean>(false);
-  const [preview, setPreview] = useState<string>("");
+  const [preview, setPreview] = useState<string>('');
   useEffect(() => {
     if (!idString) {
       setError(true);
@@ -52,13 +52,13 @@ const EmployeeEdit = () => {
           setDataUser(res?.data);
           setBio(res?.data?.bio);
           setEditorValue({
-            fullName: res?.data?.fullName || "",
-            password: "",
-            githubLink: res?.data?.githubLink || "",
-            facebookLink: res?.data?.facebookLink || "",
-            youtubeLink: res?.data?.youtubeLink || "",
-            userName: res?.data?.userName || "",
-            personalWebsite: res?.data?.personalWebsite || "",
+            fullName: res?.data?.fullName || '',
+            password: '',
+            githubLink: res?.data?.githubLink || '',
+            facebookLink: res?.data?.facebookLink || '',
+            youtubeLink: res?.data?.youtubeLink || '',
+            userName: res?.data?.userName || '',
+            personalWebsite: res?.data?.personalWebsite || '',
           });
           if (res?.data.avatar) {
             setPreview(res?.data.avatar);
@@ -75,19 +75,19 @@ const EmployeeEdit = () => {
   }, [accessToken, idString]);
 
   const handleDelete = () => {
-    setPreview("");
+    setPreview('');
     setImage(null);
   };
 
   const checkChange = (
     data: any,
-    editorValue: any
+    editorValue: any,
   ): { image: boolean; other: boolean } => {
     const checker = { image: false, other: false };
     if (image) checker.image = true;
     if (bio !== data.bio) checker.other = true;
     for (const key in editorValue) {
-      data[key] = data[key] === undefined ? "" : data[key];
+      data[key] = data[key] === undefined ? '' : data[key];
       if (editorValue[key] !== data[key]) {
         if (editorValue[key]) checker.other = true;
       }
@@ -99,8 +99,8 @@ const EmployeeEdit = () => {
     const checkExists = checkChange(dataUser, editorValue);
     if (!checkExists.image && !checkExists.other) {
       messageApi.open({
-        type: "warning",
-        content: "Không có sự thay đổi nào được thực hiện",
+        type: 'warning',
+        content: 'Không có sự thay đổi nào được thực hiện',
       });
       return;
     }
@@ -108,7 +108,7 @@ const EmployeeEdit = () => {
     let CheckSuccess = true;
     if (image) {
       const formData = new FormData();
-      formData.append("avatar", image);
+      formData.append('avatar', image);
       const resImage = await UpdateImageUser({
         id: Number(idString),
         token: accessToken,
@@ -120,8 +120,8 @@ const EmployeeEdit = () => {
         CheckSuccess = false;
         setLoading(false);
         messageApi.open({
-          content: "Có lỗi khi cập nhật hình ảnh",
-          type: "error",
+          content: 'Có lỗi khi cập nhật hình ảnh',
+          type: 'error',
         });
 
         return;
@@ -134,7 +134,7 @@ const EmployeeEdit = () => {
           editorValue.fullName !== dataUser.fullName
             ? editorValue.fullName
             : null,
-        password: editorValue.password !== "" ? editorValue.password : null,
+        password: editorValue.password !== '' ? editorValue.password : null,
         githubLink:
           editorValue.githubLink !== dataUser.githubLink
             ? editorValue.githubLink
@@ -163,12 +163,12 @@ const EmployeeEdit = () => {
       if (res?.statusCode === 200 || res?.statusCode === 201) {
         CheckSuccess = true;
         setDataUser(UpdateData(dataUser, editorValue));
-        setEditorValue({ ...editorValue, password: "" });
+        setEditorValue({ ...editorValue, password: '' });
       } else {
         CheckSuccess = false;
         messageApi.open({
-          content: "Có lỗi khi cập nhật thông tin",
-          type: "error",
+          content: 'Có lỗi khi cập nhật thông tin',
+          type: 'error',
         });
         setLoading(false);
         return;
@@ -176,8 +176,8 @@ const EmployeeEdit = () => {
     }
     if (CheckSuccess === true) {
       messageApi.open({
-        content: "Cập nhật thôg tin thành công",
-        type: "success",
+        content: 'Cập nhật thôg tin thành công',
+        type: 'success',
       });
     }
     setLoading(false);
@@ -235,9 +235,9 @@ const EmployeeEdit = () => {
                   <div className="mb-2 text-[#605f5f]">Tên người dùng</div>
                   <input
                     type="text"
-                    name={"fullName"}
+                    name={'fullName'}
                     value={editorValue.fullName}
-                    onChange={(e) =>
+                    onChange={e =>
                       setEditorValue({
                         ...editorValue,
                         fullName: e.target.value,
@@ -250,10 +250,10 @@ const EmployeeEdit = () => {
                   <div className="mb-2 text-[#605f5f]">Đặt lại mật khẩu</div>
                   <input
                     value={editorValue.password}
-                    name={"password"}
+                    name={'password'}
                     type="password"
                     className="w-full rounded-lg border-[0.1rem] border-[#e5bda7] bg-[#e6e3e1] px-5 py-2 focus:outline-none"
-                    onChange={(e) =>
+                    onChange={e =>
                       setEditorValue({
                         ...editorValue,
                         password: e.target.value,

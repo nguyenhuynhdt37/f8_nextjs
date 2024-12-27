@@ -1,12 +1,12 @@
-"use client";
-import { ViewNoteLesson, ViewQuestionLesson } from "@/api/api";
-import { getCurrentMonthAndYear } from "@/Utils/functions";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
-import { GoHeartFill } from "react-icons/go";
-import CodeBlock from "./CodeBlock";
-import confetti from "canvas-confetti";
-import { motion } from "framer-motion";
+'use client';
+import { ViewNoteLesson, ViewQuestionLesson } from '@/api/api';
+import { getCurrentMonthAndYear } from '@/Utils/functions';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { GoHeartFill } from 'react-icons/go';
+import CodeBlock from './CodeBlock';
+import confetti from 'canvas-confetti';
+import { motion } from 'framer-motion';
 const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
   const [question, setQuestion] = useState<any>(null);
   const [isAnswer, setAnswer] = useState<any>();
@@ -23,7 +23,7 @@ const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
             .sort(() => Math.random() - 0.5);
         setQuestion(dataCopy);
       } else {
-        router.push("/404");
+        // router.push('/404');
       }
     };
     getData();
@@ -75,14 +75,14 @@ const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
               onClick={() => handleClick(detail)}
               className={`px-5 my-4 py-6 cursor-pointer ${
                 isAnswer?.error && isAnswer?.id === detail?.id
-                  ? "border-[#d06868] bg-[#ea8787]"
+                  ? 'border-[#d06868] bg-[#ea8787]'
                   : detail?.id !== isAnswer?.id
-                  ? "border-[#f6f7f9]"
-                  : "border-[#0093fc]"
+                    ? 'border-[#f6f7f9]'
+                    : 'border-[#0093fc]'
               } ${
                 isAnswer?.error === false &&
                 isAnswer?.id === detail?.id &&
-                "border-[#48bd79] bg-[#b0f4b0]"
+                'border-[#48bd79] bg-[#b0f4b0]'
               } border-2 rounded-2xl bg-[#f6f7f9] focus:outline-none w-full`}
               animate={
                 isAnswer?.error && isAnswer?.id === detail?.id
@@ -91,12 +91,12 @@ const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
               }
               transition={{
                 duration: 0.3,
-                ease: "easeInOut",
+                ease: 'easeInOut',
               }}
             >
               {detail.answer}
             </motion.button>
-          )
+          ),
         )}
       </div>
       <div className="flex justify-end">

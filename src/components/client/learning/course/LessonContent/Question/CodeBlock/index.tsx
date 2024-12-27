@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
-import Prism from "prismjs";
-import "prismjs/components/prism-typescript";
-import "prism-themes/themes/prism-coldark-cold.css";
+import React, { useEffect } from 'react';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-typescript';
+import 'prism-themes/themes/prism-coldark-cold.css';
 
 interface CodeBlockProps {
   code: string;
 }
 
 const cleanCode = (code: string): string => {
-  const div = document.createElement("div");
+  const div = document.createElement('div');
   div.innerHTML = code;
-  return div.textContent || div.innerText || "";
+  return div.textContent || div.innerText || '';
 };
 
 const CodeBlock: React.FC<CodeBlockProps> = ({ code }: CodeBlockProps) => {

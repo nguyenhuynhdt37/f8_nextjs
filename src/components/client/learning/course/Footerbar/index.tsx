@@ -1,11 +1,11 @@
-import React, { memo, useState } from "react";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { PiListBold } from "react-icons/pi";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
-import { motion } from "framer-motion";
-import { getNextLesson, getPrevLesson } from "@/api/api";
-import { message } from "antd";
-import { log } from "node:console";
+import React, { memo, useState } from 'react';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { PiListBold } from 'react-icons/pi';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6';
+import { motion } from 'framer-motion';
+import { getNextLesson, getPrevLesson } from '@/api/api';
+import { message } from 'antd';
+import { log } from 'node:console';
 const FooterBar = ({
   isShowSideBar,
   setIsShowSideBar,
@@ -23,7 +23,7 @@ const FooterBar = ({
         const dataCopy = res?.data;
         onShowLesson(dataCopy?.id, dataCopy?.lessonGroup, false);
       } else {
-        messageApi.warning("Bài giảng của khoá học này đã hết!!");
+        messageApi.warning('Bài giảng của khoá học này đã hết!!');
       }
     }
   };
@@ -34,7 +34,7 @@ const FooterBar = ({
         const dataCopy = res?.data;
         onShowLesson(dataCopy?.id, dataCopy?.lessonGroup, false);
       } else {
-        messageApi.warning("Bài giảng của khoá học này đã hết!!");
+        messageApi.warning('Bài giảng của khoá học này đã hết!!');
       }
     }
   };
@@ -56,7 +56,7 @@ const FooterBar = ({
             animate={is ? { scale: [1, 1.1, 1] } : {}} // Chỉ chạy hiệu ứng khi `is` là true
             transition={{
               duration: 0.5,
-              ease: "easeOut",
+              ease: 'easeOut',
               repeat: Infinity, // Lặp vô hạn
             }}
             className="px-2 justify-center font-medium flex items-center py-3 border-[0.1rem] text-[#fff] text-2xl bg-[#0093fc] border-[#0093fc] rounded-2xl"

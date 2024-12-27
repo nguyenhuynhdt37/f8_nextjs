@@ -1,7 +1,7 @@
 // reducers/index.ts
-import { combineReducers } from "@reduxjs/toolkit";
-import AuthReducer from "./slices/AuthSlice";
-import NavBarReducer from "./slices/NavbarSlice";
+import { combineReducers } from '@reduxjs/toolkit';
+import AuthReducer from './slices/AuthSlice';
+import NavBarReducer from './slices/NavbarSlice';
 const rootReducer = combineReducers({
   auth: AuthReducer,
   nav: NavBarReducer,

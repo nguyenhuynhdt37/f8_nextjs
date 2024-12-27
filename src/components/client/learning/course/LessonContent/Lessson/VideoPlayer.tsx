@@ -1,6 +1,6 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
-import { getVideoIdFromUrl } from "@/Utils/functions";
-import { setTimeout } from "timers";
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { getVideoIdFromUrl } from '@/Utils/functions';
+import { setTimeout } from 'timers';
 
 const VideoIframe: React.FC<any> = ({
   data,
@@ -16,7 +16,7 @@ const VideoIframe: React.FC<any> = ({
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [isReady, setIsReady] = useState(false);
   const duration = data?.lessonVideo?.duration || 0;
-  console.log("watch", watchTime / duration, isCompleted?.isCompleted);
+  console.log('watch', watchTime / duration, isCompleted?.isCompleted);
   useEffect(() => {
     if (watchTime / duration >= 0.75 && !isCompleted?.isCompleted) {
       setIsCompleted({
@@ -27,15 +27,15 @@ const VideoIframe: React.FC<any> = ({
   }, [watchTime]);
   useEffect(() => {
     const loadYouTubeAPI = () => {
-      const script = document.createElement("script");
-      script.src = "https://www.youtube.com/iframe_api";
+      const script = document.createElement('script');
+      script.src = 'https://www.youtube.com/iframe_api';
       document.body.appendChild(script);
 
       (window as any).onYouTubeIframeAPIReady = () => {
         const videoId = getVideoIdFromUrl(data?.lessonVideo?.videoLink);
-        playerRef.current = new YT.Player("youtube-player", {
-          height: "100%",
-          width: "100%",
+        playerRef.current = new YT.Player('youtube-player', {
+          height: '100%',
+          width: '100%',
           videoId: videoId,
           events: {
             onReady: handlePlayerReady,
@@ -45,13 +45,13 @@ const VideoIframe: React.FC<any> = ({
       };
     };
 
-    if (!window["YT"]) {
+    if (!window['YT']) {
       loadYouTubeAPI();
     } else {
       const videoId = getVideoIdFromUrl(data?.lessonVideo?.videoLink);
-      playerRef.current = new YT.Player("youtube-player", {
-        height: "100%",
-        width: "100%",
+      playerRef.current = new YT.Player('youtube-player', {
+        height: '100%',
+        width: '100%',
         videoId: videoId,
         events: {
           onReady: handlePlayerReady,
@@ -88,7 +88,7 @@ const VideoIframe: React.FC<any> = ({
         const currentTime = player?.getCurrentTime() || 0;
         handleFastForwardDetection(currentTime);
         const newIntervalId = setInterval(() => {
-          setWatchTime((pre) => pre + 1);
+          setWatchTime(pre => pre + 1);
         }, 1000);
         intervalRef.current = newIntervalId;
       }
@@ -103,7 +103,7 @@ const VideoIframe: React.FC<any> = ({
         }
       }
     },
-    []
+    [],
   );
 
   const handleFastForwardDetection = (currentTime: number) => {

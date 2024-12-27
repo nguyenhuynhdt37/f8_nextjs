@@ -1,11 +1,11 @@
-import { LessonCreateAsync } from "@/api/api";
-import RichTextEditor from "@/components/RichTextEditor";
-import { getVideoIdFromUrl, isValidYoutubeUrlFunc } from "@/Utils/functions";
-import { message } from "antd";
-import { log } from "console";
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import LoadingBar from "react-top-loading-bar";
+import { LessonCreateAsync } from '@/api/api';
+import RichTextEditor from '@/components/RichTextEditor';
+import { getVideoIdFromUrl, isValidYoutubeUrlFunc } from '@/Utils/functions';
+import { message } from 'antd';
+
+import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
+import LoadingBar from 'react-top-loading-bar';
 
 interface ILesson {
   videoLink: string;
@@ -22,10 +22,10 @@ const Lesson = ({
   const ref = useRef<any>(null);
   const router = useRouter();
   const [Lesson, setLesson] = useState<ILesson>({
-    videoLink: "",
+    videoLink: '',
     isValidYoutubeUrl: false,
   });
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<string>('');
   const [error, setError] = useState<any>({
     errorUrl: false,
   });
@@ -34,7 +34,7 @@ const Lesson = ({
     const value = e.target.value;
     const name = e.target.name;
 
-    if (name === "videoLink") {
+    if (name === 'videoLink') {
       setError({ ...error, errorUrl: false });
       const isYoutute = isValidYoutubeUrlFunc(value);
       setLesson({
@@ -47,25 +47,25 @@ const Lesson = ({
     const value = e.target.value;
     const name = e.target.name;
 
-    if (name === "videoLink" && !Lesson.isValidYoutubeUrl) {
+    if (name === 'videoLink' && !Lesson.isValidYoutubeUrl) {
       setError({ ...error, errorUrl: true });
     }
   };
   const handleSubmit = async () => {
     let inValid = false;
-    if (Lesson.videoLink === "" || !Lesson.isValidYoutubeUrl) {
+    if (Lesson.videoLink === '' || !Lesson.isValidYoutubeUrl) {
       inValid = true;
       setError({ ...error, errorUrl: true });
     }
     if (!title) {
-      setTitleErrror("Tiêu đề không được bỏ trống");
+      setTitleErrror('Tiêu đề không được bỏ trống');
       inValid = true;
     }
-    if (description === "") inValid = true;
+    if (description === '') inValid = true;
     if (inValid) {
       message.open({
-        content: "Vui lòng nhập đúng và đầy đủ nội dung",
-        type: "error",
+        content: 'Vui lòng nhập đúng và đầy đủ nội dung',
+        type: 'error',
       });
     } else {
       const dataPost = {
@@ -84,13 +84,13 @@ const Lesson = ({
       const res = await LessonCreateAsync(courseId, dataPost);
       ref.current.complete();
       if (res?.statusCode === 200 || res?.statusCode === 201) {
-        messageApi.success("Tạo bài học thành công");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        messageApi.success('Tạo bài học thành công');
+        await new Promise(resolve => setTimeout(resolve, 1000));
         router.push(`/admin/course/lesson/${courseId}`);
       } else {
         messageApi.open({
-          type: "error",
-          content: "có vấn đề xẩy xa vui lòng thử lại sau, f5 trang để thử lại",
+          type: 'error',
+          content: 'có vấn đề xẩy xa vui lòng thử lại sau, f5 trang để thử lại',
         });
       }
     }
@@ -136,7 +136,7 @@ const Lesson = ({
               <iframe
                 onBlur={handleOnblur}
                 src={`https://www.youtube.com/embed/${getVideoIdFromUrl(
-                  Lesson.videoLink
+                  Lesson.videoLink,
                 )}?autoplay=0`}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

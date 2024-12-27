@@ -1,20 +1,20 @@
-"use client";
-import Banner from "@/components/admin/MainContent/Course/create/Banner";
-import OptionType from "@/components/admin/MainContent/Course/lesson/create/OptionType";
-import MarkdownEditor from "@/components/Edittor/MarkdownEditor";
-import { message, Modal } from "antd";
-import React, { useState } from "react";
-import "react-markdown-editor-lite/lib/index.css";
-import MarkdownIt from "markdown-it";
-import { CreatePost } from "@/api/api";
-import { useRouter } from "next/navigation";
-import { getFileFromUrl } from "@/Utils/functions";
+'use client';
+import Banner from '@/components/admin/MainContent/Course/create/Banner';
+import OptionType from '@/components/admin/MainContent/Course/lesson/create/OptionType';
+import MarkdownEditor from '@/components/Edittor/MarkdownEditor';
+import { message, Modal } from 'antd';
+import React, { useState } from 'react';
+import 'react-markdown-editor-lite/lib/index.css';
+import MarkdownIt from 'markdown-it';
+import { CreatePost } from '@/api/api';
+import { useRouter } from 'next/navigation';
+import { getFileFromUrl } from '@/Utils/functions';
 const PostEdit = ({ types, post }: any) => {
   const [content, setContent] = useState<string>(post?.post?.content);
   const mdParser = new MarkdownIt();
   const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState<any>({
-    title: post?.post?.title || "",
+    title: post?.post?.title || '',
     banner: getFileFromUrl(post?.post?.banner) || null,
   });
   const [openModal, setOpenModal] = useState(false);
@@ -25,21 +25,21 @@ const PostEdit = ({ types, post }: any) => {
   });
   const handleSubmit = async () => {
     const formData = new FormData();
-    formData.append("content", content || "");
-    formData.append("blogTypeId", type?.id || "");
-    formData.append("banner", data?.banner || "");
+    formData.append('content', content || '');
+    formData.append('blogTypeId', type?.id || '');
+    formData.append('banner', data?.banner || '');
     const res = await CreatePost(formData);
     if (res?.statusCode === 200 || res?.statusCode === 200) {
       messageApi.open({
-        type: "success",
-        content: "Tạo mới thành công",
+        type: 'success',
+        content: 'Tạo mới thành công',
       });
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      router.push("/post/");
+      await new Promise(resolve => setTimeout(resolve, 500));
+      router.push('/post/');
     } else {
       messageApi.open({
-        type: "error",
-        content: "Có lỗi xẩy ra, vui lòng thử lại sau",
+        type: 'error',
+        content: 'Có lỗi xẩy ra, vui lòng thử lại sau',
       });
     }
   };
@@ -51,7 +51,7 @@ const PostEdit = ({ types, post }: any) => {
         <div className="flex items-center justify-between">
           <input
             value={data.title}
-            onChange={(e) =>
+            onChange={e =>
               setData({
                 ...data,
                 title: e.target.value,
@@ -63,7 +63,7 @@ const PostEdit = ({ types, post }: any) => {
           />
           <button
             disabled={!((content && data.title) || !openModal)}
-            onClick={(e) => setOpenModal(true)}
+            onClick={e => setOpenModal(true)}
             className="w-[15rem] disabled:bg-[#7fc9fd] py-3 rounded-full bg-[#4dacf0] px-10 text-[#fff] font-medium text-2xl"
           >
             XUẤT BẢN
@@ -113,7 +113,7 @@ const PostEdit = ({ types, post }: any) => {
             type="text"
             className="border-y-[0.1rem] w-full focus:outline-none font-bold text-[2rem] py-4 "
             value={data?.title}
-            onChange={(e) =>
+            onChange={e =>
               setData({
                 ...data,
                 title: e.target.value,

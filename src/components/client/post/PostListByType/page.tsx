@@ -1,15 +1,15 @@
-"use client";
-import { getAllPost, getAllPostByType } from "@/api/api";
-import { useAppDispatch } from "@/redux/hook/hook";
-import { setStateNav } from "@/redux/reducers/slices/NavbarSlice";
-import { IpageEdit } from "@/types/next-auth";
-import React, { useEffect, useRef, useState } from "react";
-import { MdOutlineMoreHoriz } from "react-icons/md";
-import LoadingBar from "react-top-loading-bar";
-import { FaCircleCheck } from "react-icons/fa6";
-import { TruncateMarkdown } from "@/Utils/functions";
-import { useRouter } from "next/navigation";
-import Pagination from "../PostList/Pagination";
+'use client';
+import { getAllPost, getAllPostByType } from '@/api/api';
+import { useAppDispatch } from '@/redux/hook/hook';
+import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
+import { IpageEdit } from '@/types/next-auth';
+import React, { useEffect, useRef, useState } from 'react';
+import { MdOutlineMoreHoriz } from 'react-icons/md';
+import LoadingBar from 'react-top-loading-bar';
+import { FaCircleCheck } from 'react-icons/fa6';
+import { TruncateMarkdown } from '@/Utils/functions';
+import { useRouter } from 'next/navigation';
+import Pagination from '../PostList/Pagination';
 const PostListByType = ({ types, id }: any) => {
   const router = useRouter();
   const ref = useRef<any>(null);
@@ -28,9 +28,9 @@ const PostListByType = ({ types, id }: any) => {
     pageNumber: 1,
     totalPage: 1,
     totalCount: 0,
-    searchTerm: "",
-    sortField: "",
-    sortOrder: "",
+    searchTerm: '',
+    sortField: '',
+    sortOrder: '',
   });
   useEffect(() => {
     const handleGetData = async () => {
@@ -104,7 +104,7 @@ const PostListByType = ({ types, id }: any) => {
                   </div>
                   <div className="text-[#636363]">
                     <TruncateMarkdown
-                      content={post?.blog?.content || ""}
+                      content={post?.blog?.content || ''}
                       limit={50}
                     />
                   </div>

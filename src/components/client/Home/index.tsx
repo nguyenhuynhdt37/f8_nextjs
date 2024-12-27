@@ -1,9 +1,9 @@
-"use client";
-import { useEffect, useState } from "react";
-import Category from "./Category";
-import { getAllCourseByLevel } from "@/api/api";
-import { useAppDispatch, useAppSelector } from "@/redux/hook/hook";
-import { setStateNav } from "@/redux/reducers/slices/NavbarSlice";
+'use client';
+import { useEffect, useState } from 'react';
+import Category from './Category';
+import { getAllCourseByLevel } from '@/api/api';
+import { useAppDispatch, useAppSelector } from '@/redux/hook/hook';
+import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
 
 const Home = () => {
   const dispatch = useAppDispatch();

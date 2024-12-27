@@ -1,4 +1,4 @@
-import Content from "./Content";
-import CourseInfo from "./CourseInfo";
+import Content from './Content';
+import CourseInfo from './CourseInfo';
 
 export { Content, CourseInfo };

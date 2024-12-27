@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React from "react";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 const ErrorPage = () => {
   return (
     <div className="h-[100vh]">
-      <Link href={"/"}>
+      <Link href={'/'}>
         <div className="flex fixed cursor-pointer text-2xl font-bold items-center p-10">
           <img
             src="https://fullstack.edu.vn/assets/f8-icon-lV2rGpF0.png"
@@ -32,7 +32,7 @@ const ErrorPage = () => {
               vì dùng URL đã lưu.
             </div>
             <div className="text-center pt-10">
-              <Link href={"/"}>
+              <Link href={'/'}>
                 <button className="text-[1.7rem] py-2 px-10 text-[#fff] rounded-full bg-[#0093fc]">
                   Về trang chủ
                 </button>

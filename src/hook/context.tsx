@@ -1,5 +1,5 @@
-"use client";
-import { createContext, useState, ReactNode, FC } from "react";
+'use client';
+import { createContext, useState, ReactNode, FC } from 'react';
 
 interface MyContextProps {
   state: number;

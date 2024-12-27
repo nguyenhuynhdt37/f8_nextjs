@@ -1,19 +1,19 @@
-"use server";
-import React from "react";
-import { AiOutlinePushpin } from "react-icons/ai";
-import { RiAdminLine } from "react-icons/ri";
-import { MdOutlineEmail } from "react-icons/md";
-import { RiContactsLine } from "react-icons/ri";
-import { FaFontAwesomeFlag } from "react-icons/fa";
-import { Breadcrumbs } from "@/components/admin/MainContent/Breadcrumbs";
-import { redirect } from "next/navigation";
-import { getUserByID } from "@/api/api";
-import { cookies } from "next/headers";
-import Link from "next/link";
+'use server';
+import React from 'react';
+import { AiOutlinePushpin } from 'react-icons/ai';
+import { RiAdminLine } from 'react-icons/ri';
+import { MdOutlineEmail } from 'react-icons/md';
+import { RiContactsLine } from 'react-icons/ri';
+import { FaFontAwesomeFlag } from 'react-icons/fa';
+import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
+import { redirect } from 'next/navigation';
+import { getUserByID } from '@/api/api';
+import { cookies } from 'next/headers';
+import Link from 'next/link';
 const breadcrumbItems = [
-  { title: "Trang chủ", link: "/admin" },
-  { title: "Người dùng", link: "/admin/users" },
-  { title: "Chi tiết người dùng", link: "/admin/details" },
+  { title: 'Trang chủ', link: '/admin' },
+  { title: 'Người dùng', link: '/admin/users' },
+  { title: 'Chi tiết người dùng', link: '/admin/details' },
 ];
 interface CoursePageProps {
   params: { id: string };
@@ -24,17 +24,17 @@ const DetailPage = async (context: CoursePageProps) => {
   const cookieHeader = cookieStore
     .getAll()
     .map(({ name, value }) => `${name}=${value}`)
-    .join("; ");
-  if (!id) redirect("/404");
+    .join('; ');
+  if (!id) redirect('/404');
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${id}`,
     {
-      method: "GET",
-      cache: "no-store",
-      headers: { "Content-Type": "application/json", Cookie: cookieHeader },
-    }
+      method: 'GET',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
+    },
   );
-  if (!res.ok) redirect("/404");
+  if (!res.ok) redirect('/404');
 
   const { data } = await res?.json();
   return (
@@ -49,7 +49,7 @@ const DetailPage = async (context: CoursePageProps) => {
               className="w-[10rem] h-[10rem] rounded-full object-cover"
               src={
                 data?.avatar ||
-                "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg"
+                'https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg'
               }
               alt=""
             />
@@ -58,7 +58,7 @@ const DetailPage = async (context: CoursePageProps) => {
         <div className="pt-28 relative">
           <div className="absolute right-0">
             <Link href={`/admin/users/edit/${id}`}>
-              {" "}
+              {' '}
               <button className="bg-[#3084d6] px-4 py-3 text-[#fff] rounded-2xl flex items-center">
                 <AiOutlinePushpin className="mr-2 text-3xl" />
                 Chỉnh sửa
@@ -71,13 +71,13 @@ const DetailPage = async (context: CoursePageProps) => {
               <div className="">
                 <img className="w-10 mr-2" src="/images/vietnam.png" alt="" />
               </div>
-              <div className="icon">@{data?.userName || "Noname"}</div>
+              <div className="icon">@{data?.userName || 'Noname'}</div>
             </div>
             <div className="flex">
               <div className="mr-2 ">Tuổi: 20</div>
               <div className="mr-2 ">| Giới tính: Male</div>
               <div className="mr-2 flex">
-                | Trạng thái:{" "}
+                | Trạng thái:{' '}
                 {data?.isActive ? (
                   <p className="text-[#3cb43c] ml-2">Đã kích hoạt</p>
                 ) : (
@@ -112,16 +112,16 @@ const DetailPage = async (context: CoursePageProps) => {
               </div>
               <div className="flex-col">
                 <ul>
-                  <li className="mb-10">{"Người dùng "}</li>
-                  <li className="mb-10">{data?.email || "Chưa cập nhật"}</li>
+                  <li className="mb-10">{'Người dùng '}</li>
+                  <li className="mb-10">{data?.email || 'Chưa cập nhật'}</li>
                   <li className="mb-10">
-                    {data?.youtubeLink || "Chưa cập nhật"}
+                    {data?.youtubeLink || 'Chưa cập nhật'}
                   </li>
                   <li className="mb-10">
-                    {data?.githubLink || "Chưa cập nhật"}
+                    {data?.githubLink || 'Chưa cập nhật'}
                   </li>
                   <li className="mb-10">
-                    {data?.facebookLink || "Chưa cập nhật"}
+                    {data?.facebookLink || 'Chưa cập nhật'}
                   </li>
                 </ul>
               </div>

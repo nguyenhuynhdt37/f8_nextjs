@@ -1,12 +1,12 @@
-import { getInfoUser } from "@/api/api";
-import { log } from "console";
-import { GetUserInfoByToken, login } from "@/api/api";
-import { IAuthSlice } from "@/types/next-auth";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { getInfoUser } from '@/api/api';
+ 
+import { GetUserInfoByToken, login } from '@/api/api';
+import { IAuthSlice } from '@/types/next-auth';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 export const getInfoRedux = createAsyncThunk(
-  "auth/getinfo",
+  'auth/getinfo',
   async (_, thunkAPI) => {
     const res = await getInfoUser();
 
@@ -15,29 +15,29 @@ export const getInfoRedux = createAsyncThunk(
     } else {
       return thunkAPI.rejectWithValue(res);
     }
-  }
+  },
 );
 const initialState: any = {
-  emailSentEmail: "",
+  emailSentEmail: '',
   user: null,
   loading: false,
   error: null,
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
-    logout: (state) => {
+    logout: state => {
       state.user = null;
     },
     setEmailRedux: (state, action: PayloadAction<string>) => {
       state.emailSentEmail = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(getInfoRedux.pending, (state) => {
+      .addCase(getInfoRedux.pending, state => {
         state.loading = true;
         state.error = null;
       })

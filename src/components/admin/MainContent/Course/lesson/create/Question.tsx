@@ -1,10 +1,10 @@
-import { QuestionLessonCreate } from "@/api/api";
-import RichTextEditor from "@/components/RichTextEditor";
-import { message } from "antd";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
-import LoadingBar from "react-top-loading-bar";
-import { v4 as uuidv4 } from "uuid";
+import { QuestionLessonCreate } from '@/api/api';
+import RichTextEditor from '@/components/RichTextEditor';
+import { message } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import LoadingBar from 'react-top-loading-bar';
+import { v4 as uuidv4 } from 'uuid';
 interface IAnswers {
   id: string;
   answer: string;
@@ -17,24 +17,24 @@ const Question = ({
   title,
   setTitleErrror,
 }: any) => {
-  const [quesson, setQuestion] = useState<string>("");
+  const [quesson, setQuestion] = useState<string>('');
 
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
   const [answers, setAnswers] = useState<IAnswers[]>(() => {
     return [
-      { id: uuidv4(), answer: "" },
-      { id: uuidv4(), answer: "" },
+      { id: uuidv4(), answer: '' },
+      { id: uuidv4(), answer: '' },
     ];
   });
   const [isAnswerSuccess, setIsAnswerSuccess] = useState<string>(
-    answers[0]?.id
+    answers[0]?.id,
   );
   const ref = useRef<any>(null);
   const handleAddAnser = () => {
     let newAnwer: IAnswers = {
       id: uuidv4(),
-      answer: "",
+      answer: '',
     };
     if (answers?.length === 0) setIsAnswerSuccess(newAnwer?.id);
     const answersCopy = [...answers];
@@ -42,11 +42,11 @@ const Question = ({
     setAnswers(answersCopy);
   };
   const handleDeleteAnswer = (id: string) => {
-    const newAnswers = answers.filter((p) => p.id !== id);
+    const newAnswers = answers.filter(p => p.id !== id);
     if (answers?.length <= 2) {
       messageApi.open({
-        type: "error",
-        content: "Cần ít nhất 2 câu trả lời",
+        type: 'error',
+        content: 'Cần ít nhất 2 câu trả lời',
       });
       return;
     }
@@ -57,22 +57,22 @@ const Question = ({
     setAnswers(newAnswers);
   };
   const handleSubmit = async () => {
-    var find = answers.filter((p) => p.answer === "");
+    var find = answers.filter(p => p.answer === '');
     if (find.length > 0) {
       messageApi.open({
-        type: "error",
-        content: "Câu trả lời không được bỏ trống",
+        type: 'error',
+        content: 'Câu trả lời không được bỏ trống',
       });
       return;
     }
     if (!title) {
-      setTitleErrror("Tiêu đề không được bỏ trống");
+      setTitleErrror('Tiêu đề không được bỏ trống');
       return;
     }
     if (!quesson) {
       messageApi.open({
-        type: "error",
-        content: "Câu hỏi không được bỏ trống",
+        type: 'error',
+        content: 'Câu hỏi không được bỏ trống',
       });
       return;
     }
@@ -100,25 +100,25 @@ const Question = ({
     ref.current.complete();
     if (res?.statusCode === 200 || res?.statusCode === 201) {
       messageApi.open({
-        type: "success",
+        type: 'success',
         content:
-          "Thêm câu hỏi thành công, bạn sẽ được chuyển đến trang danh sách câu hỏi",
+          'Thêm câu hỏi thành công, bạn sẽ được chuyển đến trang danh sách câu hỏi',
       });
       router.push(`/admin/course/lesson/${courseId}`);
     } else {
       messageApi.open({
-        type: "error",
-        content: "có vấn đề xẩy xa vui lòng thử lại sau, f5 trang để thử lại",
+        type: 'error',
+        content: 'có vấn đề xẩy xa vui lòng thử lại sau, f5 trang để thử lại',
       });
     }
   };
   const handleOnchange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    id: string
+    id: string,
   ) => {
     const { value } = e.target;
-    const updatedAnswers = answers.map((answer) =>
-      answer.id === id ? { ...answer, answer: value } : answer
+    const updatedAnswers = answers.map(answer =>
+      answer.id === id ? { ...answer, answer: value } : answer,
     );
     setAnswers(updatedAnswers);
   };
@@ -140,13 +140,13 @@ const Question = ({
         <div className="py-4 text-[#e48f8f]">
           Mặc định câu hỏi khi thêm sẽ được tráo ngẫu nhiên.
         </div>
-        {answers?.map((answer) => (
+        {answers?.map(answer => (
           <div
             key={answer?.id}
             className={`${
               isAnswerSuccess === answer?.id
-                ? "border-[#609fd6] bg-[#d8e3ed]"
-                : "border-[#ffd1db] bg-[#fef0f1]"
+                ? 'border-[#609fd6] bg-[#d8e3ed]'
+                : 'border-[#ffd1db] bg-[#fef0f1]'
             } border-2 rounded-xl my-5 px-10 flex`}
           >
             <input
@@ -158,17 +158,17 @@ const Question = ({
             <input
               className={`${
                 isAnswerSuccess === answer?.id
-                  ? "placeholder-[#9bc2de] text-[#609fd6]"
-                  : "placeholder-[#de9b9b] text-[#cf6363]"
+                  ? 'placeholder-[#9bc2de] text-[#609fd6]'
+                  : 'placeholder-[#de9b9b] text-[#cf6363]'
               } flex-1 px-20 py-7 bg-inherit focus:outline-none`}
               placeholder={`${
                 isAnswerSuccess === answer?.id
-                  ? "Nhập câu trả lời đúng vào đây"
-                  : "Nhập câu trả lời sai vào đây"
+                  ? 'Nhập câu trả lời đúng vào đây'
+                  : 'Nhập câu trả lời sai vào đây'
               }`}
               type="text"
               value={answer.answer}
-              onChange={(e) => handleOnchange(e, answer?.id)}
+              onChange={e => handleOnchange(e, answer?.id)}
             />
             <div className="flex items-center">
               <button

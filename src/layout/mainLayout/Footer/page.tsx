@@ -1,6 +1,6 @@
-import { FaFacebook } from "react-icons/fa";
-import { BsYoutube } from "react-icons/bs";
-import { FaApplePay } from "react-icons/fa6";
+import { FaFacebook } from 'react-icons/fa';
+import { BsYoutube } from 'react-icons/bs';
+import { FaApplePay } from 'react-icons/fa6';
 const Footer = () => {
   return (
     <footer className="bg-[#181821] text-[1.4rem] pt-[6.8rem] pb-[4rem] px-[20rem] text-[#fff]">

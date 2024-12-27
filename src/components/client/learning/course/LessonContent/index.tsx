@@ -1,12 +1,12 @@
-import React, { memo, useEffect, useState } from "react";
-import "react-quill/dist/quill.snow.css";
-import Lesson from "./Lessson";
-import { AddCourseComplete, getdataLesson } from "@/api/api";
-import Note from "./Note";
-import Question from "./Question";
-import QuessonCode from "./QuestionCode";
-import { FaComments } from "react-icons/fa6";
-import CommentLesson from "./CommentLesson";
+import React, { memo, useEffect, useState } from 'react';
+import 'react-quill/dist/quill.snow.css';
+import Lesson from './Lessson';
+import { AddCourseComplete, getdataLesson } from '@/api/api';
+import Note from './Note';
+import Question from './Question';
+import QuessonCode from './QuestionCode';
+import { FaComments } from 'react-icons/fa6';
+import CommentLesson from './CommentLesson';
 const LessonContent = ({
   isShowSideBar,
   lessonActive,
@@ -16,7 +16,8 @@ const LessonContent = ({
   courseId,
 }: any) => {
   const [data, setdata] = useState<any>();
-  const [isShowComment, setIsShowComment] = useState<boolean>(true);
+  const [isShowComment, setIsShowComment] = useState<boolean>(false);
+
   useEffect(() => {
     if (
       isCompleteLesson?.lessonId &&
@@ -53,7 +54,7 @@ const LessonContent = ({
   return (
     <div
       className={`${
-        isShowSideBar ? "col-span-3" : "col-span-full"
+        isShowSideBar ? 'col-span-3' : 'col-span-full'
       } scrollbar-custom text-[1.4rem] relative mb-[5rem] overflow-y-scroll`}
     >
       {data?.lesson?.lessonType?.id === 1 && (
@@ -89,8 +90,7 @@ const LessonContent = ({
       />
       <button
         onClick={() => setIsShowComment(true)}
-        style={{ boxShadow: "0 0 10px #0003;" }}
-        className="flex rounded-full px-10 py-4  fixed top-[88vh] right-[47rem] z-10 bg-[#fff] items-center text-[#f05123]"
+        className="flex rounded-full border-[0.2rem] border-[#f05123] px-10 py-4  fixed top-[88vh] right-[47rem] z-10 bg-[#fff] items-center text-[#f05123]"
       >
         <FaComments className="mr-2 text-[2rem]" />
         Hỏi đáp

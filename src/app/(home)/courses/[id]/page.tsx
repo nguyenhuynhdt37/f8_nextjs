@@ -1,9 +1,9 @@
-import { getCourseInfo } from "@/api/api";
-import { Content, CourseInfo } from "@/components/client/courses";
-import LoadingPage from "@/components/client/LoadingPage";
-import { useCookie } from "@/hook/useCookie";
-import { convertSecondsToYMDHMS } from "@/Utils/functions";
-import { redirect } from "next/navigation";
+import { getCourseInfo } from '@/api/api';
+import { Content, CourseInfo } from '@/components/client/courses';
+import LoadingPage from '@/components/client/LoadingPage';
+import { useCookie } from '@/hook/useCookie';
+import { convertSecondsToYMDHMS } from '@/Utils/functions';
+import { redirect } from 'next/navigation';
 
 interface CoursePageProps {
   params: { id: string };
@@ -14,9 +14,9 @@ const fetchCourseData = async (id: string) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/${id}`,
     {
-      cache: "no-store",
-      headers: { "Content-Type": "application/json", Cookie: cookieHeader },
-    }
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
+    },
   );
   if (!res.ok) {
     // redirect("/404");
@@ -30,12 +30,12 @@ const fetchIsRegister = async (id: string) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/user/check-course-is-register/${id}`,
     {
-      cache: "no-store",
-      headers: { "Content-Type": "application/json", Cookie: cookieHeader },
-    }
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
+    },
   );
   if (res.ok) {
-    redirect("/learning/" + id);
+    redirect('/learning/' + id);
     return;
   }
 };
@@ -53,7 +53,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
       });
       return store;
     },
-    0
+    0,
   );
 
   const totalLesson = content?.lessonGroups?.reduce(
@@ -63,7 +63,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
       }
       return store;
     },
-    0
+    0,
   );
 
   const fomartTimeCourse = convertSecondsToYMDHMS(totalSecconsCourse || 0);

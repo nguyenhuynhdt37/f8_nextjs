@@ -1,15 +1,15 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { MdOutlineFacebook } from "react-icons/md";
-import { FaCertificate } from "react-icons/fa6";
-import { TbBrandYoutubeFilled } from "react-icons/tb";
-import { FaGithub } from "react-icons/fa";
-import { useAppSelector } from "@/redux/hook/hook";
-import { calculateYearsAgo } from "@/Utils/functions";
-import RichTextEditor from "@/components/RichTextEditor";
-import { useRouter } from "next/navigation";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { MdOutlineFacebook } from 'react-icons/md';
+import { FaCertificate } from 'react-icons/fa6';
+import { TbBrandYoutubeFilled } from 'react-icons/tb';
+import { FaGithub } from 'react-icons/fa';
+import { useAppSelector } from '@/redux/hook/hook';
+import { calculateYearsAgo } from '@/Utils/functions';
+import RichTextEditor from '@/components/RichTextEditor';
+import { useRouter } from 'next/navigation';
 const Profile = ({ user }: any) => {
-  const userRedux = useAppSelector((state) => state.auth.user);
+  const userRedux = useAppSelector(state => state.auth.user);
   const [data, setData] = useState<any>(null);
   useEffect(() => {
     if (user === null) {
@@ -20,7 +20,7 @@ const Profile = ({ user }: any) => {
   }, []);
   const router = useRouter();
   const handleRouter = (id: number) => {
-    router.push("/learning/" + id);
+    router.push('/learning/' + id);
   };
   return (
     <div>
@@ -36,7 +36,7 @@ const Profile = ({ user }: any) => {
               className="rounded-full w-[16rem]"
               src={
                 data?.user?.avatar ||
-                "https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg"
+                'https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg'
               }
               alt=""
             />
@@ -49,7 +49,7 @@ const Profile = ({ user }: any) => {
           <div className="col-span-2">
             <div
               className=" p-5 rounded-2xl"
-              style={{ boxShadow: "#0000001a 0 0 5px, #0000001a 0 0 1px" }}
+              style={{ boxShadow: '#0000001a 0 0 5px, #0000001a 0 0 1px' }}
             >
               <div className="text-[1.4rem] font-medium pb-2">Giới thiệu</div>
               <div className="flex py-4 items-center">
@@ -100,7 +100,7 @@ const Profile = ({ user }: any) => {
           </div>
           <div
             className="col-span-3 p-5 rounded-2xl"
-            style={{ boxShadow: "#0000001a 0 0 5px, #0000001a 0 0 1px" }}
+            style={{ boxShadow: '#0000001a 0 0 5px, #0000001a 0 0 1px' }}
           >
             <div className="text-[1.4rem] font-medium pb-2">
               Các khoá học đã tham gia
@@ -138,7 +138,7 @@ const Profile = ({ user }: any) => {
           {data?.user?.bio && (
             <div
               className="  rounded-2xl   p-5"
-              style={{ boxShadow: "#0000001a 0 0 5px, #0000001a 0 0 1px" }}
+              style={{ boxShadow: '#0000001a 0 0 5px, #0000001a 0 0 1px' }}
             >
               <div className="text-[1.4rem] font-medium pb-2">Thông tin</div>
               <div

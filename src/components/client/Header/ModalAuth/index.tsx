@@ -1,6 +1,6 @@
-"use client";
-import Login from "@/components/client/Login";
-import { useEffect, useState } from "react";
+'use client';
+import Login from '@/components/client/Login';
+import { useEffect, useState } from 'react';
 
 const ModalAuth = () => {
   const [openLogin, setOpenLogin] = useState<boolean>(false);

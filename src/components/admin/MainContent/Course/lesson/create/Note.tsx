@@ -1,9 +1,9 @@
-import { NoteCreateAsync } from "@/api/api";
-import RichTextEditor from "@/components/RichTextEditor";
-import { message } from "antd";
-import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
-import LoadingBar from "react-top-loading-bar";
+import { NoteCreateAsync } from '@/api/api';
+import RichTextEditor from '@/components/RichTextEditor';
+import { message } from 'antd';
+import { useRouter } from 'next/navigation';
+import React, { useRef, useState } from 'react';
+import LoadingBar from 'react-top-loading-bar';
 
 const Note = ({
   courseId,
@@ -16,18 +16,18 @@ const Note = ({
   const ref = useRef<any>(null);
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<string>('');
   const handleSubmit = async () => {
     let isError = false;
     if (!title) {
       isError = true;
-      setTitleErrror("Vui lòng nhập tiêu dề");
+      setTitleErrror('Vui lòng nhập tiêu dề');
     }
     if (!description) {
       isError = true;
     }
     if (isError) {
-      messageApi.error("Vui lòng nhập thông tin đầy đủ trước khi gửi đi");
+      messageApi.error('Vui lòng nhập thông tin đầy đủ trước khi gửi đi');
     } else {
       const dataSubmit = {
         lectureDetail: {
@@ -44,16 +44,16 @@ const Note = ({
       ref.current.complete();
       if (res?.statusCode === 200 || res?.statusCode === 201) {
         messageApi.open({
-          type: "success",
+          type: 'success',
           content:
-            "Thêm câu note thành công, bạn sẽ được chuyển đến trang danh sách bài giảng",
+            'Thêm câu note thành công, bạn sẽ được chuyển đến trang danh sách bài giảng',
         });
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 500));
         router.push(`/admin/course/lesson/${courseId}`);
       } else {
         messageApi.open({
-          type: "error",
-          content: "có vấn đề xẩy xa vui lòng thử lại sau, f5 trang để thử lại",
+          type: 'error',
+          content: 'có vấn đề xẩy xa vui lòng thử lại sau, f5 trang để thử lại',
         });
       }
     }

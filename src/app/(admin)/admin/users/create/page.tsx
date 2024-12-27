@@ -1,10 +1,10 @@
-import { Breadcrumbs } from "@/components/admin/MainContent/Breadcrumbs";
-import EmployeeCreate from "@/components/admin/MainContent/EmployeeListingPage/EmployeeCreate";
+import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
+import EmployeeCreate from '@/components/admin/MainContent/EmployeeListingPage/EmployeeCreate';
 
 const breadcrumbItems = [
-  { title: "Dashboard", link: "/dashboard" },
-  { title: "Employee", link: "/dashboard/employee" },
-  { title: "Create", link: "/dashboard/employee/create" },
+  { title: 'Dashboard', link: '/dashboard' },
+  { title: 'Employee', link: '/dashboard/employee' },
+  { title: 'Create', link: '/dashboard/employee/create' },
 ];
 
 export default function EmployeeViewPage() {

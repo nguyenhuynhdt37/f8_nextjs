@@ -1,6 +1,6 @@
 // MonacoEditor.tsx
-import React, { useEffect, useRef } from "react";
-import * as monaco from "monaco-editor";
+import React, { useEffect, useRef } from 'react';
+import * as monaco from 'monaco-editor';
 
 interface MonacoEditorProps {
   value: string;
@@ -36,12 +36,12 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
 
     return () => {
       if (editorRef.current) {
-        monaco.editor.getModels().forEach((model) => model.dispose());
+        monaco.editor.getModels().forEach(model => model.dispose());
       }
     };
   }, [value, language, theme, onChange]);
 
-  return <div ref={editorRef} style={{ width: "100%", height: "600px" }} />;
+  return <div ref={editorRef} style={{ width: '100%', height: '600px' }} />;
 };
 
 export default MonacoEditor;

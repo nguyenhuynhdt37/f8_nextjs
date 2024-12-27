@@ -1,9 +1,9 @@
-"use client";
-import { getFirstLesson } from "@/api/api";
-import { getVideoIdFromUrl } from "@/Utils/functions";
-import { Modal } from "antd";
-import React, { useState, useEffect } from "react";
-import useSWR from "swr";
+'use client';
+import { getFirstLesson } from '@/api/api';
+import { getVideoIdFromUrl } from '@/Utils/functions';
+import { Modal } from 'antd';
+import React, { useState, useEffect } from 'react';
+import useSWR from 'swr';
 
 interface Iprops {
   isModalOpen: boolean;
@@ -12,12 +12,12 @@ interface Iprops {
 }
 const ModalIntroduce = ({ isModalOpen, setIsModalOpen, id }: Iprops) => {
   const { data, isLoading, error } = useSWR(
-    ["getFistLesson", id],
+    ['getFistLesson', id],
     () => getFirstLesson({ id }),
     {
       revalidateOnFocus: false, // Tắt refetch khi người dùng quay lại trang
       // revalidateOnReconnect: false, // Tắt refetch khi kết nối lại mạng
-    }
+    },
   );
   const result = data?.data;
 
@@ -36,7 +36,7 @@ const ModalIntroduce = ({ isModalOpen, setIsModalOpen, id }: Iprops) => {
         <div className="w-full h-[50rem] mt-10">
           <iframe
             src={`https://www.youtube.com/embed/${getVideoIdFromUrl(
-              result?.lesson?.videoLink
+              result?.lesson?.videoLink,
             )}?autoplay=1`}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

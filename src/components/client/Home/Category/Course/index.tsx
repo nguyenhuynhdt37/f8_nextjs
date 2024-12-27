@@ -1,18 +1,18 @@
-import React, { useRef } from "react";
-import { PiFinnTheHumanFill } from "react-icons/pi";
-import { FaPlayCircle } from "react-icons/fa";
-import { MdAccessTimeFilled } from "react-icons/md";
-import { useRouter } from "next/navigation";
-import LoadingBar from "react-top-loading-bar";
-import { message } from "antd";
-import { formatCurrency2 } from "@/Utils/functions";
+import React, { useRef } from 'react';
+import { PiFinnTheHumanFill } from 'react-icons/pi';
+import { FaPlayCircle } from 'react-icons/fa';
+import { MdAccessTimeFilled } from 'react-icons/md';
+import { useRouter } from 'next/navigation';
+import LoadingBar from 'react-top-loading-bar';
+import { message } from 'antd';
+import { formatCurrency2 } from '@/Utils/functions';
 const Course = ({ data }: any) => {
   const router = useRouter();
   const refLoading = useRef<any>(null);
   const [messageApi, contextHolder] = message.useMessage();
   const handleClick = () => {
     refLoading.current.continuousStart();
-    router.push("/courses/" + data?.course?.id);
+    router.push('/courses/' + data?.course?.id);
   };
   return (
     <>

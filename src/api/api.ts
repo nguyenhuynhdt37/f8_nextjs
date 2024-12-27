@@ -1,5 +1,5 @@
-import axiosInstance from "./axiosInstance";
-import { ICreateUser, IGetWithParam, IpageEdit } from "@/types/next-auth";
+import axiosInstance from './axiosInstance';
+import { ICreateUser, IGetWithParam, IpageEdit } from '@/types/next-auth';
 
 interface LoginParams {
   email: string;
@@ -9,12 +9,12 @@ interface LoginParams {
 export const login = async ({ email, password }: LoginParams): Promise<any> => {
   try {
     const res = await axiosInstance.post(
-      "/auth/login",
+      '/auth/login',
       {
         email,
         password,
       },
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data;
   } catch (error: any) {
@@ -23,7 +23,7 @@ export const login = async ({ email, password }: LoginParams): Promise<any> => {
 };
 export const AddCourseComplete = async (
   idLesson: number,
-  idCourse: number
+  idCourse: number,
 ): Promise<any> => {
   try {
     const res = await axiosInstance.post(
@@ -35,7 +35,7 @@ export const AddCourseComplete = async (
           courseId: idCourse,
         },
         withCredentials: true,
-      }
+      },
     );
     return res.data;
   } catch (error: any) {
@@ -44,7 +44,7 @@ export const AddCourseComplete = async (
 };
 export const sendEmailAsync = async (email: string): Promise<any> => {
   try {
-    const res = await axiosInstance.post("/auth/send-email", email);
+    const res = await axiosInstance.post('/auth/send-email', email);
 
     return res.data;
   } catch (error: any) {
@@ -67,7 +67,7 @@ export const activeShowLesson = async ({
         lessonId,
         groupId,
       },
-      { withCredentials: true }
+      { withCredentials: true },
     );
 
     return res.data;
@@ -80,7 +80,7 @@ export const CheckCodeActive = async ({
   codeID,
 }: ICheckCode): Promise<any> => {
   try {
-    const res = await axiosInstance.post("/auth/confirm-email", {
+    const res = await axiosInstance.post('/auth/confirm-email', {
       email,
       codeID,
     });
@@ -91,7 +91,7 @@ export const CheckCodeActive = async ({
 };
 export const GetUserInfoByToken = async (token: string): Promise<any> => {
   try {
-    const res = await axiosInstance.get("/auth/getinfo", {
+    const res = await axiosInstance.get('/auth/getinfo', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -144,7 +144,7 @@ export const getCourseLearningById = async ({
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return res.data;
   } catch (error: any) {
@@ -163,7 +163,7 @@ export const RegiterCourseFree = async ({
       idCourse,
       {
         withCredentials: true,
-      }
+      },
     );
 
     return res.data;
@@ -174,7 +174,7 @@ export const RegiterCourseFree = async ({
 
 export const CreateUser = async (user: ICreateUser): Promise<any> => {
   try {
-    const res = await axiosInstance.post("/users/create", user, {
+    const res = await axiosInstance.post('/users/create', user, {
       withCredentials: true,
     });
 
@@ -185,7 +185,7 @@ export const CreateUser = async (user: ICreateUser): Promise<any> => {
 };
 export const getAllUser = async ({ config }: IGetWithParam): Promise<any> => {
   try {
-    const res = await axiosInstance.get("/users", {
+    const res = await axiosInstance.get('/users', {
       withCredentials: true,
       params: {
         searchTerm: config.searchTerm,
@@ -235,7 +235,7 @@ export const UpdateImageUser = async ({
     const res = await axiosInstance.patch(`/users/${id}/avatar`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
 
@@ -276,7 +276,7 @@ export const CreateLessonGroup = async ({ id, name }: any): Promise<any> => {
       { courseId: id, name },
       {
         withCredentials: true,
-      }
+      },
     );
 
     return res.data;
@@ -312,7 +312,7 @@ export const CourseActive = async ({
       },
       {
         withCredentials: true,
-      }
+      },
     );
 
     return res.data;
@@ -327,7 +327,7 @@ export const getFirstLesson = async ({ id }: any): Promise<any> => {
       `/courses/get-fisrt-lesson-by-course/${id}`,
       {
         withCredentials: true,
-      }
+      },
     );
     return res.data;
   } catch (error: any) {
@@ -338,7 +338,7 @@ export const getAllCourses = async ({
   config,
 }: IGetWithParam): Promise<any> => {
   try {
-    const res = await axiosInstance.get("/courses/all", {
+    const res = await axiosInstance.get('/courses/all', {
       withCredentials: true,
       params: {
         searchTerm: config.searchTerm,
@@ -373,7 +373,7 @@ export const getLesonGroupById = async ({
           pageNumber: config.pageNumber,
           pageSize: config.pageSize,
         },
-      }
+      },
     );
 
     return res.data;
@@ -407,9 +407,9 @@ export const getLesonpByCourseId = async ({
 };
 export const CourseCreate = async (formData: any): Promise<any> => {
   try {
-    const res = await axiosInstance.post("/courses/create", formData, {
+    const res = await axiosInstance.post('/courses/create', formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
       withCredentials: true,
     });
@@ -421,7 +421,7 @@ export const CourseCreate = async (formData: any): Promise<any> => {
 };
 export const QuestionLessonCreate = async (
   courseId: number,
-  data: any
+  data: any,
 ): Promise<any> => {
   try {
     const res = await axiosInstance.post(
@@ -429,7 +429,7 @@ export const QuestionLessonCreate = async (
       data,
       {
         withCredentials: true,
-      }
+      },
     );
 
     return res.data;
@@ -439,7 +439,7 @@ export const QuestionLessonCreate = async (
 };
 export const LessonCreateAsync = async (
   courseId: number,
-  data: any
+  data: any,
 ): Promise<any> => {
   try {
     const res = await axiosInstance.post(
@@ -447,7 +447,7 @@ export const LessonCreateAsync = async (
       data,
       {
         withCredentials: true,
-      }
+      },
     );
 
     return res.data;
@@ -457,7 +457,7 @@ export const LessonCreateAsync = async (
 };
 export const NoteCreateAsync = async (
   courseId: number,
-  data: any
+  data: any,
 ): Promise<any> => {
   try {
     const res = await axiosInstance.post(
@@ -465,7 +465,7 @@ export const NoteCreateAsync = async (
       data,
       {
         withCredentials: true,
-      }
+      },
     );
 
     return res.data;
@@ -490,7 +490,7 @@ export const ViewQuestionLesson = async (lessonId: number): Promise<any> => {
       `/courses/lesson/question/${lessonId}`,
       {
         withCredentials: true,
-      }
+      },
     );
 
     return res.data;
@@ -523,7 +523,7 @@ export const uploadImage = async (formData: any) => {
     const res = await axiosInstance.post(`/upload`, formData, {
       withCredentials: true,
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
     return res.data;
@@ -536,7 +536,7 @@ export const CreatePost = async (formData: any) => {
     const res = await axiosInstance.post(`/post/create`, formData, {
       withCredentials: true,
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
     return res.data;
@@ -556,7 +556,7 @@ export const getAllPostType = async (formData: any) => {
 };
 export const getAllPost = async ({ config }: IGetWithParam): Promise<any> => {
   try {
-    const res = await axiosInstance.get("/post", {
+    const res = await axiosInstance.get('/post', {
       withCredentials: true,
       params: {
         searchTerm: config.searchTerm,
@@ -605,7 +605,7 @@ export const CheckLessonComplete = async (lessonId: number) => {
       `/courses/lesson/complete/${lessonId}`,
       {
         withCredentials: true,
-      }
+      },
     );
     return res.data;
   } catch (error: any) {
@@ -649,7 +649,7 @@ export const SaveCodeUser = async (lessonId: number, code: string) => {
       code,
       {
         withCredentials: true,
-      }
+      },
     );
     return res.data;
   } catch (error: any) {
@@ -663,8 +663,59 @@ export const SubmitCode = async (submitCode: any) => {
       submitCode,
       {
         withCredentials: true,
-      }
+      },
     );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const CreateComment = async (comment: any) => {
+  try {
+    const res = await axiosInstance.post(`/lesson/comment/create`, comment, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getAllCommentByLessonId = async (lessonId: any) => {
+  try {
+    const res = await axiosInstance.get(`/lesson/comment/all/${lessonId}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+
+export const ReportComment = async (idComment: any) => {
+  try {
+    const res = await axiosInstance.post(`/lesson/comment/reportComment/${idComment}`, {}, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const DeleteComment = async (idComment: any) => {
+  try {
+    const res = await axiosInstance.post(`/lesson/comment/delete/${idComment}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const updateComment = async ({idComment, comment}: any) => {
+  try {
+    const res = await axiosInstance.put(`/lesson/comment/edit/${idComment}`, comment, {
+      withCredentials: true,
+    });
     return res.data;
   } catch (error: any) {
     return error?.response?.data;

@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import { useAppSelector } from "@/redux/hook/hook";
-import { CreateLessonGroup, CreateUser } from "@/api/api";
-import { useSnackbar } from "notistack";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ICreateUser } from "@/types/next-auth";
-import Loading from "@/components/client/Loading";
-import { hasValue, hasWhitespace } from "@/Utils/functions";
-import { message, Switch } from "antd";
+import { useAppSelector } from '@/redux/hook/hook';
+import { CreateLessonGroup, CreateUser } from '@/api/api';
+import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { ICreateUser } from '@/types/next-auth';
+import Loading from '@/components/client/Loading';
+import { hasValue, hasWhitespace } from '@/Utils/functions';
+import { message, Switch } from 'antd';
 
 const ChapterCreate = ({ id }: { id: number }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const router = useRouter();
   const [error, setError] = useState<any>({
-    name: "",
+    name: '',
   });
   const [data, setData] = useState<any>({
-    name: "",
+    name: '',
   });
   const [isLoadding, setIsLoading] = useState<boolean>(false);
   const handleSubmit = async () => {
     if (hasValue(error)) {
       messageApi.open({
-        type: "error",
+        type: 'error',
         content:
-          "Vui lòng nhập đúng thông tin hợp lệ trước khi tạo mới chương học",
+          'Vui lòng nhập đúng thông tin hợp lệ trước khi tạo mới chương học',
       });
       return;
     }
-    if (data.email === "" || data.name === "" || data.password === "") {
+    if (data.email === '' || data.name === '' || data.password === '') {
       messageApi.open({
-        type: "error",
-        content: "Thông tin không được bỏ trống",
+        type: 'error',
+        content: 'Thông tin không được bỏ trống',
       });
       return;
     }
@@ -42,27 +42,27 @@ const ChapterCreate = ({ id }: { id: number }) => {
 
     if (result?.statusCode === 200 || result?.statusCode === 201) {
       messageApi.open({
-        type: "success",
-        content: "Tạo mới khoá học thành công",
+        type: 'success',
+        content: 'Tạo mới khoá học thành công',
       });
       router.push(`/admin/course/chapter/${id}`);
     }
     if (result?.statusCode === 400) {
       setError({
         ...error,
-        email: "Email này đã được sử dụng",
+        email: 'Email này đã được sử dụng',
       });
     }
     if (result?.statusCode === 401)
       messageApi.open({
-        type: "error",
-        content: "Hết phiên đănng nhập vui lòng đăng nhập lại",
+        type: 'error',
+        content: 'Hết phiên đănng nhập vui lòng đăng nhập lại',
       });
   };
   const handleOnchange = (e: any) => {
     setError({
       ...error,
-      [e.target.name]: "",
+      [e.target.name]: '',
     });
     setData({
       ...data,
@@ -72,10 +72,10 @@ const ChapterCreate = ({ id }: { id: number }) => {
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === "name" && !hasWhitespace(value)) {
+    if (name === 'name' && !hasWhitespace(value)) {
       setError((prevError: any) => ({
         ...prevError,
-        [name]: "Tên chương học phải chứa ít nhất phải chứa 2 từ",
+        [name]: 'Tên chương học phải chứa ít nhất phải chứa 2 từ',
       }));
     }
   };
@@ -99,7 +99,7 @@ const ChapterCreate = ({ id }: { id: number }) => {
               className="px-4 mt-2 mb-2 bg-[#fff] py-3 focus:outline-none border-[#e0cacd] focus:border-[#dd9ba0] border-[0.2rem] rounded-xl y-3 w-full"
               onChange={handleOnchange}
               value={data.name}
-              onBlur={(e) => handleBlur(e)}
+              onBlur={e => handleBlur(e)}
             />
             <div className="pb-2 text-[#d52e74]">{error.name}</div>
           </div>

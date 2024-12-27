@@ -1,15 +1,15 @@
-"use client";
-import React, { useEffect, useRef, useState } from "react";
-import Table from "./Table";
-import Search from "./Search";
-import Filter from "./Filter";
-import Pagination from "../../Pagination";
-import { getAllCourses, getLesonGroupById } from "@/api/api";
-import { IpageEdit } from "@/types/next-auth";
-import LoadingPage from "@/components/client/LoadingPage";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import LoadingBar from "react-top-loading-bar";
+'use client';
+import React, { useEffect, useRef, useState } from 'react';
+import Table from './Table';
+import Search from './Search';
+import Filter from './Filter';
+import Pagination from '../../Pagination';
+import { getAllCourses, getLesonGroupById } from '@/api/api';
+import { IpageEdit } from '@/types/next-auth';
+import LoadingPage from '@/components/client/LoadingPage';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import LoadingBar from 'react-top-loading-bar';
 
 const Chapter = ({ id }: any) => {
   const ref = useRef<any>(null);
@@ -20,9 +20,9 @@ const Chapter = ({ id }: any) => {
     pageNumber: 1,
     totalPage: 1,
     totalCount: 0,
-    searchTerm: "",
-    sortField: "",
-    sortOrder: "",
+    searchTerm: '',
+    sortField: '',
+    sortOrder: '',
   });
 
   useEffect(() => {

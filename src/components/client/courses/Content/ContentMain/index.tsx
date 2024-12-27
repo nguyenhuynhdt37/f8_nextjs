@@ -1,12 +1,12 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import PropTypes, { number } from "prop-types";
-import { MdAdd, MdRemove } from "react-icons/md";
-import { FaPlayCircle } from "react-icons/fa";
-import { GoCodeReview } from "react-icons/go";
-import { RiQuestionnaireFill } from "react-icons/ri";
-import { CgNotes } from "react-icons/cg";
-import { convertSecondsToYMDHMS } from "@/Utils/functions";
+'use client';
+import React, { useEffect, useState } from 'react';
+import PropTypes, { number } from 'prop-types';
+import { MdAdd, MdRemove } from 'react-icons/md';
+import { FaPlayCircle } from 'react-icons/fa';
+import { GoCodeReview } from 'react-icons/go';
+import { RiQuestionnaireFill } from 'react-icons/ri';
+import { CgNotes } from 'react-icons/cg';
+import { convertSecondsToYMDHMS } from '@/Utils/functions';
 
 const ContentMain = ({ data }: { data: any }) => {
   const [isShowLesson, setIsShowLesson] = useState<number[]>([data[0]?.id]);
@@ -35,9 +35,9 @@ const ContentMain = ({ data }: { data: any }) => {
   const handleToggleShowLessson = (groupId: number) => {
     if (groupId === -1) return;
     const arrayLesson = [...isShowLesson];
-    const id = arrayLesson?.find((p) => p === groupId);
+    const id = arrayLesson?.find(p => p === groupId);
     if (id) {
-      const newarrayLesson = arrayLesson.filter((p) => p !== id);
+      const newarrayLesson = arrayLesson.filter(p => p !== id);
       setIsShowLesson(newarrayLesson);
     } else {
       setIsShowLesson([...arrayLesson, groupId]);
@@ -89,7 +89,7 @@ const ContentMain = ({ data }: { data: any }) => {
             className="flex justify-between  cursor-pointer bg-[#f5f5f5] rounded-xl border-[0.1rem] border-[#ebebeb] py-6 px-10"
           >
             <div className="flex font-medium text-[1.5rem] items-center">
-              {isShowLesson.find((p) => p === groupLesson?.id) ? (
+              {isShowLesson.find(p => p === groupLesson?.id) ? (
                 <MdRemove className="text-[1.8rem] mr-5 text-[#f05123]" />
               ) : (
                 <MdAdd className="text-[1.8rem] mr-5 text-[#f05123]" />
@@ -98,7 +98,7 @@ const ContentMain = ({ data }: { data: any }) => {
             </div>
             <div className="">{groupLesson?.lectureDetail?.length} bài học</div>
           </div>
-          {isShowLesson.find((p) => p === groupLesson?.id) &&
+          {isShowLesson.find(p => p === groupLesson?.id) &&
             groupLesson?.lectureDetail?.map((lectureDetail: any) => (
               <div
                 key={lectureDetail?.id}
@@ -122,7 +122,7 @@ const ContentMain = ({ data }: { data: any }) => {
                 {lectureDetail?.lessonType?.id === 1 && (
                   <div className="">
                     {convertSecondsToYMDHMS(
-                      lectureDetail?.lesson?.duration || 0
+                      lectureDetail?.lesson?.duration || 0,
                     )}
                   </div>
                 )}

@@ -1,38 +1,38 @@
-"use client";
-import Link from "next/link";
-import { MdOutlineDashboard } from "react-icons/md";
-import { LuUser } from "react-icons/lu";
-import { AiOutlineCopyright } from "react-icons/ai";
-import { RiUser3Line } from "react-icons/ri";
-import Button from "./Button";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+'use client';
+import Link from 'next/link';
+import { MdOutlineDashboard } from 'react-icons/md';
+import { LuUser } from 'react-icons/lu';
+import { AiOutlineCopyright } from 'react-icons/ai';
+import { RiUser3Line } from 'react-icons/ri';
+import Button from './Button';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 const item = [
   {
     id: 1,
-    url: "/admin",
-    name: "Tổng quan",
+    url: '/admin',
+    name: 'Tổng quan',
     icon: <MdOutlineDashboard />,
     isActive: true,
   },
   {
     id: 2,
-    url: "/admin/users",
-    name: "Người dùng",
+    url: '/admin/users',
+    name: 'Người dùng',
     icon: <LuUser />,
     isActive: false,
   },
   {
     id: 3,
-    url: "/admin/course",
-    name: "Khoá học",
+    url: '/admin/course',
+    name: 'Khoá học',
     icon: <AiOutlineCopyright />,
     isActive: false,
   },
   {
     id: 4,
-    url: "/admin/profile",
-    name: "Tài khoản",
+    url: '/admin/profile',
+    name: 'Tài khoản',
     icon: <RiUser3Line />,
     isActive: false,
   },
@@ -57,7 +57,7 @@ export default function Sidebar() {
       className={` p-5 bg-[#fdf9f7] hidden h-screen flex-none border-r bg-card transition-[width] duration-500 md:block`}
     >
       <div className="hidden pt-10 lg:block">
-        <Link href={"/dashboard"}>
+        <Link href={'/dashboard'}>
           <img
             src="/images/logo.png"
             alt="F8 Icon"

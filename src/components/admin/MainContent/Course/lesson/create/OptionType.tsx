@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import React, { Fragment, useState } from 'react';
+import { Menu, Transition } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
 function OptionType({ data, typeChoise, setTypeChoise }: any) {
   return (
@@ -33,7 +33,7 @@ function OptionType({ data, typeChoise, setTypeChoise }: any) {
                       {option.name}
                     </div>
                   </Menu.Item>
-                )
+                ),
             )}
           </div>
         </Menu.Items>

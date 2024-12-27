@@ -66,6 +66,6 @@ declare global {
     user: [] | null;
     loading: boolean;
     error: null | string;
-    accessToken: "";
+    accessToken: '';
   }
 }

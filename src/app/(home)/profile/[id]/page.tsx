@@ -1,7 +1,7 @@
-import Profile from "@/components/client/Profile";
-import { useCookie } from "@/hook/useCookie";
-import { redirect } from "next/navigation";
-import React from "react";
+import Profile from '@/components/client/Profile';
+import { useCookie } from '@/hook/useCookie';
+import { redirect } from 'next/navigation';
+import React from 'react';
 interface Iprops {
   params: { id: string };
 }
@@ -11,9 +11,9 @@ const ProfileByIdPage = async ({ params }: Iprops) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/info/${id}`,
     {
-      method: "GET",
-      headers: { "Content-Type": "application/json", Cookie: cookieHeader },
-    }
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
+    },
   );
   if (!res.ok) {
     redirect(`/404`);

@@ -1,5 +1,5 @@
-import React from "react";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import React from 'react';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
   const handlePageChange = (pageNumber: number) => {
     setLoadData((prev: any) => prev + 1);
@@ -25,10 +25,10 @@ const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
     }
 
     if (currentPage - delta > 2) {
-      range.unshift("...");
+      range.unshift('...');
     }
     if (currentPage + delta < totalPage - 1) {
-      range.push("...");
+      range.push('...');
     }
 
     range.unshift(1);
@@ -37,11 +37,11 @@ const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
     }
 
     range.forEach((page, index) => {
-      if (page === "...") {
+      if (page === '...') {
         pageNumbers.push(
           <span key={index} className="px-3 py-2.5">
             ...
-          </span>
+          </span>,
         );
       } else {
         pageNumbers.push(
@@ -49,12 +49,12 @@ const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
             key={page}
             onClick={() => handlePageChange(page as number)}
             className={`w-10 mx-2 h-10 flex items-center justify-center px-3 py-2.5 rounded-full text-center font-semibold transition-all hover:opacity-75 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ${
-              currentPage === page ? "bg-[#3084d6] text-[#fff]" : ""
+              currentPage === page ? 'bg-[#3084d6] text-[#fff]' : ''
             }`}
             type="button"
           >
             {page}
-          </button>
+          </button>,
         );
       }
     });
@@ -70,7 +70,7 @@ const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
           onClick={() => handlePageChange(pageEdit?.pageNumber - 1 || 1)}
           disabled={pageEdit?.pageNumber === 1}
           className={`w-10 h-10 mx-2 bg-[#3084d6] rounded-full flex justify-center items-center text-[#fff] ${
-            pageEdit?.pageNumber === 1 ? "bg-[#999] opacity-25" : ""
+            pageEdit?.pageNumber === 1 ? 'bg-[#999] opacity-25' : ''
           }`}
           type="button"
         >
@@ -82,8 +82,8 @@ const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
           disabled={pageEdit?.pageNumber === pageEdit?.totalPage}
           className={`w-10 h-10 px-2 bg-[#3084d6] rounded-full flex justify-center items-center text-[#fff] ${
             pageEdit?.pageNumber === pageEdit?.totalPage
-              ? "bg-[#999] opacity-25"
-              : ""
+              ? 'bg-[#999] opacity-25'
+              : ''
           }`}
           type="button"
         >

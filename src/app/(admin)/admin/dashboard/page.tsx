@@ -1,5 +1,5 @@
-import { NextResponse, NextRequest } from "next/server";
-import React from "react";
+import { NextResponse, NextRequest } from 'next/server';
+import React from 'react';
 
 const DashBoard = (request: any) => {
   // const cookies = parse(req.headers.cookie || "");

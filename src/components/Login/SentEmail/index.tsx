@@ -1,16 +1,16 @@
-import { CheckCodeActive, sendEmailAsync } from "@/api/api";
-import Loading from "@/components/client/Loading";
-import { RootState } from "@/redux/store";
-import { error } from "console";
-import { useSnackbar } from "notistack";
+import { CheckCodeActive, sendEmailAsync } from '@/api/api';
+import Loading from '@/components/client/Loading';
+import { RootState } from '@/redux/store';
+import { error } from 'console';
+import { useSnackbar } from 'notistack';
 import React, {
   Dispatch,
   SetStateAction,
   useEffect,
   useRef,
   useState,
-} from "react";
-import { TypedUseSelectorHook, useSelector } from "react-redux";
+} from 'react';
+import { TypedUseSelectorHook, useSelector } from 'react-redux';
 
 interface IFormSentEmail {
   email: string;
@@ -28,11 +28,11 @@ const SentEmail = ({
   const [isDistable, setIsDistable] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingAuth, setLoadingAuth] = useState<boolean>(false);
-  const [codeError, setCodeError] = useState<string>("");
+  const [codeError, setCodeError] = useState<string>('');
   const { enqueueSnackbar } = useSnackbar();
   const [formSentEmail, setFormSentEmail] = useState<IFormSentEmail>({
     email: emailSentEmail,
-    code: "",
+    code: '',
   });
   const handleSetCode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -51,7 +51,7 @@ const SentEmail = ({
         setIsDistable(true);
       }
     } catch (e) {
-      setCodeError("Có lỗi xẩy ra, vui lòng thử lại sau");
+      setCodeError('Có lỗi xẩy ra, vui lòng thử lại sau');
     } finally {
       setLoading(false);
     }
@@ -61,7 +61,7 @@ const SentEmail = ({
     if (!isCounting) return;
 
     const interval = setInterval(() => {
-      setSentEmail((prevSendEmail) => {
+      setSentEmail(prevSendEmail => {
         if (prevSendEmail <= 1) {
           setIsCounting(false);
           setIsDistable(false);
@@ -77,23 +77,23 @@ const SentEmail = ({
     };
   }, [isCounting]);
   const handleBlur = () => {
-    if (formSentEmail.code === "") {
-      setCodeError("Mã xác nhận không được bỏ trống");
+    if (formSentEmail.code === '') {
+      setCodeError('Mã xác nhận không được bỏ trống');
       return;
     }
     if (formSentEmail.code.length !== 6) {
-      setCodeError("Mã xác nhận phải chứa 6 ký tự");
+      setCodeError('Mã xác nhận phải chứa 6 ký tự');
       return;
     }
-    setCodeError("");
+    setCodeError('');
   };
   const handleSubmit = async () => {
-    if (formSentEmail.code === "") {
-      setCodeError("Mã xác nhận không được bỏ trống");
+    if (formSentEmail.code === '') {
+      setCodeError('Mã xác nhận không được bỏ trống');
       return;
     }
-    if (formSentEmail.email === "") {
-      setCodeError("Email không được bỏ trống");
+    if (formSentEmail.email === '') {
+      setCodeError('Email không được bỏ trống');
       return;
     }
     if (codeError) return;
@@ -106,8 +106,8 @@ const SentEmail = ({
       setCodeError(res?.message?.message);
     }
     if (res?.statusCode === 200 || res?.statusCode === 201) {
-      enqueueSnackbar("Xác thực thành công!", {
-        variant: "success",
+      enqueueSnackbar('Xác thực thành công!', {
+        variant: 'success',
       });
       setStep(1);
     }
@@ -135,22 +135,22 @@ const SentEmail = ({
         <input
           type="text"
           className={`${
-            codeError && "border-[#f33a58] bg-[#eedce4]"
+            codeError && 'border-[#f33a58] bg-[#eedce4]'
           } px-6 rounded-full border-[0.15rem]  text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
           placeholder="Mã xác nhận"
           // disabled={isDistable}
           name="code"
           value={formSentEmail.code}
           onChange={handleSetCode}
-          onFocus={() => setCodeError("")}
+          onFocus={() => setCodeError('')}
           onBlur={handleBlur}
         />
         <button
           onClick={handleSentEmail}
           className={`${
             !isDistable
-              ? "text-[#fff] bg-[#f97525]"
-              : "text-[#757575] bg-[#cccccc]"
+              ? 'text-[#fff] bg-[#f97525]'
+              : 'text-[#757575] bg-[#cccccc]'
           } absolute py-[1rem] top-1/2 -translate-y-1/2 text-[1.4rem] font-medium w-44 right-[0.26rem] rounded-full `}
         >
           {loading && (
@@ -172,7 +172,7 @@ const SentEmail = ({
         onClick={handleSubmit}
         className={`w-full flex justify-center py-[1.2rem] bg-gradient-to-r from-[#8de0f9] to-[#88eae0] rounded-full mt-9 font-bold text-[#fff]`}
       >
-        {!loadingAuth && "Xác thực"}
+        {!loadingAuth && 'Xác thực'}
         {loadingAuth && <Loading />}
       </button>
     </>

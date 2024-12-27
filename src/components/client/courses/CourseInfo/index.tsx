@@ -1,13 +1,13 @@
-"use client";
-import { FaPlayCircle } from "react-icons/fa";
-import { CgPerformance } from "react-icons/cg";
-import { TbMovie } from "react-icons/tb";
-import { MdOutlineAccessTimeFilled } from "react-icons/md";
-import { IoIosBatteryFull } from "react-icons/io";
-import ButtonRegiterStudy from "./ButtonRegiterStudy";
-import { useEffect, useState } from "react";
-import { Modal } from "antd";
-import ModalIntroduce from "./ModalIntroduce";
+'use client';
+import { FaPlayCircle } from 'react-icons/fa';
+import { CgPerformance } from 'react-icons/cg';
+import { TbMovie } from 'react-icons/tb';
+import { MdOutlineAccessTimeFilled } from 'react-icons/md';
+import { IoIosBatteryFull } from 'react-icons/io';
+import ButtonRegiterStudy from './ButtonRegiterStudy';
+import { useEffect, useState } from 'react';
+import { Modal } from 'antd';
+import ModalIntroduce from './ModalIntroduce';
 const CourseInfo = ({
   data,
   timeCourse,

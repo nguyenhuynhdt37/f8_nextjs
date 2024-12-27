@@ -1,7 +1,7 @@
-import React, { memo, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import { FaImages } from "react-icons/fa";
-import { IoIosImages } from "react-icons/io";
+import React, { memo, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { FaImages } from 'react-icons/fa';
+import { IoIosImages } from 'react-icons/io';
 
 const Banner = ({ data, setData }: any) => {
   const onDrop = useCallback((acceptedFiles: any) => {
@@ -61,7 +61,7 @@ const Banner = ({ data, setData }: any) => {
                   <div className="cursor-pointer border-2 items-center flex-col justify-center rounded-[2rem] w-full border-[#cedbe6] border-dashed flex h-[20rem] p-10">
                     <IoIosImages className="text-[5rem] text-[#609fd6]" />
                     <div className="py-5">
-                      Kéo thả ảnh vào đây, hoặc chọn từ{" "}
+                      Kéo thả ảnh vào đây, hoặc chọn từ{' '}
                       <span className="text-[#609fd6]">thư mục</span>
                     </div>
                   </div>

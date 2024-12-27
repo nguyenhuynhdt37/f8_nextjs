@@ -1,14 +1,14 @@
-import LoginHome from "@/components/Login/LoginHome";
-import LoginWithEmail from "@/components/Login/LoginWithEmail";
-import SentEmail from "@/components/Login/SentEmail";
-import { useAppSelector } from "@/redux/hook/hook";
-import { Modal } from "antd";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { FiChevronLeft } from "react-icons/fi";
-import { Lexend } from "@next/font/google";
+import LoginHome from '@/components/Login/LoginHome';
+import LoginWithEmail from '@/components/Login/LoginWithEmail';
+import SentEmail from '@/components/Login/SentEmail';
+import { useAppSelector } from '@/redux/hook/hook';
+import { Modal } from 'antd';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { FiChevronLeft } from 'react-icons/fi';
+import { Lexend } from '@next/font/google';
 const lexend = Lexend({
-  weight: ["400", "100", "200", "300", "500", "600", "700"], // Thêm các trọng số bạn cần
-  subsets: ["latin", "vietnamese"], // Thêm subset "vietnamese" nếu cần
+  weight: ['400', '100', '200', '300', '500', '600', '700'], // Thêm các trọng số bạn cần
+  subsets: ['latin', 'vietnamese'], // Thêm subset "vietnamese" nếu cần
 });
 const Login = ({
   open,
@@ -31,7 +31,7 @@ const Login = ({
           {step !== 0 && (
             <button
               className="flex items-center text-2xl relative top-5 left-0"
-              onClick={() => setStep((prev) => prev - 1)}
+              onClick={() => setStep(prev => prev - 1)}
             >
               <FiChevronLeft className="text-[2.5rem]" />
               Quay lại

@@ -1,8 +1,8 @@
-import PostCreate from "@/components/client/post/PostCreare";
-import PostEdit from "@/components/client/post/PostEdit";
-import { useCookie } from "@/hook/useCookie";
-import { redirect } from "next/navigation";
-import React from "react";
+import PostCreate from '@/components/client/post/PostCreare';
+import PostEdit from '@/components/client/post/PostEdit';
+import { useCookie } from '@/hook/useCookie';
+import { redirect } from 'next/navigation';
+import React from 'react';
 interface Iprops {
   params: { id: string };
 }
@@ -10,14 +10,14 @@ const PostCreatePage = async ({ params }: Iprops) => {
   const { id } = params;
   const cookieHeader = useCookie();
   if (!cookieHeader) {
-    redirect("/404");
+    redirect('/404');
   }
   const resPost = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/post/${id}`,
     {
-      method: "GET",
-      headers: { "Content-Type": "application/json", Cookie: cookieHeader },
-    }
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
+    },
   );
   if (!resPost.ok) {
     redirect(`/404`);
@@ -30,9 +30,9 @@ const PostCreatePage = async ({ params }: Iprops) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/post/all/type`,
     {
-      method: "GET",
-      headers: { "Content-Type": "application/json", Cookie: cookieHeader },
-    }
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
+    },
   );
 
   if (!res.ok) {

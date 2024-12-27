@@ -1,21 +1,21 @@
-"use client";
-import MarkdownIt from "markdown-it";
-import React, { useEffect } from "react";
-import { FaTwitter } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { FaLink } from "react-icons/fa6";
-import { FaFacebook } from "react-icons/fa";
-import Tippy from "@tippyjs/react"; // Import thư viện
-import "tippy.js/dist/tippy.css"; // Import CSS
-import { FaRegHeart } from "react-icons/fa";
-import { FaRegComment } from "react-icons/fa6";
-import { IoIosMore } from "react-icons/io";
-import { FaPencil } from "react-icons/fa6";
-import "github-markdown-css";
-import hljs from "highlight.js";
-import "highlight.js/styles/github.css";
-import { useAppDispatch } from "@/redux/hook/hook";
-import { setStateNav } from "@/redux/reducers/slices/NavbarSlice";
+'use client';
+import MarkdownIt from 'markdown-it';
+import React, { useEffect } from 'react';
+import { FaTwitter } from 'react-icons/fa';
+import { MdEmail } from 'react-icons/md';
+import { FaLink } from 'react-icons/fa6';
+import { FaFacebook } from 'react-icons/fa';
+import Tippy from '@tippyjs/react'; // Import thư viện
+import 'tippy.js/dist/tippy.css'; // Import CSS
+import { FaRegHeart } from 'react-icons/fa';
+import { FaRegComment } from 'react-icons/fa6';
+import { IoIosMore } from 'react-icons/io';
+import { FaPencil } from 'react-icons/fa6';
+import 'github-markdown-css';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css';
+import { useAppDispatch } from '@/redux/hook/hook';
+import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
 const PostById = ({ data }: any) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -31,7 +31,7 @@ const PostById = ({ data }: any) => {
         } catch (_) {}
       }
       return `<pre class="hljs"><code>${mdParser.utils.escapeHtml(
-        code
+        code,
       )}</code></pre>`;
     },
   });

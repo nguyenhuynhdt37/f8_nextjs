@@ -1,8 +1,8 @@
-"use client";
-import React from "react";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
-import { FaNoteSticky } from "react-icons/fa6";
+'use client';
+import React from 'react';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { FaNoteSticky } from 'react-icons/fa6';
 const App = () => {
   const percentage = 75;
 
@@ -14,10 +14,10 @@ const App = () => {
           text={`${percentage}%`}
           styles={buildStyles({
             pathColor: `rgba(62, 152, 199, ${percentage / 100})`,
-            textColor: "#fff",
-            trailColor: "#d6d6d6",
-            backgroundColor: "#3498db",
-            textSize: "2.5rem",
+            textColor: '#fff',
+            trailColor: '#d6d6d6',
+            backgroundColor: '#3498db',
+            textSize: '2.5rem',
           })}
         />
       </div>

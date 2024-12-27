@@ -1,42 +1,42 @@
-"use client";
+'use client';
 
-import { useAppSelector } from "@/redux/hook/hook";
-import { CreateUser } from "@/api/api";
-import { useSnackbar } from "notistack";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ICreateUser } from "@/types/next-auth";
-import Loading from "@/components/client/Loading";
-import { checkIsEmail, hasValue, hasWhitespace } from "@/Utils/functions";
-import { message, Switch } from "antd";
+import { useAppSelector } from '@/redux/hook/hook';
+import { CreateUser } from '@/api/api';
+import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { ICreateUser } from '@/types/next-auth';
+import Loading from '@/components/client/Loading';
+import { checkIsEmail, hasValue, hasWhitespace } from '@/Utils/functions';
+import { message, Switch } from 'antd';
 
 const EmployeeCreate = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const router = useRouter();
   const [error, setError] = useState<any>({
-    fullName: "",
-    email: "",
-    password: "",
+    fullName: '',
+    email: '',
+    password: '',
   });
   const [data, setData] = useState<ICreateUser>({
-    fullName: "",
-    email: "",
-    password: "",
+    fullName: '',
+    email: '',
+    password: '',
     isActive: 0,
   });
   const [isLoadding, setIsLoading] = useState<boolean>(false);
   const handleSubmit = async () => {
     if (hasValue(error)) {
       messageApi.open({
-        type: "error",
-        content: "Vui lòng nhập đúng thông tin hợp lệ trước khi tạo tài khoản",
+        type: 'error',
+        content: 'Vui lòng nhập đúng thông tin hợp lệ trước khi tạo tài khoản',
       });
       return;
     }
-    if (data.email === "" || data.fullName === "" || data.password === "") {
+    if (data.email === '' || data.fullName === '' || data.password === '') {
       messageApi.open({
-        type: "error",
-        content: "Thông tin không được bỏ trống",
+        type: 'error',
+        content: 'Thông tin không được bỏ trống',
       });
       return;
     }
@@ -46,27 +46,27 @@ const EmployeeCreate = () => {
 
     if (result?.statusCode === 200 || result?.statusCode === 201) {
       messageApi.open({
-        type: "success",
-        content: "Tạo mới tài khoản thành công",
+        type: 'success',
+        content: 'Tạo mới tài khoản thành công',
       });
-      router.push("/admin/users");
+      router.push('/admin/users');
     }
     if (result?.statusCode === 400) {
       setError({
         ...error,
-        email: "Email này đã được sử dụng",
+        email: 'Email này đã được sử dụng',
       });
     }
     if (result?.statusCode === 401)
       messageApi.open({
-        type: "error",
-        content: "Hết phiên đănng nhập vui lòng đăng nhập lại",
+        type: 'error',
+        content: 'Hết phiên đănng nhập vui lòng đăng nhập lại',
       });
   };
   const handleOnchange = (e: any) => {
     setError({
       ...error,
-      [e.target.name]: "",
+      [e.target.name]: '',
     });
     setData({
       ...data,
@@ -76,24 +76,24 @@ const EmployeeCreate = () => {
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === "email" && !checkIsEmail(value)) {
+    if (name === 'email' && !checkIsEmail(value)) {
       setError((prevError: ICreateUser) => ({
         ...prevError,
-        [name]: "Địa chỉ email không hợp lệ",
+        [name]: 'Địa chỉ email không hợp lệ',
       }));
     }
 
-    if (name === "fullName" && !hasWhitespace(value)) {
+    if (name === 'fullName' && !hasWhitespace(value)) {
       setError((prevError: ICreateUser) => ({
         ...prevError,
-        [name]: "Tên người dùng ít nhất phải chứa 2 từ",
+        [name]: 'Tên người dùng ít nhất phải chứa 2 từ',
       }));
     }
 
-    if (name === "password" && value.length < 8) {
+    if (name === 'password' && value.length < 8) {
       setError((prevError: ICreateUser) => ({
         ...prevError,
-        [name]: "Mật khẩu phải chứa ít nhất 8 ký tự",
+        [name]: 'Mật khẩu phải chứa ít nhất 8 ký tự',
       }));
     }
   };
@@ -123,7 +123,7 @@ const EmployeeCreate = () => {
               className="px-4 mt-2 mb-2 bg-[#fff] py-3 focus:outline-none border-[#e0cacd] focus:border-[#dd9ba0] border-[0.2rem] rounded-xl y-3 w-full"
               onChange={handleOnchange}
               value={data.fullName}
-              onBlur={(e) => handleBlur(e)}
+              onBlur={e => handleBlur(e)}
             />
             <div className="pb-2 text-[#d52e74]">{error.fullName}</div>
           </div>

@@ -1,24 +1,24 @@
-"use client";
-import { getAllPost } from "@/api/api";
-import Pagination from "./Pagination";
-import { useAppDispatch } from "@/redux/hook/hook";
-import { setStateNav } from "@/redux/reducers/slices/NavbarSlice";
-import { IpageEdit } from "@/types/next-auth";
-import React, { useEffect, useRef, useState } from "react";
-import { MdEmail, MdOutlineMoreHoriz } from "react-icons/md";
-import LoadingBar from "react-top-loading-bar";
+'use client';
+import { getAllPost } from '@/api/api';
+import Pagination from './Pagination';
+import { useAppDispatch } from '@/redux/hook/hook';
+import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
+import { IpageEdit } from '@/types/next-auth';
+import React, { useEffect, useRef, useState } from 'react';
+import { MdEmail, MdOutlineMoreHoriz } from 'react-icons/md';
+import LoadingBar from 'react-top-loading-bar';
 import {
   FaCircleCheck,
   FaFacebook,
   FaLink,
   FaPencil,
   FaTwitter,
-} from "react-icons/fa6";
-import { TruncateMarkdown } from "@/Utils/functions";
-import { useRouter } from "next/navigation";
-import Tippy from "@tippyjs/react";
-import { IoIosMore } from "react-icons/io";
-import { message } from "antd";
+} from 'react-icons/fa6';
+import { TruncateMarkdown } from '@/Utils/functions';
+import { useRouter } from 'next/navigation';
+import Tippy from '@tippyjs/react';
+import { IoIosMore } from 'react-icons/io';
+import { message } from 'antd';
 const PostList = ({ types }: any) => {
   const router = useRouter();
   const ref = useRef<any>(null);
@@ -38,9 +38,9 @@ const PostList = ({ types }: any) => {
     pageNumber: 1,
     totalPage: 1,
     totalCount: 0,
-    searchTerm: "",
-    sortField: "",
-    sortOrder: "",
+    searchTerm: '',
+    sortField: '',
+    sortOrder: '',
   });
   useEffect(() => {
     const handleGetData = async () => {
@@ -79,7 +79,7 @@ const PostList = ({ types }: any) => {
     const url = window.location.href; // Lấy URL hiện tại của trang
     window.open(
       `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-      "_blank"
+      '_blank',
     );
   };
 
@@ -88,9 +88,9 @@ const PostList = ({ types }: any) => {
     const url = window.location.href; // Lấy URL hiện tại của trang
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        "Xem bài viết này! " + url
+        'Xem bài viết này! ' + url,
       )}`,
-      "_blank"
+      '_blank',
     );
   };
 
@@ -98,17 +98,17 @@ const PostList = ({ types }: any) => {
     const url = window.location.href; // Lấy URL hiện tại của trang
     window.open(
       `mailto:?subject=${encodeURIComponent(
-        "Xem bài viết này"
+        'Xem bài viết này',
       )}&body=${encodeURIComponent(
-        "Tôi muốn chia sẻ bài viết này với bạn: " + url
-      )}`
+        'Tôi muốn chia sẻ bài viết này với bạn: ' + url,
+      )}`,
     );
   };
 
   const handleCopyLink = (id: number) => {
     const url = window.location.href + `/${id}`; // Lấy URL hiện tại của trang
     navigator.clipboard.writeText(url).then(() => {
-      messageApi.success("Copy thành công");
+      messageApi.success('Copy thành công');
     });
   };
 
@@ -208,7 +208,7 @@ const PostList = ({ types }: any) => {
                   </div>
                   <div className="text-[#636363]">
                     <TruncateMarkdown
-                      content={post?.blog?.content || ""}
+                      content={post?.blog?.content || ''}
                       limit={50}
                     />
                   </div>

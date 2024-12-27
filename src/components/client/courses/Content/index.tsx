@@ -1,6 +1,6 @@
-import React from "react";
-import ResultCourse from "./ResultCourse";
-import ContentMain from "./ContentMain";
+import React from 'react';
+import ResultCourse from './ResultCourse';
+import ContentMain from './ContentMain';
 
 const Content = ({ data }: any) => {
   return (

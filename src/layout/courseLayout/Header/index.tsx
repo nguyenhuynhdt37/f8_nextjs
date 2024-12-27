@@ -1,9 +1,9 @@
-"use client";
-import Progressbar from "@/components/client/learning/header/Progressbar";
-import { useRouter } from "next/navigation";
-import { useRef } from "react";
-import { FaChevronLeft } from "react-icons/fa6";
-import LoadingBar from "react-top-loading-bar";
+'use client';
+import Progressbar from '@/components/client/learning/header/Progressbar';
+import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
+import { FaChevronLeft } from 'react-icons/fa6';
+import LoadingBar from 'react-top-loading-bar';
 const Header = ({ data }: { data: any }) => {
   const router = useRouter();
   const ref = useRef<any>(null);
@@ -12,7 +12,7 @@ const Header = ({ data }: { data: any }) => {
     router.back();
   };
   const handleBackHome = () => {
-    router.push("/");
+    router.push('/');
   };
   return (
     <header>

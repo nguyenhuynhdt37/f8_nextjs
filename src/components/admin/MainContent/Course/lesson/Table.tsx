@@ -1,12 +1,11 @@
-import React, { useRef, useState } from "react";
-import Pagination from "../../Pagination";
-import { message, Modal, Switch } from "antd";
-import Delete from "./Delete";
-import { CourseActive } from "@/api/api";
-import LoadingBar from "react-top-loading-bar";
-import { useOutsideClick } from "@/hook/useOutsideClick";
-import Link from "next/link";
-import { log } from "console";
+import React, { useRef, useState } from 'react';
+import Pagination from '../../Pagination';
+import { message, Modal, Switch } from 'antd';
+import Delete from './Delete';
+import { CourseActive } from '@/api/api';
+import LoadingBar from 'react-top-loading-bar';
+import { useOutsideClick } from '@/hook/useOutsideClick';
+import Link from 'next/link';
 
 const Table = ({ data, params, setParams, setLoadData }: any) => {
   const ref = useRef<any>(null);
@@ -27,8 +26,8 @@ const Table = ({ data, params, setParams, setLoadData }: any) => {
       setLoadData((prev: number) => (prev += 1));
     } else {
       messageApi.open({
-        type: "error",
-        content: "Có lỗi xẩy ra khi thay đổi",
+        type: 'error',
+        content: 'Có lỗi xẩy ra khi thay đổi',
       });
     }
   };

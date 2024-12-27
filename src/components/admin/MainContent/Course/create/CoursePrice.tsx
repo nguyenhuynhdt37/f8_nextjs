@@ -2,7 +2,7 @@ const CoursePrice = ({ data, setData, error, setError }: any) => {
   const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError({
       ...error,
-      [e.target.name]: "",
+      [e.target.name]: '',
     });
     const newValue = e.target.value;
     if (/^\d*$/.test(newValue)) {
@@ -16,16 +16,16 @@ const CoursePrice = ({ data, setData, error, setError }: any) => {
     const name = e.target.name;
     const value = e.target.value;
 
-    if (name === "price" && value.length === 0) {
+    if (name === 'price' && value.length === 0) {
       setError({
         ...error,
-        [name]: "Giá không được bỏ trống",
+        [name]: 'Giá không được bỏ trống',
       });
     }
-    if (name === "priceOld" && value.length === 0) {
+    if (name === 'priceOld' && value.length === 0) {
       setError({
         ...error,
-        [name]: "Giá cũ không được bỏ trống",
+        [name]: 'Giá cũ không được bỏ trống',
       });
     }
   };
@@ -80,7 +80,7 @@ const CoursePrice = ({ data, setData, error, setError }: any) => {
             <input
               type="text"
               name="price"
-              value={data.price || ""}
+              value={data.price || ''}
               onBlur={handleSetErrror}
               onChange={handleOnchange}
               placeholder="Giá Hiện tại (VNĐ) ...."
@@ -91,7 +91,7 @@ const CoursePrice = ({ data, setData, error, setError }: any) => {
             </div>
             <div className="text-[1.4rem] pt-4 font-medium">Giá cũ</div>
             <input
-              value={data?.priceOld || ""}
+              value={data?.priceOld || ''}
               name="priceOld"
               placeholder="Nhập giá (VND) ..."
               type="text"

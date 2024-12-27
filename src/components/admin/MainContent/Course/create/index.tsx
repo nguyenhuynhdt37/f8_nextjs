@@ -1,14 +1,14 @@
-"use client";
-import RichTextEditor from "@/components/RichTextEditor";
-import { message } from "antd";
-import { useState } from "react";
+'use client';
+import RichTextEditor from '@/components/RichTextEditor';
+import { message } from 'antd';
+import { useState } from 'react';
 
-import CoursePrice from "./CoursePrice";
-import Levels from "./Levels";
-import { hasValue } from "@/Utils/functions";
-import { CourseCreate } from "@/api/api";
-import { useRouter } from "next/navigation";
-import Banner from "./Banner";
+import CoursePrice from './CoursePrice';
+import Levels from './Levels';
+import { hasValue } from '@/Utils/functions';
+import { CourseCreate } from '@/api/api';
+import { useRouter } from 'next/navigation';
+import Banner from './Banner';
 
 interface ICourseCreate {
   title: string;
@@ -22,19 +22,19 @@ interface ICourseCreate {
 const CreateCourse = ({ levels }: any) => {
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
-  const [resultsAfterStudying, setResultsAfterStudying] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [resultsAfterStudying, setResultsAfterStudying] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [error, setError] = useState<any>();
-  const [courseSuggestions, setCourseSuggestions] = useState<string>("");
-  const [introduce, setIntroduce] = useState<string>("");
+  const [courseSuggestions, setCourseSuggestions] = useState<string>('');
+  const [introduce, setIntroduce] = useState<string>('');
   const [data, setData] = useState<ICourseCreate>({
-    title: "",
+    title: '',
     banner: null,
     levelId: levels[0]?.id,
     price: undefined,
     priceOld: undefined,
     isFree: true,
-    slogan: "",
+    slogan: '',
   });
   const handleChoiseCourse = (id: any) => {
     setData({
@@ -45,16 +45,16 @@ const CreateCourse = ({ levels }: any) => {
   const handleSetErrror = (e: any) => {
     const name = e.target.name;
     const value = e.target.value;
-    if (name === "title" && value.length === 0) {
+    if (name === 'title' && value.length === 0) {
       setError({
         ...error,
-        [name]: "Tiêu đề không được bỏ trống",
+        [name]: 'Tiêu đề không được bỏ trống',
       });
     }
-    if (name === "slogan" && value.length === 0) {
+    if (name === 'slogan' && value.length === 0) {
       setError({
         ...error,
-        [name]: "Slogan không được bỏ trống",
+        [name]: 'Slogan không được bỏ trống',
       });
     }
   };
@@ -64,7 +64,7 @@ const CreateCourse = ({ levels }: any) => {
     if (!data?.title) {
       setError((prevError: any) => ({
         ...prevError,
-        title: "Tiêu đề không được bỏ trống",
+        title: 'Tiêu đề không được bỏ trống',
       }));
       hasError = true;
     }
@@ -72,7 +72,7 @@ const CreateCourse = ({ levels }: any) => {
     if (!data?.slogan) {
       setError((prevError: any) => ({
         ...prevError,
-        slogan: "Slogan không được bỏ trống",
+        slogan: 'Slogan không được bỏ trống',
       }));
       hasError = true;
     }
@@ -81,7 +81,7 @@ const CreateCourse = ({ levels }: any) => {
       if (!data?.price || data?.price === 0) {
         setError((prevError: any) => ({
           ...prevError,
-          price: "Giá không được bỏ trống",
+          price: 'Giá không được bỏ trống',
         }));
         hasError = true;
       }
@@ -89,7 +89,7 @@ const CreateCourse = ({ levels }: any) => {
       if (!data?.priceOld || data?.priceOld === 0) {
         setError((prevError: any) => ({
           ...prevError,
-          priceOld: "Giá cũ không được bỏ trống",
+          priceOld: 'Giá cũ không được bỏ trống',
         }));
         hasError = true;
       }
@@ -97,49 +97,49 @@ const CreateCourse = ({ levels }: any) => {
 
     if (hasError) {
       messageApi.open({
-        type: "error",
-        content: "Vui lòng nhập thông tin đầy đủ",
+        type: 'error',
+        content: 'Vui lòng nhập thông tin đầy đủ',
       });
       return;
     }
 
     const formData = new FormData();
-    formData.append("CourseCreate.LevelId", data?.levelId?.toString() || "");
-    formData.append("CourseCreate.Title", data?.title || "");
-    formData.append("CourseCreate.Image", data?.banner || "");
-    formData.append("CourseCreate.introduce", introduce || "");
+    formData.append('CourseCreate.LevelId', data?.levelId?.toString() || '');
+    formData.append('CourseCreate.Title', data?.title || '');
+    formData.append('CourseCreate.Image', data?.banner || '');
+    formData.append('CourseCreate.introduce', introduce || '');
     formData.append(
-      "CourseDetailCreate.IsFree",
-      data?.isFree ? "true" : "false"
+      'CourseDetailCreate.IsFree',
+      data?.isFree ? 'true' : 'false',
     );
     if (!data?.isFree) {
       formData.append(
-        "CourseDetailCreate.Price",
-        data?.price?.toString() || ""
+        'CourseDetailCreate.Price',
+        data?.price?.toString() || '',
       );
       formData.append(
-        "CourseDetailCreate.PriceOld",
-        data?.priceOld?.toString() || ""
+        'CourseDetailCreate.PriceOld',
+        data?.priceOld?.toString() || '',
       );
     }
-    formData.append("CourseDetailCreate.Description", description || "");
+    formData.append('CourseDetailCreate.Description', description || '');
     formData.append(
-      "CourseDetailCreate.ResultsAfterStudying",
-      resultsAfterStudying || ""
+      'CourseDetailCreate.ResultsAfterStudying',
+      resultsAfterStudying || '',
     );
-    formData.append("CourseDetailCreate.Slogan", data?.slogan || "");
+    formData.append('CourseDetailCreate.Slogan', data?.slogan || '');
 
     const res = await CourseCreate(formData);
     if (res?.statusCode === 200 || res?.statusCode === 200) {
       messageApi.open({
-        type: "success",
-        content: "Tạo mới thành công",
+        type: 'success',
+        content: 'Tạo mới thành công',
       });
-      router.push("/admin/course");
+      router.push('/admin/course');
     } else {
       messageApi.open({
-        type: "error",
-        content: "Có lỗi xẩy ra, vui lòng thử lại sau",
+        type: 'error',
+        content: 'Có lỗi xẩy ra, vui lòng thử lại sau',
       });
     }
   };
@@ -152,12 +152,12 @@ const CreateCourse = ({ levels }: any) => {
         <input
           onBlur={handleSetErrror}
           type="text"
-          name={"title"}
+          name={'title'}
           value={data.title}
-          onChange={(e) => {
+          onChange={e => {
             setError({
               ...error,
-              [e.target.name]: "",
+              [e.target.name]: '',
             });
             setData({
               ...data,
@@ -176,14 +176,14 @@ const CreateCourse = ({ levels }: any) => {
             <input
               onBlur={handleSetErrror}
               type="text"
-              name={"slogan"}
+              name={'slogan'}
               value={data.slogan}
               className="w-full mt-10 rounded-xl placeholder-[#908e8e] text-[1.4rem] py-4 px-10 shadow-lg text-[#000] focus:outline-none bg-[#fff]"
               placeholder="Slogan ...."
-              onChange={(e) => {
+              onChange={e => {
                 setError({
                   ...error,
-                  [e.target.name]: "",
+                  [e.target.name]: '',
                 });
                 setData({
                   ...data,

@@ -1,8 +1,8 @@
-import PostList from "@/components/client/post/PostList";
-import PostListByType from "@/components/client/post/PostListByType/page";
-import { useCookie } from "@/hook/useCookie";
-import { redirect } from "next/navigation";
-import React from "react";
+import PostList from '@/components/client/post/PostList';
+import PostListByType from '@/components/client/post/PostListByType/page';
+import { useCookie } from '@/hook/useCookie';
+import { redirect } from 'next/navigation';
+import React from 'react';
 interface Iprops {
   params: { id: string };
 }
@@ -12,9 +12,9 @@ const PostPageByPostType = async ({ params }: Iprops) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/post/all/type`,
     {
-      method: "GET",
-      headers: { "Content-Type": "application/json", Cookie: cookieHeader },
-    }
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
+    },
   );
 
   if (!res.ok) {

@@ -1,5 +1,5 @@
-import { cookies } from "next/headers";
-import Link from "next/link";
+import { cookies } from 'next/headers';
+import Link from 'next/link';
 interface CoursePageProps {
   params: { id: string };
 }
@@ -21,7 +21,7 @@ const NotFoundChapter = async (context: CoursePageProps) => {
             </div>
             <div className="py-2"></div>
             <div className="text-center pt-10">
-              <Link href={"/"}>
+              <Link href={'/'}>
                 <button className="text-[1.7rem] py-2 px-10 text-[#fff] rounded-full bg-[#0093fc]">
                   Về trang danh sách chương học
                 </button>

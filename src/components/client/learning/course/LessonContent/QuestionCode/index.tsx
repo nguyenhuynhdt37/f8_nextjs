@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import Editor, { loader } from "@monaco-editor/react";
-import * as esprima from "esprima";
-import { getQuessonCode, SaveCodeUser, SubmitCode } from "@/api/api";
-import { getCurrentMonthAndYear } from "@/Utils/functions";
-import "prismjs/components/prism-typescript";
-import "prism-themes/themes/prism-coldark-cold.css";
-import { FaCheck } from "react-icons/fa6";
-import confetti from "canvas-confetti";
-import { motion } from "framer-motion";
-import { log } from "node:console";
+import React, { useEffect, useRef, useState } from 'react';
+import Editor, { loader } from '@monaco-editor/react';
+import * as esprima from 'esprima';
+import { getQuessonCode, SaveCodeUser, SubmitCode } from '@/api/api';
+import { getCurrentMonthAndYear } from '@/Utils/functions';
+import 'prismjs/components/prism-typescript';
+import 'prism-themes/themes/prism-coldark-cold.css';
+import { FaCheck } from 'react-icons/fa6';
+import confetti from 'canvas-confetti';
+import { motion } from 'framer-motion';
+import { log } from 'node:console';
 
 const QuessonCode = ({ id, courseId }: any) => {
   const [data, setData] = useState<any>(null);
-  const [preCode, setPreCode] = useState<string>("");
+  const [preCode, setPreCode] = useState<string>('');
   const editorRef = useRef<any>(null);
   const timeout = useRef<any>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -27,7 +27,7 @@ const QuessonCode = ({ id, courseId }: any) => {
         setPreCode(
           res?.data?.userCode?.SubmittedCode ||
             res?.data?.quesson?.starterCode ||
-            ""
+            '',
         );
       }
     };
@@ -35,7 +35,7 @@ const QuessonCode = ({ id, courseId }: any) => {
   }, [id]);
 
   useEffect(() => {
-    loader.init().then((monaco) => setMonacoInstance(monaco));
+    loader.init().then(monaco => setMonacoInstance(monaco));
   }, []);
   useEffect(() => {
     if (animateError) {
@@ -77,7 +77,7 @@ const QuessonCode = ({ id, courseId }: any) => {
           });
         } else {
           const errorMessages: string[] = [];
-          errorMessages.push("Câu trả lời chưa chính xác");
+          errorMessages.push('Câu trả lời chưa chính xác');
           setErrors(errorMessages);
           setAnimateError(true);
           return;
@@ -98,22 +98,22 @@ const QuessonCode = ({ id, courseId }: any) => {
 
       // Thêm lỗi vào danh sách
       errorMessages.push(
-        `Line ${lineNumber}, Column ${column}: ${description}`
+        `Line ${lineNumber}, Column ${column}: ${description}`,
       );
     }
 
     // Hiển thị lỗi trong editor
     monacoInstance.editor.setModelMarkers(
       editorRef.current.getModel(),
-      "owner",
-      markers
+      'owner',
+      markers,
     );
     if (errorMessages?.length > 0) setAnimateError(true);
     setErrors(errorMessages);
   };
   const handleEditorDidMount = (editor: any, monaco: any) => {
     editor.updateOptions({
-      autoIndent: "full",
+      autoIndent: 'full',
       suggestOnTriggerCharacters: true,
       wordBasedSuggestions: true,
       quickSuggestions: { other: true, comments: true, strings: true },
@@ -152,23 +152,23 @@ const QuessonCode = ({ id, courseId }: any) => {
         <Editor
           height="400px"
           theme="vs-dark"
-          defaultLanguage={"javascript"}
-          defaultValue={data?.quesson?.starterCode || ""}
+          defaultLanguage={'javascript'}
+          defaultValue={data?.quesson?.starterCode || ''}
           onMount={handleEditorDidMount}
         />
         <div className="flex py-5 text-[1.5rem] px-5 border-b-[0.1rem] items-center justify-between">
-          <div>Bài kiểm tra ({!isResult ? "0" : "1"}/1)</div>
+          <div>Bài kiểm tra ({!isResult ? '0' : '1'}/1)</div>
           <div className="" onClick={handleCheckSyntax}>
             <motion.button
               initial={{ scale: 1 }}
               animate={animateError ? { scale: [1, 1.1, 1] } : {}} // Chỉ chạy hiệu ứng khi `is` là true
               transition={{
                 duration: 0.5,
-                ease: "easeOut",
+                ease: 'easeOut',
                 repeat: Infinity, // Lặp vô hạn
               }}
               className={`rounded-full duration-200 px-10 py-3 ${
-                animateError ? "bg-[#c94534]" : "bg-[#3490c9]"
+                animateError ? 'bg-[#c94534]' : 'bg-[#3490c9]'
               } text-[#fff]`}
             >
               Kiểm tra
@@ -186,7 +186,7 @@ const QuessonCode = ({ id, courseId }: any) => {
         ) : (
           <div className="p-5 flex items-center">
             {isResult && <FaCheck className="mr-2 text-[#71af3a]" />}
-            {data?.quesson?.solution || ""}
+            {data?.quesson?.solution || ''}
           </div>
         )}
       </div>

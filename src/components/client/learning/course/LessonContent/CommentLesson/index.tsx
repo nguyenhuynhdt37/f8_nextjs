@@ -1,28 +1,103 @@
-import { Button, Drawer } from "antd";
-import { useState } from "react";
-import { IoIosMore } from "react-icons/io";
-import RichTextEditor from "@/components/RichTextEditor";
-import ReactQuill from "react-quill";
-import ReactReactions from "@charkour/react-reactions";
+import { Button, Drawer } from 'antd';
+import { useEffect, useState } from 'react';
+import { IoIosMore } from 'react-icons/io';
+import RichTextEditor from '@/components/RichTextEditor';
+import ReactQuill from 'react-quill';
+import ReactQuillEditorComment from './ReactQuillEditorComment';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
+import ProfileComment from './ProfileComment';
+import BoxComment from './ProfileComment/BoxComment';
+import * as signalR from '@microsoft/signalr';
+import { getAllCommentByLessonId } from '@/api/api';
+import ContentComment from './ContentComment';
+import { Oooh_Baby } from '@next/font/google';
+import { useAppSelector } from '@/redux/hook/hook';
 const CommentLesson = ({
   title,
   idLesson,
   isShowComment,
   setIsShowComment,
 }: any) => {
-  const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [comment, setComment] = useState("");
+  const [feedback, setFeedback] = useState<any>({
+    id: -1,
+    type: 'add',
+  });
+  const user = useAppSelector(p => p.auth?.user?.user);
+  const [moreComment, setMoreComment] = useState<number[]>([]);
+  const [data, setData] = useState<any>([]);
+  const [isPostReq, setIsPostReq] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [comment, setComment] = useState<string>('');
+  const [connection, setConnection] = useState<any>(null);
+  useEffect(() => {
+    setIsPostReq(true);
+  }, [idLesson]);
+  useEffect(() => {
+    if (idLesson && isShowComment && isPostReq) {
+      const handleRequest = async () => {
+        setLoading(true);
+        const res = await getAllCommentByLessonId(idLesson);
+        if (res?.statusCode === 200) {
+          setData(res?.data);
+        }
+        setIsPostReq(false);
+        setLoading(false);
+      };
+      handleRequest();
+    }
+  }, [idLesson, isShowComment]);
+  console.log('data', data);
+
+  console.log('comment', comment);
+  // Kết nối SignalR khi component mount
+  useEffect(() => {
+    const connect = async () => {
+      const connection = new signalR.HubConnectionBuilder()
+        .withUrl('http://localhost:5217/commentHub')
+        .withAutomaticReconnect()
+        .build();
+
+      connection.on('ReceiveComment', dataCommentNew => {
+        setData(dataCommentNew);
+      });
+      connection.on('Error', error => {
+        console.log(error);
+      });
+
+      try {
+        await connection.start();
+        console.log('SignalR Connected');
+        setConnection(connection);
+      } catch (err: any) {
+        console.error('Connection failed: ', err.toString());
+      }
+    };
+
+    connect();
+
+    return () => {
+      connection?.stop();
+    };
+  }, []);
   const showDrawer = () => {
     setIsShowComment(true);
   };
-
   const closeDrawer = () => {
     setIsShowComment(false);
   };
-  const [reaction, setReaction] = useState(null);
-
-  const handleReactionChange = (newReaction) => {
-    setReaction(newReaction);
+  const handleShowMoreComment = (id: number) => {
+    var comments = moreComment.find(p => p === id);
+    if (!comments) {
+      setMoreComment([...moreComment, id]);
+    }
+  };
+  const handleHideComment = (id: number) => {
+    const newMoreComment = moreComment.filter(item => item !== id);
+    setMoreComment(newMoreComment);
+  };
+  const handleClick = () => {
+    connection.send('SendComment2', 'hello xin chào cả nhà');
   };
   return (
     <div>
@@ -33,122 +108,104 @@ const CommentLesson = ({
         open={isShowComment}
         width="50%" // Chiều rộng modal (50% màn hình)
         bodyStyle={{
-          padding: "20px",
+          padding: '20px',
         }}
       >
         <div className="p-10">
+          {/* Phần nhập bình luận */}
           <div className="flex items-start">
             <img
+              onClick={handleClick}
               className="w-16 h-16 object-cover mr-5 rounded-full"
-              src="https://files.fullstack.edu.vn/f8-prod/user_photos/299093/63fc362173671.jpg"
-              alt=""
+              src={
+                user?.avatar
+                  ? user?.avatar
+                  : 'https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474274OrH/anh-avatar-khong-hinh-cuc-doc-dao_094008300.jpg'
+              }
+              alt="hình ảnh đại diện"
             />
-            {!isEdit ? (
+            {feedback?.id !== 0 ? (
               <div
-                onClick={() => setIsEdit(true)}
+                onClick={() =>
+                  setFeedback({
+                    id: 0,
+                    type: 'add',
+                  })
+                }
                 className="py-4 px-7 cursor-text rounded-2xl text-[#8893a1] bg-[#eef4fc] flex-1"
               >
                 Nhập bình luận mới của bạn
               </div>
             ) : (
-              <div className="">
-                {/* <ReactQuill
-                  value={comment}
-                  onChange={setComment}
-                  className="text-[3rem] border-[0.1rem] rounded-3xl border-[#1d8388]  overflow-hidden  rounded-lg scrollbar-custom"
-                  theme="snow"
-                  style={{ padding: "0px" }}
-                  placeholder="Viết văn bản ở đây..."
-                  modules={{
-                    toolbar: [
-                      [{ header: "1" }, { header: "2" }, { font: [] }],
-                      [{ list: "ordered" }, { list: "bullet" }],
-                      ["bold", "italic", "underline", "strike", "blockquote"],
-                      [{ align: [] }],
-                      [{ color: [] }, { background: [] }],
-                      ["link", "image"],
-                      ["clean"],
-                      ["code-block"],
-                    ],
-                  }}
-                  formats={[
-                    "header",
-                    "font",
-                    "size",
-                    "bold",
-                    "italic",
-                    "underline",
-                    "strike",
-                    "blockquote",
-                    "list",
-                    "bullet",
-                    "indent",
-                    "link",
-                    "image",
-                    "color",
-                    "background",
-                    "align",
-                    "code-block",
-                  ]}
-                /> */}
-                <div className="mt-10 flex justify-end">
-                  <button
-                    onClick={() => setIsEdit(false)}
-                    className="font-medium px-20 py-2.5 mr-5 rounded-3xl text-[#3590f1] border-[#3590f1] border-[0.1rem]"
-                  >
-                    Hủy
-                  </button>
-                  <button className="font-medium px-20 py-2.5 rounded-3xl bg-[#3590f1] text-[#fff] border-[0.1rem]">
-                    Bình luận
-                  </button>
-                </div>
-              </div>
+              <BoxComment
+                lessonId={idLesson}
+                parentId={null}
+                comment={comment}
+                feedback={feedback}
+                setFeedback={setFeedback}
+                setComment={setComment}
+              />
             )}
           </div>
+
+          {/* Đường kẻ phân cách */}
           <div className="h-[0.1rem] my-10 bg-[#f1f1f1]"></div>
-          <div className="flex items-center justify-between">
-            <div className="font-medium text-[1.6rem] text-[#555555]">
-              33 Bình luận
-            </div>
-            <div className=" text-[#a6a6a6]">
-              Nếu thấy bình luận spam, các bạn bấm report giúp admin nhé
-            </div>
-          </div>
-          <div className="mt-10 ">
-            <div className="flex items-center pb-7">
-              <img
-                className="w-16 h-16 object-cover mr-5 rounded-full"
-                src="https://files.fullstack.edu.vn/f8-prod/user_photos/299093/63fc362173671.jpg"
-                alt=""
-              />
-              <div className="flex items-center">
-                <div className="font-medium text-[#44a5c5] mr-5">
-                  Nguyễn Xuân Huỳnh
+          {data?.comments?.length > 0 ? (
+            loading ? (
+              <div className="flex items-center justify-center">
+                <img
+                  className="w-5 mr-2"
+                  src="/images/loading_black.gif"
+                  alt="Loading"
+                />
+                <span>Đang tải bình luận...</span>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between">
+                  <div className="font-medium text-[1.6rem] text-[#555555]">
+                    {data?.commentsCount > 9
+                      ? data?.commentsCount
+                      : '0' + data?.commentsCount}{' '}
+                    Bình luận
+                  </div>
+                  <div className="text-[#a6a6a6]">
+                    Nếu thấy bình luận spam, các bạn bấm report giúp admin nhé
+                  </div>
                 </div>
-                26 phút trước
-              </div>
-            </div>
-            <div className="">content</div>
-            <div className="pt-7 flex items-center justify-between font-medium text-[#217bb3]">
-              <div className="flex">
-                <button className="mr-5">Thích</button>
-                <button>Phản hồi</button>
-              </div>
-              <div className="flex items-center">
-                <div className="">like</div>
-                <div className="">
-                  <IoIosMore />
+                <ContentComment
+                  onShowMoreComment={handleShowMoreComment}
+                  lessonId={idLesson}
+                  feedback={feedback}
+                  setFeedback={setFeedback}
+                  moreComment={moreComment}
+                  handleHideComment={handleHideComment}
+                  data={data}
+                />
+                <div className="h-[0.1rem] my-10 bg-[#f1f1f1]"></div>
+                <div className="flex items-center justify-center font-medium">
+                  Đã tải hết bình luận ❤️
                 </div>
               </div>
+            )
+          ) : loading ? (
+            <>
+              <div className="flex items-center justify-center">
+                <img
+                  className="w-5 mr-2"
+                  src="/images/loading_black.gif"
+                  alt="Loading"
+                />
+                <span>Đang tải bình luận...</span>
+              </div>
+            </>
+          ) : (
+            <div className="flex font-medium text-[#4a88b8] text-[1.4rem] items-center justify-center">
+              Hãy là người bình luận đầu tiên 😊
             </div>
-          </div>
+          )}
         </div>
       </Drawer>
-      <ReactReactions
-        reactions={["like", "love", "haha", "wow", "sad", "angry"]}
-        onReactionChange={handleReactionChange}
-        selectedReaction={reaction}
-      />
     </div>
   );
 };

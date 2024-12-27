@@ -1,14 +1,14 @@
-"use client";
-import { convertSecondsToYMDHMS } from "@/Utils/functions";
-import { memo, useRef, useState } from "react";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa6";
-import { FaCircleCheck } from "react-icons/fa6";
-import { FaCirclePlay } from "react-icons/fa6";
-import { GiBeastEye } from "react-icons/gi";
-import { FaCode } from "react-icons/fa";
-import { MdEventNote } from "react-icons/md";
-import { FaBluesky } from "react-icons/fa6";
-import LoadingBar from "react-top-loading-bar";
+'use client';
+import { convertSecondsToYMDHMS } from '@/Utils/functions';
+import { memo, useRef, useState } from 'react';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa6';
+import { FaCircleCheck } from 'react-icons/fa6';
+import { FaCirclePlay } from 'react-icons/fa6';
+import { GiBeastEye } from 'react-icons/gi';
+import { FaCode } from 'react-icons/fa';
+import { MdEventNote } from 'react-icons/md';
+import { FaBluesky } from 'react-icons/fa6';
+import LoadingBar from 'react-top-loading-bar';
 
 interface IProps {
   isShowSideBar: boolean;
@@ -31,9 +31,9 @@ const SideBar = ({
   ]);
 
   const handleShowLesson = (id: number) => {
-    const value = activeShowGroupLesson.find((value) => value === id);
+    const value = activeShowGroupLesson.find(value => value === id);
     if (value) {
-      const newarray = activeShowGroupLesson.filter((v) => v !== value);
+      const newarray = activeShowGroupLesson.filter(v => v !== value);
       setActiveShowGroupLesson(newarray);
     } else {
       setActiveShowGroupLesson([...activeShowGroupLesson, id]);
@@ -42,7 +42,7 @@ const SideBar = ({
   return (
     <div
       className={`${
-        isShowSideBar ? "col-span-1" : "hidden"
+        isShowSideBar ? 'col-span-1' : 'hidden'
       }  scrollbar-custom mb-[5rem] relative overflow-y-scroll`}
     >
       <LoadingBar color="#0066df" ref={ref} />
@@ -62,7 +62,7 @@ const SideBar = ({
                     {Index + index}. {groupLesson?.name}
                   </div>
                   <div className="text-[1.3rem] text-[#29303b]">
-                    {groupLesson?.length || 0} |{" "}
+                    {groupLesson?.length || 0} |{' '}
                     {convertSecondsToYMDHMS(
                       groupLesson?.lectureDetails?.reduce(
                         (data: number, item: any) => {
@@ -71,14 +71,14 @@ const SideBar = ({
                           }
                           return data;
                         },
-                        0
-                      )
+                        0,
+                      ),
                     )}
                   </div>
                 </div>
                 <button className="pe-3">
                   {activeShowGroupLesson.find(
-                    (value) => value === groupLesson?.id
+                    value => value === groupLesson?.id,
                   ) ? (
                     <FaAngleUp />
                   ) : (
@@ -88,11 +88,9 @@ const SideBar = ({
               </div>
               <div
                 className={`lesson ${
-                  activeShowGroupLesson.find(
-                    (value) => value === groupLesson?.id
-                  )
-                    ? "block"
-                    : "hidden"
+                  activeShowGroupLesson.find(value => value === groupLesson?.id)
+                    ? 'block'
+                    : 'hidden'
                 }`}
               >
                 {groupLesson?.lectureDetails?.map(
@@ -103,14 +101,14 @@ const SideBar = ({
                           onShowLesson(
                             lesson?.id,
                             groupLesson?.id,
-                            lesson?.userLessons?.length > 0 ? true : false
+                            lesson?.userLessons?.length > 0 ? true : false,
                           )
                         }
                         key={lesson?.id}
                         className={`flex justify-between cursor-pointer pr-10 ps-14 py-4 ${
                           lessonActive?.lessonId === lesson?.id
-                            ? "bg-[#fcdcd3]"
-                            : "hover:bg-[#f7f8fa]"
+                            ? 'bg-[#fcdcd3]'
+                            : 'hover:bg-[#f7f8fa]'
                         }`}
                       >
                         <div className="">
@@ -139,7 +137,7 @@ const SideBar = ({
                               )}
                             {lesson?.lessonType?.id === 1 &&
                               convertSecondsToYMDHMS(
-                                lesson?.lessonVideo?.duration
+                                lesson?.lessonVideo?.duration,
                               )}
                           </div>
                         </div>
@@ -150,7 +148,7 @@ const SideBar = ({
                         )}
                       </div>
                     );
-                  }
+                  },
                 )}
               </div>
             </div>

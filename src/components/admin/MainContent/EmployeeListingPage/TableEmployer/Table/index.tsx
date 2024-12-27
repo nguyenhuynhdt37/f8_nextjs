@@ -1,13 +1,13 @@
-import { IUser } from "@/types/next-auth";
-import { Modal } from "antd";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
-import { CiCircleMore, CiEdit, CiUser } from "react-icons/ci";
-import { TiDeleteOutline } from "react-icons/ti";
-import ChildDelete from "../ChildDelete";
-import { AiOutlineDelete } from "react-icons/ai";
-import LoadingBar from "react-top-loading-bar";
+import { IUser } from '@/types/next-auth';
+import { Modal } from 'antd';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { CiCircleMore, CiEdit, CiUser } from 'react-icons/ci';
+import { TiDeleteOutline } from 'react-icons/ti';
+import ChildDelete from '../ChildDelete';
+import { AiOutlineDelete } from 'react-icons/ai';
+import LoadingBar from 'react-top-loading-bar';
 const Table = ({ data }: { data: IUser[] | undefined }) => {
   const router = useRouter();
   const [showModal, setShowModal] = useState<number>(-1);
@@ -35,10 +35,10 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [modalRef]);
   return (
@@ -78,7 +78,7 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((item) => (
+          {data?.map(item => (
             <tr
               onClick={() => handleRedirect(+item?.id)}
               className="cursor-pointer hover:bg-[#fdf9f7]"
@@ -92,7 +92,7 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
                   <img
                     src={
                       item?.avatar ||
-                      "https://fullstack.edu.vn/assets/f8-icon-lV2rGpF0.png"
+                      'https://fullstack.edu.vn/assets/f8-icon-lV2rGpF0.png'
                     }
                     alt="John Michael"
                     className="relative inline-block h-14 w-14 mr-5 !rounded-full object-cover object-center"
@@ -116,12 +116,12 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
                   <div
                     className={`relative grid select-none items-center whitespace-nowrap rounded-md px-3 py-1 font-sans text-[1.1rem] font-medium uppercase ${
                       item.isActive === 1
-                        ? "bg-green-500/20 text-green-900"
-                        : "bg-[#fee4e2] text-[#883c3a]"
+                        ? 'bg-green-500/20 text-green-900'
+                        : 'bg-[#fee4e2] text-[#883c3a]'
                     } `}
                   >
                     <span className="">
-                      {item?.isActive === 1 ? "Đã kích hoạt" : "Chưa kích hoạt"}
+                      {item?.isActive === 1 ? 'Đã kích hoạt' : 'Chưa kích hoạt'}
                     </span>
                   </div>
                 </div>
@@ -130,7 +130,7 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
                 {Number(item?.id) !== showModal && (
                   <button
                     className="relative"
-                    onClick={(e) => handleMore(e, +item?.id)}
+                    onClick={e => handleMore(e, +item?.id)}
                   >
                     <CiCircleMore className="text-[2.4rem] text-[#cccccc]" />
                   </button>
@@ -138,12 +138,12 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
                 {Number(item?.id) === showModal && (
                   <button
                     className="relative"
-                    onClick={(e) => handleMore(e, +item?.id)}
+                    onClick={e => handleMore(e, +item?.id)}
                   >
                     <TiDeleteOutline className="text-[2.4rem] text-[#cccccc]" />
                     <div
                       ref={modalRef}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={e => e.stopPropagation()}
                       className="absolute z-10 w-52 overflow-hidden rounded-xl bg-[#fff] text-[#252424] shadow-lg"
                     >
                       <Link href={`/admin/users/edit/${item?.id}`}>

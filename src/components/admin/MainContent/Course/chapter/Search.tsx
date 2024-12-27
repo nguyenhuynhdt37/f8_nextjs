@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react';
 
 const Search = ({ pageEdit, setPageEdit, setLoadData }: any) => {
   const timeoutRef = useRef<number | null>(null);
-  const [data, setData] = useState<string>("");
+  const [data, setData] = useState<string>('');
   const handleSearch = (e: any) => {
     const value = e.target.value;
     setData(value);

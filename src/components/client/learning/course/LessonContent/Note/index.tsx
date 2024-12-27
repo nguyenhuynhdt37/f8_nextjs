@@ -1,9 +1,9 @@
-"use client";
-import { ViewNoteLesson } from "@/api/api";
-import { log } from "console";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { GoHeartFill } from "react-icons/go";
+'use client';
+import { ViewNoteLesson } from '@/api/api';
+
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { GoHeartFill } from 'react-icons/go';
 
 const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
   const [note, setNote] = useState<any>(null);
@@ -14,7 +14,7 @@ const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
       if (data?.statusCode === 200) {
         setNote(data?.data);
       } else {
-        router.push("/404");
+        // router.push('/404');
       }
     };
     getData();

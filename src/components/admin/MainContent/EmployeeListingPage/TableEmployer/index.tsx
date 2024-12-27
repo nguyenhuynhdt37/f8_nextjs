@@ -1,11 +1,11 @@
-"use client";
-import { DeleteUser, getAllUser } from "@/api/api";
-import { useEffect, useRef, useState } from "react";
-import { IpageEdit, IPageListProps, IUser } from "@/types/next-auth";
-import LoadingPage from "@/components/client/LoadingPage";
-import Table from "./Table";
-import { message } from "antd";
-import Paganation from "../../Pagination";
+'use client';
+import { DeleteUser, getAllUser } from '@/api/api';
+import { useEffect, useRef, useState } from 'react';
+import { IpageEdit, IPageListProps, IUser } from '@/types/next-auth';
+import LoadingPage from '@/components/client/LoadingPage';
+import Table from './Table';
+import { message } from 'antd';
+import Paganation from '../../Pagination';
 
 const TableEmployer = () => {
   const timeoutRef = useRef<number | null>(null);
@@ -13,16 +13,16 @@ const TableEmployer = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadData, setLoadData] = useState<number>(0);
   const [pageList, setPageList] = useState<IPageListProps<IUser> | undefined>(
-    undefined
+    undefined,
   );
   const [pageEdit, setPageEdit] = useState<IpageEdit>({
     pageSize: 10,
     pageNumber: 1,
     totalPage: 0,
     totalCount: 0,
-    searchTerm: "",
-    sortField: "",
-    sortOrder: "",
+    searchTerm: '',
+    sortField: '',
+    sortOrder: '',
   });
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const TableEmployer = () => {
       clearTimeout(timeoutRef.current);
     }
     timeoutRef.current = window.setTimeout(() => {
-      setLoadData((prev) => prev + 1);
+      setLoadData(prev => prev + 1);
     }, 700);
   };
   return (
@@ -87,7 +87,7 @@ const TableEmployer = () => {
         />
       </div>
       <div className="py-4 text-[2.4rem] font-bold">
-        Tổng số người dùng: {pageEdit?.totalCount || "0"}
+        Tổng số người dùng: {pageEdit?.totalCount || '0'}
       </div>
       <div className="relative flex h-full w-full flex-col rounded-xl bg-white bg-clip-border text-slate-700 shadow-md">
         <div className="relative mx-4 mt-4 overflow-hidden rounded-none bg-white bg-clip-border text-slate-700"></div>

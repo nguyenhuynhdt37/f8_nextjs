@@ -1,20 +1,20 @@
-"use client";
-import { useState } from "react";
-import OptionType from "./OptionType";
-import Lesson from "./Lesson";
-import Question from "./Question";
-import Note from "./Note";
+'use client';
+import { useState } from 'react';
+import OptionType from './OptionType';
+import Lesson from './Lesson';
+import Question from './Question';
+import Note from './Note';
 
 const LessonCreate = ({ courseId, grouplessons, lessonType }: any) => {
   const [lessonTypeIsChoise, setLessonTypeIsChoise] = useState(lessonType[0]);
   const [grouplessonIsChoise, setGrouplessonIsChoise] = useState(
-    grouplessons[0]
+    grouplessons[0],
   );
-  const [title, setTitle] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [title, setTitle] = useState<string>('');
+  const [error, setError] = useState<string>('');
   const handleSetErrror = (e: any) => {
     if (!e.target.value) {
-      setError("Tiêu đề không được bỏ trống");
+      setError('Tiêu đề không được bỏ trống');
     }
   };
   return (
@@ -22,10 +22,10 @@ const LessonCreate = ({ courseId, grouplessons, lessonType }: any) => {
       <input
         onBlur={handleSetErrror}
         type="text"
-        name={"title"}
+        name={'title'}
         value={title}
-        onChange={(e) => {
-          setError("");
+        onChange={e => {
+          setError('');
           setTitle(e.target.value);
         }}
         className="w-full rounded-xl placeholder-[#cecdcd] text-[3rem] py-11 px-10 text-[#fff] focus:outline-none bg-[#1e75e5]"

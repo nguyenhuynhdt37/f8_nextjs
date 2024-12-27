@@ -1,5 +1,5 @@
-import React from "react";
-import Course from "./Course";
+import React from 'react';
+import Course from './Course';
 
 const Category = ({ data }: any) => {
   return (

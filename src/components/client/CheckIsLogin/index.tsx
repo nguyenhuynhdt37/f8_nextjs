@@ -1,11 +1,11 @@
-"use client";
-import { logoutApi } from "@/api/api";
-import { useAppDispatch } from "@/redux/hook/hook";
-import { getInfoRedux } from "@/redux/reducers/slices/AuthSlice";
-import { message } from "antd";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import Swal from "sweetalert2";
+'use client';
+import { logoutApi } from '@/api/api';
+import { useAppDispatch } from '@/redux/hook/hook';
+import { getInfoRedux } from '@/redux/reducers/slices/AuthSlice';
+import { message } from 'antd';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 const CheckIsLogin = ({ cookie }: any) => {
   const dispatch = useAppDispatch();
@@ -20,10 +20,10 @@ const CheckIsLogin = ({ cookie }: any) => {
         .catch(() => {
           logoutApi();
           Swal.fire({
-            icon: "info",
-            title: "Thông tin!",
-            text: "Hết phiên đăng nhập.",
-            confirmButtonText: "Đóng",
+            icon: 'info',
+            title: 'Thông tin!',
+            text: 'Hết phiên đăng nhập.',
+            confirmButtonText: 'Đóng',
           });
           return;
         });

@@ -1,21 +1,21 @@
-"use client";
-import ModalAuth from "@/components/client/Header/ModalAuth";
-import ModalUser from "@/components/client/Header/ModalUser";
-import Search from "@/components/client/Header/Search";
-import { useClientCookie } from "@/hook/cookieHeaderClient";
-import { useCookie } from "@/hook/useCookie";
-import { useAppSelector } from "@/redux/hook/hook";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { FiChevronLeft } from "react-icons/fi";
+'use client';
+import ModalAuth from '@/components/client/Header/ModalAuth';
+import ModalUser from '@/components/client/Header/ModalUser';
+import Search from '@/components/client/Header/Search';
+import { useClientCookie } from '@/hook/cookieHeaderClient';
+import { useCookie } from '@/hook/useCookie';
+import { useAppSelector } from '@/redux/hook/hook';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { FiChevronLeft } from 'react-icons/fi';
 const Header = () => {
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector(state => state.auth.user);
   return (
     <header>
       <div className="px-[2.8rem] z-50 fixed top-0 left-0 right-0 h-[6.6rem] border border-bottom-[0.1rem] bg-[#fff] flex items-center justify-between">
         <div className="flex items-center">
           <div className="mr-6">
-            <Link href={"/"}>
+            <Link href={'/'}>
               <img
                 src="https://fullstack.edu.vn/assets/f8-icon-lV2rGpF0.png"
                 alt=""

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const UserInfo = ({ editorValue, setEditorValue }: any) => {
   return (
@@ -7,10 +7,10 @@ const UserInfo = ({ editorValue, setEditorValue }: any) => {
         <div className="mb-2 text-[#605f5f]">Link GitHub</div>
         <input
           value={editorValue.githubLink}
-          name={"githubLink"}
+          name={'githubLink'}
           type="text"
           className="w-full rounded-lg border-[0.1rem] border-[#e5bda7] bg-[#e6e3e1] px-5 py-2 focus:outline-none"
-          onChange={(e) =>
+          onChange={e =>
             setEditorValue({
               ...editorValue,
               githubLink: e.target.value,
@@ -21,7 +21,7 @@ const UserInfo = ({ editorValue, setEditorValue }: any) => {
         <input
           value={editorValue.facebookLink}
           className="w-full rounded-lg border-[0.1rem] border-[#e5bda7] bg-[#e6e3e1] px-5 py-2 focus:outline-none"
-          onChange={(e) =>
+          onChange={e =>
             setEditorValue({
               ...editorValue,
               facebookLink: e.target.value,
@@ -32,7 +32,7 @@ const UserInfo = ({ editorValue, setEditorValue }: any) => {
         <input
           value={editorValue.youtubeLink}
           className="w-full rounded-lg border-[0.1rem] border-[#e5bda7] bg-[#e6e3e1] px-5 py-2 focus:outline-none"
-          onChange={(e) =>
+          onChange={e =>
             setEditorValue({
               ...editorValue,
               youtubeLink: e.target.value,
@@ -43,7 +43,7 @@ const UserInfo = ({ editorValue, setEditorValue }: any) => {
         <input
           value={editorValue.userName}
           className="w-full rounded-lg border-[0.1rem] border-[#e5bda7] bg-[#e6e3e1] px-5 py-2 focus:outline-none"
-          onChange={(e) =>
+          onChange={e =>
             setEditorValue({
               ...editorValue,
               userName: e.target.value,
@@ -54,7 +54,7 @@ const UserInfo = ({ editorValue, setEditorValue }: any) => {
         <input
           value={editorValue.personalWebsite}
           className="w-full rounded-lg border-[0.1rem] border-[#e5bda7] bg-[#e6e3e1] px-5 py-2 focus:outline-none"
-          onChange={(e) =>
+          onChange={e =>
             setEditorValue({
               ...editorValue,
               personalWebsite: e.target.value,

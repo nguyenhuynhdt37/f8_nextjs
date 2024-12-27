@@ -1,22 +1,22 @@
-"use client";
-import Header from "@/layout/courseLayout/Header";
+'use client';
+import Header from '@/layout/courseLayout/Header';
 import {
   FooterBar,
   LessonContent,
   SideBar,
-} from "@/components/client/learning";
-import LoadingPage from "@/components/client/LoadingPage";
-import { useAppSelector } from "@/redux/hook/hook";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { message } from "antd";
-import { activeShowLesson, CheckLessonComplete } from "@/api/api";
-import LoadingBar from "react-top-loading-bar";
-import { group } from "console";
+} from '@/components/client/learning';
+import LoadingPage from '@/components/client/LoadingPage';
+import { useAppSelector } from '@/redux/hook/hook';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { message } from 'antd';
+import { activeShowLesson, CheckLessonComplete } from '@/api/api';
+import LoadingBar from 'react-top-loading-bar';
+import { group } from 'console';
 const Learning = ({ dataLearning, courseId }: any) => {
   const [data, setData] = useState<any>(dataLearning);
   const [messageApi, contextHolder] = message.useMessage();
   const [lessonActive, setLessonActive] = useState<any>(
-    data?.userActiveLessonByCourses[0]
+    data?.userActiveLessonByCourses[0],
   );
 
   const [isCompleteLesson, setIsCompletedLesson] = useState<any>({
@@ -81,7 +81,7 @@ const Learning = ({ dataLearning, courseId }: any) => {
     async (
       idLesson: number,
       groupId: number,
-      isOldCompletedLesson: boolean
+      isOldCompletedLesson: boolean,
     ) => {
       if (idLesson && data?.id) {
         ref.current.continuousStart();
@@ -100,12 +100,12 @@ const Learning = ({ dataLearning, courseId }: any) => {
         }
       } else {
         messageApi.open({
-          type: "warning",
-          content: "không thể lưu trạng thái lưu lịch sử bài học",
+          type: 'warning',
+          content: 'không thể lưu trạng thái lưu lịch sử bài học',
         });
       }
     },
-    []
+    [],
   );
   return (
     <>

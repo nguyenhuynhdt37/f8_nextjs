@@ -1,5 +1,5 @@
-"use client";
-import { useEffect, useState } from "react";
+'use client';
+import { useEffect, useState } from 'react';
 
 export const useClientCookie = (): string | null => {
   const [cookieHeader, setCookieHeader] = useState<string | null>(null);

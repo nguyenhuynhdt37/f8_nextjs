@@ -1,6 +1,6 @@
-import { DeleteUser } from "@/api/api";
-import { message } from "antd";
-import React from "react";
+import { DeleteUser } from '@/api/api';
+import { message } from 'antd';
+import React from 'react';
 
 const ChildDelete = ({ setLoadData, setShowDelete, id }: any) => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -11,20 +11,20 @@ const ChildDelete = ({ setLoadData, setShowDelete, id }: any) => {
     const res = await DeleteUser({ id });
     if (res?.statusCode === 200 || res?.statusCode === 201) {
       messageApi.open({
-        content: "Xoá tài khoản thành công!",
-        type: "success",
+        content: 'Xoá tài khoản thành công!',
+        type: 'success',
       });
 
       setLoadData((prev: any) => prev + 1);
     } else if (res?.statusCode === 400 || res?.statusCode === 401) {
       messageApi.open({
-        content: "Tài khoản đã sử dụng không thể huỷ bỏ!",
-        type: "error",
+        content: 'Tài khoản đã sử dụng không thể huỷ bỏ!',
+        type: 'error',
       });
     } else {
       messageApi.open({
-        content: "Có lỗi trong quá trình thực hiện!",
-        type: "error",
+        content: 'Có lỗi trong quá trình thực hiện!',
+        type: 'error',
       });
     }
     setShowDelete(false);
@@ -50,7 +50,7 @@ const ChildDelete = ({ setLoadData, setShowDelete, id }: any) => {
         </button>
         <button
           className="mx-1 flex-1 rounded-2xl border-0 bg-[#ff3f56] px-4 py-3 text-[#fff]"
-          onClick={(e) => handleDeleteUser(id, e)}
+          onClick={e => handleDeleteUser(id, e)}
         >
           Đồng ý
         </button>

@@ -1,7 +1,7 @@
-"use client";
-import { useAppDispatch } from "@/redux/hook/hook";
-import { setStateNav } from "@/redux/reducers/slices/NavbarSlice";
-import React, { useEffect } from "react";
+'use client';
+import { useAppDispatch } from '@/redux/hook/hook';
+import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
+import React, { useEffect } from 'react';
 const LearningPaths = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {

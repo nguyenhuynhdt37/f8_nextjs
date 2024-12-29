@@ -28,7 +28,7 @@ const Profile = ({ user }: any) => {
         <div className="relative">
           <img
             className="h-[40rem] w-full object-cover rounded-3xl"
-            src="https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/hinh-nen-free-fire-3d-5.jpg"
+            src="https://fullstack.edu.vn//assets/cover-profile-CDYcrPwJ.png"
             alt=""
           />
           <div className="p-3 bg-[#fff] rounded-full absolute left-32 -bottom-36">

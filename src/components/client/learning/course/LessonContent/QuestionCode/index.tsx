@@ -10,9 +10,13 @@ import confetti from 'canvas-confetti';
 import { motion } from 'framer-motion';
 import { log } from 'node:console';
 
-const QuessonCode = ({ id, courseId }: any) => {
+const QuessonCode = ({
+  id,
+  courseId,
+  isCompleteLesson,
+  setIsCompletedLesson,
+}: any) => {
   const [data, setData] = useState<any>(null);
-  const [preCode, setPreCode] = useState<string>('');
   const editorRef = useRef<any>(null);
   const timeout = useRef<any>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -24,11 +28,6 @@ const QuessonCode = ({ id, courseId }: any) => {
       const res = await getQuessonCode(id);
       if (res?.statusCode === 200 || res?.statusCode === 201) {
         setData(res?.data);
-        setPreCode(
-          res?.data?.userCode?.SubmittedCode ||
-            res?.data?.quesson?.starterCode ||
-            '',
-        );
       }
     };
     getdata();
@@ -74,6 +73,10 @@ const QuessonCode = ({ id, courseId }: any) => {
               x: 0.7,
               y: 1,
             },
+          });
+          setIsCompletedLesson({
+            ...isCompleteLesson,
+            isCompleted: true,
           });
         } else {
           const errorMessages: string[] = [];
@@ -124,10 +127,7 @@ const QuessonCode = ({ id, courseId }: any) => {
     // Sự kiện mất focus
     editor.onDidBlurEditorText(async () => {
       const code = editor.getValue();
-      if (code && code !== preCode && code !== data?.quesson?.starterCode) {
-        await SaveCodeUser(id, code);
-        setPreCode(code);
-      }
+      await SaveCodeUser(id, code);
     });
   };
 
@@ -153,7 +153,9 @@ const QuessonCode = ({ id, courseId }: any) => {
           height="400px"
           theme="vs-dark"
           defaultLanguage={'javascript'}
-          defaultValue={data?.quesson?.starterCode || ''}
+          defaultValue={
+            data?.userCode?.submittedCode || data?.quesson?.starterCode || ''
+          }
           onMount={handleEditorDidMount}
         />
         <div className="flex py-5 text-[1.5rem] px-5 border-b-[0.1rem] items-center justify-between">

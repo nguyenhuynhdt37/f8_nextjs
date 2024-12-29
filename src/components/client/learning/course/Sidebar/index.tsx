@@ -59,10 +59,10 @@ const SideBar = ({
               >
                 <div className="">
                   <div className="font-medium text-[1.4rem] pb-2">
-                    {Index + index}. {groupLesson?.name}
+                    {groupLesson?.name}
                   </div>
                   <div className="text-[1.3rem] text-[#29303b]">
-                    {groupLesson?.length || 0} |{' '}
+                    {groupLesson?.lectureDetails?.length} |{' '}
                     {convertSecondsToYMDHMS(
                       groupLesson?.lectureDetails?.reduce(
                         (data: number, item: any) => {
@@ -113,7 +113,7 @@ const SideBar = ({
                       >
                         <div className="">
                           <div className="font-medium pb-2">
-                            {Index + index}. {lesson?.title}
+                            {lesson?.title}
                           </div>
                           <div className="text-[1.3rem] text-[#29303] items-center flex">
                             {lessonActive?.lessonId === lesson?.id && (

@@ -25,7 +25,7 @@ const ModalInfo = ({ data }: any) => {
   };
   return (
     <div
-      className="p-10 absolute top-24 right-16 bg-[#fff] text-[#666666] rounded-2xl w-[28.5rem]"
+      className="p-10 bg-[#fff] text-[#666666] rounded-2xl w-[28.5rem]"
       style={{ boxShadow: '0 -4px 32px #0003' }}
     >
       {contextHolder}

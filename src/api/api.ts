@@ -703,7 +703,7 @@ export const ReportComment = async (idComment: any) => {
 };
 export const DeleteComment = async (idComment: any) => {
   try {
-    const res = await axiosInstance.post(`/lesson/comment/delete/${idComment}`, {
+    const res = await axiosInstance.delete(`/lesson/comment/delete/${idComment}`, {
       withCredentials: true,
     });
     return res.data;
@@ -714,6 +714,36 @@ export const DeleteComment = async (idComment: any) => {
 export const updateComment = async ({idComment, comment}: any) => {
   try {
     const res = await axiosInstance.put(`/lesson/comment/edit/${idComment}`, comment, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const UnlikeComment = async (idComment: any) => {
+  try {
+    const res = await axiosInstance.delete(`/comment/like/unlike/${idComment}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const LikeChangeOrAdd = async (idComment: number, icon: string) => {
+  try {
+    const res = await axiosInstance.post(`/comment/like/add_or_change/${idComment}`,icon ,{
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getProcess = async (courseId: number) => {
+  try {
+    const res = await axiosInstance.get(`/courses/progress/${courseId}` ,{
       withCredentials: true,
     });
     return res.data;

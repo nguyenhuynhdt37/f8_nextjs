@@ -9,7 +9,7 @@ const ProfileByIdPage = async ({ params }: Iprops) => {
   const { id } = params;
   const cookieHeader = useCookie();
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/info/${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/info/${id}`,
     {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },

@@ -110,7 +110,7 @@ const Learning = ({ dataLearning, courseId }: any) => {
   return (
     <>
       {contextHolder}
-      <Header data={data} />
+      <Header data={data} courseId={courseId} />
       <LoadingBar color="#b90021" ref={ref} />
       <div className="">
         {isLoading && <LoadingPage />}

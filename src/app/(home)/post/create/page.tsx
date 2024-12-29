@@ -9,7 +9,7 @@ const PostCreatePage = async () => {
     redirect('/404');
   }
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/post/all/type`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/post/all/type`,
     {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },

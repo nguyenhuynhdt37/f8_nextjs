@@ -1,5 +1,6 @@
 'use client';
 import { ViewNoteLesson } from '@/api/api';
+import confetti from 'canvas-confetti';
 
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -7,6 +8,7 @@ import { GoHeartFill } from 'react-icons/go';
 
 const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
   const [note, setNote] = useState<any>(null);
+  const refTimeOut = React.useRef<any>(null);
   const router = useRouter();
   useEffect(() => {
     const getData = async () => {
@@ -14,19 +16,32 @@ const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
       if (data?.statusCode === 200) {
         setNote(data?.data);
       } else {
-        // router.push('/404');
+        router.push('/404');
       }
     };
     getData();
-  }, []);
+  }, [id]);
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsCompletedLesson({
         ...isCompleteLesson,
         isCompleted: true,
       });
-      clearTimeout(timeout);
+      if (!isCompleteLesson?.isOldCompleted) {
+        confetti({
+          particleCount: 100,
+          spread: 100,
+          origin: {
+            x: 0.7,
+            y: 1,
+          },
+        });
+      }
     }, 10000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
   }, []);
 
   return (

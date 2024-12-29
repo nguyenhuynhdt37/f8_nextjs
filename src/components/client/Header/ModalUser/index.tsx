@@ -4,6 +4,7 @@ import { FaBell } from 'react-icons/fa';
 import 'tippy.js/dist/tippy.css';
 import ModalInfo from './ModaInfo';
 import { useOutsideClick } from '@/hook/useOutsideClick';
+import Tippy from '@tippyjs/react';
 
 const ModalUser = ({ data }: any) => {
   const [visible, setVisible] = useState(false);
@@ -22,20 +23,28 @@ const ModalUser = ({ data }: any) => {
       <div className="">
         <FaBell className="text-3xl mr-8 text-[#707070] hover:text-[#333333] cursor-pointer" />
       </div>
-      <img
-        onClick={handleToggleMenu}
-        className="object-cover cursor-pointer h-12 w-12 rounded-full"
-        src={
-          data?.user?.avatar ||
-          'https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg'
+      <Tippy
+        className="tippy-custom"
+        arrow={false}
+        content={
+          <div ref={menuRef} className="transition ease-in-out duration-500">
+            <ModalInfo data={data} />
+          </div>
         }
-        alt=""
-      />
-      {visible && (
-        <div ref={menuRef} className="transition ease-in-out duration-500">
-          <ModalInfo data={data} />
-        </div>
-      )}
+        interactive={true}
+        placement="bottom"
+        trigger="click"
+      >
+        <img
+          onClick={handleToggleMenu}
+          className="object-cover cursor-pointer h-12 w-12 rounded-full"
+          src={
+            data?.user?.avatar ||
+            'https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg'
+          }
+          alt=""
+        />
+      </Tippy>
     </div>
   );
 };

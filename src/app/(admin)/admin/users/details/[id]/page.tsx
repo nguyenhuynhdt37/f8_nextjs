@@ -27,7 +27,7 @@ const DetailPage = async (context: CoursePageProps) => {
     .join('; ');
   if (!id) redirect('/404');
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/${id}`,
     {
       method: 'GET',
       cache: 'no-store',

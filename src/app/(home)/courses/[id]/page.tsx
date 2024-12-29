@@ -12,7 +12,7 @@ interface CoursePageProps {
 const fetchCourseData = async (id: string) => {
   const cookieHeader = useCookie();
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/${id}`,
     {
       cache: 'no-store',
       headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },
@@ -28,7 +28,7 @@ const fetchCourseData = async (id: string) => {
 const fetchIsRegister = async (id: string) => {
   const cookieHeader = useCookie();
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/user/check-course-is-register/${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/user/check-course-is-register/${id}`,
     {
       cache: 'no-store',
       headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },

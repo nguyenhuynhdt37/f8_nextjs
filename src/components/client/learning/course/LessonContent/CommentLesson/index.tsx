@@ -13,6 +13,7 @@ import { getAllCommentByLessonId } from '@/api/api';
 import ContentComment from './ContentComment';
 import { Oooh_Baby } from '@next/font/google';
 import { useAppSelector } from '@/redux/hook/hook';
+import { EditorState } from 'draft-js';
 const CommentLesson = ({
   title,
   idLesson,
@@ -28,7 +29,7 @@ const CommentLesson = ({
   const [data, setData] = useState<any>([]);
   const [isPostReq, setIsPostReq] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [comment, setComment] = useState<string>('');
+  const [comment, setComment] = useState<any>('');
   const [connection, setConnection] = useState<any>(null);
   useEffect(() => {
     setIsPostReq(true);
@@ -117,11 +118,7 @@ const CommentLesson = ({
             <img
               onClick={handleClick}
               className="w-16 h-16 object-cover mr-5 rounded-full"
-              src={
-                user?.avatar
-                  ? user?.avatar
-                  : 'https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474274OrH/anh-avatar-khong-hinh-cuc-doc-dao_094008300.jpg'
-              }
+              src={user?.avatar ? user?.avatar : '/images/avatar-empty.png'}
               alt="hình ảnh đại diện"
             />
             {feedback?.id !== 0 ? (

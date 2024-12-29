@@ -7,6 +7,7 @@ import Question from './Question';
 import QuessonCode from './QuestionCode';
 import { FaComments } from 'react-icons/fa6';
 import CommentLesson from './CommentLesson';
+import { playSound } from '@/Utils/functions/SoundNumber';
 const LessonContent = ({
   isShowSideBar,
   lessonActive,
@@ -27,6 +28,7 @@ const LessonContent = ({
       !isCompleteLesson?.isPostReq
     ) {
       const completeData = async () => {
+        playSound('/sounds/success.mp3');
         const res = await AddCourseComplete(data?.lesson?.id, courseId);
         if (res?.statusCode === 200 || res?.statusCode === 201) {
           setIsCompletedLesson({
@@ -80,11 +82,16 @@ const LessonContent = ({
         />
       )}
       {data?.lesson?.lessonType?.id === 2 && (
-        <QuessonCode courseId={courseId} id={data?.lesson?.id} />
+        <QuessonCode
+          courseId={courseId}
+          isCompleteLesson={isCompleteLesson}
+          setIsCompletedLesson={setIsCompletedLesson}
+          id={data?.lesson?.id}
+        />
       )}
       <CommentLesson
         title={data?.lesson?.title}
-        idLesson={lessonActive?.lessonId}
+        idLesson={data?.lesson?.id}
         isShowComment={isShowComment}
         setIsShowComment={setIsShowComment}
       />

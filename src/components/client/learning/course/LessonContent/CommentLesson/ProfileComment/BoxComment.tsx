@@ -2,6 +2,8 @@ import React, { use, useState } from 'react';
 import ReactQuillEditorComment from '../ReactQuillEditorComment';
 import { CreateComment, updateComment } from '@/api/api';
 import { message } from 'antd';
+import { playSound } from '@/Utils/functions/SoundNumber';
+import EditorComment from '../EditorComment';
 
 const BoxComment = ({
   lessonId,
@@ -42,6 +44,7 @@ const BoxComment = ({
               content: 'Gửi thành công!',
               duration: 2,
             });
+            playSound('/sounds/commentSound.mp3');
             await new Promise(resolve => setTimeout(resolve, 1000));
             setFeedback({
               id: -1,
@@ -82,6 +85,7 @@ const BoxComment = ({
               content: 'sửa bình luận thành công!',
               duration: 2,
             });
+            playSound('/sounds/commentSound.mp3');
             await new Promise(resolve => setTimeout(resolve, 1000));
             setFeedback({
               id: -1,
@@ -96,10 +100,16 @@ const BoxComment = ({
       }
     }
   };
+  const handleEditorChange = (editorState: any) => {
+    setComment(editorState);
+  };
   return (
     <div className="flex-1">
       {contextHolder}
-      <ReactQuillEditorComment comment={comment} setComment={setComment} />
+      <EditorComment
+        value={comment} // Truyền giá trị editorState vào
+        onChange={handleEditorChange} // Lắng nghe thay đổi
+      />
       <div className="mt-10 flex justify-end">
         <button
           onClick={() =>

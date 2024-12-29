@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { getVideoIdFromUrl } from '@/Utils/functions';
 import { setTimeout } from 'timers';
+import confetti from 'canvas-confetti';
 
 const VideoIframe: React.FC<any> = ({
   data,
@@ -16,13 +17,23 @@ const VideoIframe: React.FC<any> = ({
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [isReady, setIsReady] = useState(false);
   const duration = data?.lessonVideo?.duration || 0;
-  console.log('watch', watchTime / duration, isCompleted?.isCompleted);
+  console.log('watch', watchTime / duration, isCompleted);
   useEffect(() => {
     if (watchTime / duration >= 0.75 && !isCompleted?.isCompleted) {
       setIsCompleted({
         ...isCompleted,
         isCompleted: true,
       });
+      if (!isCompleted?.isOldCompleted) {
+        confetti({
+          particleCount: 100,
+          spread: 100,
+          origin: {
+            x: 0.8,
+            y: 1,
+          },
+        });
+      }
     }
   }, [watchTime]);
   useEffect(() => {

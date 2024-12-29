@@ -1,19 +1,59 @@
 'use client';
+import { getProcess } from '@/api/api';
 import Progressbar from '@/components/client/learning/header/Progressbar';
+import { HubConnectionBuilder } from '@microsoft/signalr';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa6';
 import LoadingBar from 'react-top-loading-bar';
-const Header = ({ data }: { data: any }) => {
+const Header = ({ data, courseId }: { data: any; courseId: number }) => {
   const router = useRouter();
+  const [connection, setConnection] = useState<any>(null);
+  const [progress, setProgress] = useState<any>({});
   const ref = useRef<any>(null);
   const handleGoBack = () => {
     ref.current.continuousStart();
     router.back();
   };
   const handleBackHome = () => {
+    ref.current.continuousStart();
     router.push('/');
   };
+  useEffect(() => {
+    const handleRequest = async () => {
+      const res = await getProcess(courseId);
+      if (res?.statusCode === 200 || res?.statusCode === 201)
+        setProgress(res?.data);
+    };
+    handleRequest();
+  }, []);
+  useEffect(() => {
+    const connect = async () => {
+      const connection = new HubConnectionBuilder()
+        .withUrl(`${process.env.NEXT_PUBLIC_API_BASE_URL}/processHub`)
+        .withAutomaticReconnect()
+        .build();
+
+      connection.on('ReceiveProcess', dataCommentNew => {
+        console.log('dataCommentNew', dataCommentNew);
+        setProgress(dataCommentNew);
+      });
+      connection.on('Error', error => {
+        console.log(error);
+      });
+
+      try {
+        await connection.start();
+        setConnection(connection);
+      } catch (err: any) {
+        console.error('Connection failed: ', err.toString());
+      }
+    };
+    connect();
+    return () => {
+      connection?.stop();
+    };
+  }, []);
   return (
     <header>
       <LoadingBar color="#0066df" ref={ref} />
@@ -24,14 +64,14 @@ const Header = ({ data }: { data: any }) => {
           </button>
           <div onClick={handleBackHome}>
             <img
-              className="w-[3rem] rounded-xl mr-10 hidden md:block"
+              className="w-[3rem] cursor-pointer rounded-xl mr-10 hidden md:block"
               src="/logo/logo1.png"
               alt=""
             />
           </div>
           <div className="font-bold text-[1.4rem]">{data?.title}</div>
         </div>
-        <Progressbar />
+        <Progressbar progress={progress} />
       </div>
     </header>
   );

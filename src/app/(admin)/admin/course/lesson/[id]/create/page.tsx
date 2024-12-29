@@ -20,7 +20,7 @@ const LessonCreatePage = async (context: CoursePageProps) => {
   const cookieHeader = useCookie();
 
   const resLessonType = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/lesson-type`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/lesson-type`,
     {
       method: 'GET',
       cache: 'no-store',
@@ -32,7 +32,7 @@ const LessonCreatePage = async (context: CoursePageProps) => {
   dataLessonType = dataLessonType?.data;
 
   const resGroupLesson = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/grouplesson/course/${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/grouplesson/course/${id}`,
     {
       method: 'GET',
       cache: 'no-store',

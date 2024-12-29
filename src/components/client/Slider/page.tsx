@@ -1,13 +1,16 @@
 'use client';
 import MyContext from '@/hook/context';
+import { RiAdminFill } from 'react-icons/ri';
 import { useAppDispatch, useAppSelector } from '@/redux/hook/hook';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
+import { IoIosChatbubbles } from 'react-icons/io';
 import LoadingBar from 'react-top-loading-bar';
 const Slider = () => {
   const router = useRouter();
   const ref = useRef<any>(null);
   const state = useAppSelector(state => state.nav.state);
+  const user = useAppSelector(state => state.auth?.user?.user);
   const handleRedirect = async (id: number) => {
     switch (id) {
       case 1:
@@ -27,6 +30,16 @@ const Slider = () => {
         router.push('/post');
         await new Promise(resolve => setTimeout(resolve, 200));
         ref.current.complete();
+        break;
+      case 4:
+        ref.current.continuousStart();
+        router.push('/chat');
+        await new Promise(resolve => setTimeout(resolve, 200));
+        ref.current.complete();
+        break;
+      case 5:
+        ref.current.continuousStart();
+        router.push('/admin/users');
         break;
     }
   };
@@ -109,6 +122,32 @@ const Slider = () => {
           </svg>
           <div className="pt-1">Bài viết</div>
         </button>
+        {user && (
+          <button
+            className={`${
+              state === 4
+                ? 'bg-[#e8ebed] text-[#252525]'
+                : 'hover:bg-[#f2f0f0] hover:text-[#252525]'
+            } flex w-[7.2rem] h-[7.2rem] hover:bg-[#f2f0f0] hover:text-[#252525] my-1 justify-center items-center  rounded-[1.8rem] py-2 flex-col`}
+            onClick={() => handleRedirect(4)}
+          >
+            <IoIosChatbubbles className="text-[3rem]" />
+            <div className="pt-1">Tin nhắn</div>
+          </button>
+        )}
+        {user?.roleId == 2 && (
+          <button
+            className={`${
+              state === 5
+                ? 'bg-[#e8ebed] text-[#252525]'
+                : 'hover:bg-[#f2f0f0] hover:text-[#252525]'
+            } flex w-[7.2rem] h-[7.2rem] hover:bg-[#f2f0f0] hover:text-[#252525] my-1 justify-center items-center  rounded-[1.8rem] py-2 flex-col`}
+            onClick={() => handleRedirect(5)}
+          >
+            <RiAdminFill className="text-[3rem]" />
+            <div className="pt-1">Admin</div>
+          </button>
+        )}
       </div>
     </div>
   );

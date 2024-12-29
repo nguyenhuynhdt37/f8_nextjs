@@ -17,7 +17,7 @@ const CourseCreatePagge = async () => {
     .join('; ');
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/get-level`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/get-level`,
     {
       method: 'GET',
       cache: 'no-store',

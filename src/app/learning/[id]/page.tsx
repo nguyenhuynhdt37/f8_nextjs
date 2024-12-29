@@ -10,7 +10,7 @@ const CourseDetail = async ({ params }: Iprops) => {
   const { id } = params;
   const cookieHeader = useCookie();
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/get-course-is-register-${id}`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/courses/get-course-is-register-${id}`,
     {
       method: 'GET',
       headers: { 'Content-Type': 'application/json', Cookie: cookieHeader },

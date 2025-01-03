@@ -13,7 +13,12 @@ const MarkdownEditor = ({ value, onChange, height = '400px' }: any) => {
   };
   const handleImageUpload = async (file: File) => {
     const formData = new FormData();
-    formData.append('avatar', file);
+
+    // Mã hóa tên file nếu chứa khoảng trắng
+    const encodedFileName = encodeURIComponent(file.name);
+
+    formData.append('avatar', file, encodedFileName);
+
     const res = await uploadImage(formData);
 
     if (res?.statusCode === 200 || res?.statusCode === 201) {
@@ -22,6 +27,7 @@ const MarkdownEditor = ({ value, onChange, height = '400px' }: any) => {
       return '';
     }
   };
+
   return (
     <MdEditor
       className="mdEdit-customize"

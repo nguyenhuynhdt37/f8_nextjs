@@ -28,7 +28,6 @@ const Lesson = ({ id }: any) => {
     sortField: '',
     sortOrder: '',
   });
-
   useEffect(() => {
     const handleGetData = async () => {
       ref.current.continuousStart();
@@ -58,7 +57,7 @@ const Lesson = ({ id }: any) => {
           setLoadData={setLoadData}
         />
         <div className="flex items-center">
-          <Filter />
+          <></>
           <Link href={`/admin/course/lesson/${id}/create`}>
             <button className="px-5 py-3 bg-[#3084d6] rounded-2xl text-[#fff]">
               + Thêm mới

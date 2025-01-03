@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Table from './Table';
 import Search from './Search';
-import Filter from './Filter';
+import Filter from './SortPotion';
 import Pagination from '../../Pagination';
 import { getAllCourses, getLesonGroupById } from '@/api/api';
 import { IpageEdit } from '@/types/next-auth';
@@ -24,7 +24,7 @@ const Chapter = ({ id }: any) => {
     sortField: '',
     sortOrder: '',
   });
-
+  const router = useRouter();
   useEffect(() => {
     const handleGetData = async () => {
       ref.current.continuousStart();
@@ -43,6 +43,10 @@ const Chapter = ({ id }: any) => {
     };
     handleGetData();
   }, [loadData]);
+  const handleCreate = () => {
+    ref.current.continuousStart();
+    router.push(`/admin/course/chapter/create/${id}`);
+  };
   return (
     <div className="p-10 text-[1.4rem]">
       <LoadingBar color="#0066df" ref={ref} />
@@ -54,12 +58,12 @@ const Chapter = ({ id }: any) => {
           setLoadData={setLoadData}
         />
         <div className="flex items-center">
-          <Filter />
-          <Link href={`/admin/course/chapter/create/${id}`}>
+          <></>
+          <div onClick={handleCreate}>
             <button className="px-5 py-3 bg-[#3084d6] rounded-2xl text-[#fff]">
               + Thêm mới
             </button>
-          </Link>
+          </div>
         </div>
       </div>
       <Table

@@ -9,7 +9,6 @@ import LoadingBar from 'react-top-loading-bar';
 const ListReaction = ({ data }: any) => {
   const [listSortdata, setListSortData] = useState<any>([]);
   const [isMe, setIsMe] = useState<boolean>(false);
-  console.log('data', data);
   const user = useAppSelector(state => state.auth?.user?.user);
   const handleRedirectProfile = (id: any) => {
     ref.current.continuousStart();
@@ -70,6 +69,8 @@ const ListReaction = ({ data }: any) => {
         className="tippy-custom"
         trigger="click"
         arrow={false}
+        interactive={true}
+        placement="bottom"
         content={
           <Modal
             data={data}
@@ -77,8 +78,6 @@ const ListReaction = ({ data }: any) => {
             handleRedirectProfile={handleRedirectProfile}
           />
         }
-        interactive={true}
-        placement="bottom"
       >
         <div className="flex items-center mr-5">
           <div className="">

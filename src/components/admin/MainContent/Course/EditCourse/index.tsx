@@ -1,41 +1,61 @@
 'use client';
 import RichTextEditor from '@/components/RichTextEditor';
 import { message } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import CoursePrice from './CoursePrice';
-import Levels from './Levels';
-import { hasValue } from '@/Utils/functions';
-import { CourseCreate } from '@/api/api';
+import { fetchFile, hasValue } from '@/Utils/functions';
+import { CourseCreate, CourseEditAsync } from '@/api/api';
 import { useRouter } from 'next/navigation';
-import Banner from './Banner';
+import CoursePrice from '../create/CoursePrice';
+import Levels from '../create/Levels';
+import Banner from '../create/Banner';
 
-interface ICourseCreate {
+interface ICourseEdit {
   title: string;
-  banner: File | null;
+  banner: File | null | undefined;
   levelId: number | undefined;
   price: number | undefined;
   priceOld: number | undefined;
   isFree: boolean;
   slogan: string;
 }
-const CreateCourse = ({ levels }: any) => {
+const CourseEdit = ({ levels, course }: any) => {
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
-  const [resultsAfterStudying, setResultsAfterStudying] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [resultsAfterStudying, setResultsAfterStudying] = useState<string>(
+    course?.courseDetail?.resultsAfterStudying,
+  );
+  const [description, setDescription] = useState<string>(
+    course?.courseDetail?.description,
+  );
   const [error, setError] = useState<any>();
-  const [courseSuggestions, setCourseSuggestions] = useState<string>('');
-  const [introduce, setIntroduce] = useState<string>('');
-  const [data, setData] = useState<ICourseCreate>({
-    title: '',
+  const [courseSuggestions, setCourseSuggestions] = useState<string>(
+    course?.courseDetail?.courseSuggestions,
+  );
+  const [introduce, setIntroduce] = useState<string>(course?.introduce);
+  const [data, setData] = useState<ICourseEdit>({
+    title: course?.title,
     banner: null,
-    levelId: levels[0]?.id,
-    price: undefined,
-    priceOld: undefined,
-    isFree: true,
-    slogan: '',
+    levelId: course?.levelId,
+    price: course?.courseDetail?.price,
+    priceOld: course?.courseDetail?.priceOld,
+    isFree: course?.courseDetail?.isFree,
+    slogan: course?.courseDetail?.slogan,
   });
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (course?.banner) {
+        const image = await fetchFile(course?.banner);
+        if (image) {
+          setData({
+            ...data,
+            banner: image,
+          });
+        }
+      }
+    };
+    fetchImage();
+  }, []);
   const handleChoiseCourse = (id: any) => {
     setData({
       ...data,
@@ -102,7 +122,17 @@ const CreateCourse = ({ levels }: any) => {
       });
       return;
     }
-
+    if (
+      course?.courseDetail?.courseSuggestions === courseSuggestions &&
+      course?.courseDetail?.description === description &&
+      course?.courseDetail?.isFree === data?.isFree &&
+      course?.courseDetail?.slogan === data?.slogan &&
+      course?.introduce == introduce &&
+      data?.title === data?.title
+    ) {
+      messageApi.warning('bạn chưa thay đổi giá trị');
+      return;
+    }
     const formData = new FormData();
     formData.append('CourseCreate.LevelId', data?.levelId?.toString() || '');
     formData.append('CourseCreate.Title', data?.title || '');
@@ -132,11 +162,12 @@ const CreateCourse = ({ levels }: any) => {
       'CourseDetailCreate.CourseSuggestions',
       courseSuggestions || '',
     );
-    const res = await CourseCreate(formData);
+
+    const res = await CourseEditAsync(formData, course.id);
     if (res?.statusCode === 200 || res?.statusCode === 200) {
       messageApi.open({
         type: 'success',
-        content: 'Tạo mới thành công',
+        content: 'Lưu thành công',
       });
       router.push('/admin/course');
     } else {
@@ -150,7 +181,7 @@ const CreateCourse = ({ levels }: any) => {
   return (
     <div className="p-10 text-[1.3rem]">
       {contextHolder}
-      <div className="text-[2.5rem]  font-bold">Thêm Khoá học mới</div>
+      <div className="text-[2.5rem]  font-bold">Chỉnh sửa khoá học</div>
       <div className="mt-10">
         <input
           onBlur={handleSetErrror}
@@ -265,11 +296,11 @@ const CreateCourse = ({ levels }: any) => {
           onClick={handleSubmit}
           className="px-10 py-4 rounded-2xl bg-[#609fd6] text-[#fff]"
         >
-          Tạo mới
+          Lưu lại
         </button>
       </div>
     </div>
   );
 };
 
-export default CreateCourse;
+export default CourseEdit;

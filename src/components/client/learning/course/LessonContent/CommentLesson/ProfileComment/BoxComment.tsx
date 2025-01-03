@@ -3,8 +3,11 @@ import ReactQuillEditorComment from '../ReactQuillEditorComment';
 import { CreateComment, updateComment } from '@/api/api';
 import { message } from 'antd';
 import { playSound } from '@/Utils/functions/SoundNumber';
-import EditorComment from '../EditorComment';
-
+import MarkdownIt from 'markdown-it';
+import hljs from 'highlight.js';
+import 'github-markdown-css';
+import 'highlight.js/styles/github.css';
+import MarkdownEditor from '@/components/Edittor/MarkdownEditor';
 const BoxComment = ({
   lessonId,
   data,
@@ -23,7 +26,6 @@ const BoxComment = ({
       alert('Bạn chưa nhập bình luận');
       return;
     } else {
-      console.log('feedback', feedback);
       if (feedback?.type === 'add') {
         const handlePostData = async () => {
           var dataSubmit = {
@@ -50,7 +52,8 @@ const BoxComment = ({
               id: -1,
               type: 'add',
             });
-            if (parentId) {
+            if (rootParentId) {
+              console.log('parentId', rootParentId);
               onShowMoreComment(rootParentId);
             }
           } else {
@@ -62,8 +65,6 @@ const BoxComment = ({
       } else if (feedback?.type === 'edit') {
         const handleEdit = async () => {
           if (comment === data?.content) {
-            console.log('data', data);
-
             await new Promise(resolve => setTimeout(resolve, 1000));
             messageApi.open({
               key,
@@ -106,9 +107,10 @@ const BoxComment = ({
   return (
     <div className="flex-1">
       {contextHolder}
-      <EditorComment
+      <MarkdownEditor
         value={comment} // Truyền giá trị editorState vào
         onChange={handleEditorChange} // Lắng nghe thay đổi
+        height="30rem"
       />
       <div className="mt-10 flex justify-end">
         <button

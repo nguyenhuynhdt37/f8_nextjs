@@ -13,8 +13,6 @@ const ChildrentComment = ({
   lessonId,
   setFeedback,
 }: any) => {
-  // console.log('pareentId', parentId);
-
   return (
     <div
       className={'ml-1 border-l-[0.1rem] mt-5 p-5 pr-0'}
@@ -25,6 +23,7 @@ const ChildrentComment = ({
         lessonId={lessonId}
         data={commentChild}
         feedback={feedback}
+        onShowMoreComment={onShowMoreComment}
         rootParentId={rootParentId}
         setFeedback={setFeedback}
       />

@@ -18,6 +18,7 @@ const ContentComment = ({
           <ProfileComment
             onShowMoreComment={onShowMoreComment}
             parentId={comment?.id}
+            rootParentId={comment?.id}
             lessonId={lessonId}
             data={comment}
             feedback={feedback}

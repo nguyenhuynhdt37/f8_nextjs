@@ -6,6 +6,7 @@ import { CourseActive } from '@/api/api';
 import LoadingBar from 'react-top-loading-bar';
 import { useOutsideClick } from '@/hook/useOutsideClick';
 import Link from 'next/link';
+import { timeAgo } from '@/Utils/functions';
 
 const Table = ({ data, params, setParams, setLoadData }: any) => {
   const ref = useRef<any>(null);
@@ -110,10 +111,10 @@ const Table = ({ data, params, setParams, setLoadData }: any) => {
                       {data?.lesson?.groupLesson?.name}
                     </td>
                     <td className="w-48 px-5 py-3 whitespace-nowrap">
-                      {data?.lesson?.createdAt}
+                      {timeAgo(data?.lesson?.createdAt)}
                     </td>
                     <td className="w-48 px-5 py-3 whitespace-nowrap">
-                      {data?.lesson?.updatedAt}
+                      {timeAgo(data?.lesson?.updatedAt)}
                     </td>
                     <td className="">
                       <div className="flex">

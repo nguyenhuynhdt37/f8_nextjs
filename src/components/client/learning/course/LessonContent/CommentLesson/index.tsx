@@ -1,19 +1,10 @@
 import { Button, Drawer } from 'antd';
 import { useEffect, useState } from 'react';
-import { IoIosMore } from 'react-icons/io';
-import RichTextEditor from '@/components/RichTextEditor';
-import ReactQuill from 'react-quill';
-import ReactQuillEditorComment from './ReactQuillEditorComment';
-import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css';
-import ProfileComment from './ProfileComment';
 import BoxComment from './ProfileComment/BoxComment';
 import * as signalR from '@microsoft/signalr';
 import { getAllCommentByLessonId } from '@/api/api';
 import ContentComment from './ContentComment';
-import { Oooh_Baby } from '@next/font/google';
 import { useAppSelector } from '@/redux/hook/hook';
-import { EditorState } from 'draft-js';
 const CommentLesson = ({
   title,
   idLesson,
@@ -48,9 +39,6 @@ const CommentLesson = ({
       handleRequest();
     }
   }, [idLesson, isShowComment]);
-  console.log('data', data);
-
-  console.log('comment', comment);
   // Kết nối SignalR khi component mount
   useEffect(() => {
     const connect = async () => {
@@ -68,7 +56,6 @@ const CommentLesson = ({
 
       try {
         await connection.start();
-        console.log('SignalR Connected');
         setConnection(connection);
       } catch (err: any) {
         console.error('Connection failed: ', err.toString());

@@ -1,6 +1,6 @@
 import { IUser } from '@/types/next-auth';
 import { Modal } from 'antd';
-import Link from 'next/link';
+import button from 'next/button';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { CiCircleMore, CiEdit, CiUser } from 'react-icons/ci';
@@ -41,6 +41,14 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [modalRef]);
+  const handleEdit = (id: number) => {
+    ref.current.continuousStart();
+    router.push(`/admin/users/edit/${id}`);
+  };
+  const handleRedirectDetail = (id: number) => {
+    router.push(`/admin/users/details/${id}`);
+  };
+
   return (
     <>
       <LoadingBar
@@ -79,11 +87,7 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
         </thead>
         <tbody>
           {data?.map(item => (
-            <tr
-              onClick={() => handleRedirect(+item?.id)}
-              className="cursor-pointer hover:bg-[#fdf9f7]"
-              key={item?.id}
-            >
+            <tr className="cursor-pointer hover:bg-[#fdf9f7]" key={item?.id}>
               <td className="border-b border-slate-200 ps-5">
                 <div className="">{item?.id}</div>
               </td>
@@ -144,27 +148,28 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
                     <div
                       ref={modalRef}
                       onClick={e => e.stopPropagation()}
-                      className="absolute z-10 w-52 overflow-hidden rounded-xl bg-[#fff] text-[#252424] shadow-lg"
+                      className="absolute p-5 z-10 text-[1.4rem] w-52 overflow-hidden rounded-xl bg-[#fff] text-[#252424] shadow-lg"
                     >
-                      <Link href={`/admin/users/edit/${item?.id}`}>
-                        <div className=" flex items-center bg-white  py-3 ps-3 hover:bg-[#ccc]">
-                          <CiEdit className="mr-2 text-2xl" /> Chỉnh sửa
-                        </div>
-                      </Link>
-                      <Link href={`/admin/users/details/${item?.id}`}>
-                        <div className=" flex items-center bg-white py-3 ps-3 hover:bg-[#ccc]">
-                          <CiUser className="mr-2 text-2xl" /> Xem chi tiết
-                        </div>
-                      </Link>
-                      <div
-                        className="flex items-center bg-white py-3 ps-3 hover:bg-[#ccc]"
+                      <button
+                        className="flex items-center bg-white py-3 hover:text-[#196096]"
+                        onClick={() => handleEdit(+item?.id)}
+                      >
+                        Chỉnh sửa
+                      </button>
+                      <button
+                        className="flex items-center bg-white py-3 hover:text-[#196096]"
+                        onClick={() => handleRedirectDetail(+item?.id)}
+                      >
+                        Xem chi tiết
+                      </button>
+                      <button
+                        className="flex items-center bg-white py-3 hover:text-[#196096]"
                         onClick={() => {
                           setShowDelete(true);
                         }}
                       >
-                        <AiOutlineDelete className="mr-2 text-2xl" />
                         Xoá
-                      </div>
+                      </button>
                     </div>
                   </button>
                 )}

@@ -236,3 +236,19 @@ export function timeAgo(input: string | Date | undefined | null): string {
 
   return 'Vừa xong';
 }
+export const fetchFile = async (url: string): Promise<File | null> => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch file: ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    const fileName = url.split('/').pop() || 'unknown';
+    const fileObject = new File([blob], fileName, { type: blob.type });
+    return fileObject;
+  } catch (error) {
+    console.error('Error fetching file:', error);
+    return null; // Trả về null khi có lỗi
+  }
+};

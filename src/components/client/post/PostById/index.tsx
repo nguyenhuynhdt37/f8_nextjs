@@ -16,11 +16,13 @@ import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
+import { message } from 'antd';
 const PostById = ({ data }: any) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(setStateNav(3));
   }, []);
+  const [messageApi, contextHolder] = message.useMessage();
   const mdParser: any = new MarkdownIt({
     highlight: (code, lang) => {
       if (lang && hljs.getLanguage(lang)) {
@@ -35,8 +37,51 @@ const PostById = ({ data }: any) => {
       )}</code></pre>`;
     },
   });
+  const handleEdit = () => {
+    // Xử lý khi người dùng chọn sửa bài viết
+    // Thực hiện các hành động cần thiết như điều hướng hoặc mở modal
+  };
+
+  const handleShareFacebook = () => {
+    // Chia sẻ lên Facebook
+    const url = window.location.href; // Lấy URL hiện tại của trang
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      '_blank',
+    );
+  };
+
+  const handleShareTwitter = () => {
+    // Chia sẻ lên Twitter
+    const url = window.location.href; // Lấy URL hiện tại của trang
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        'Xem bài viết này! ' + url,
+      )}`,
+      '_blank',
+    );
+  };
+
+  const handleShareEmail = () => {
+    const url = window.location.href; // Lấy URL hiện tại của trang
+    window.open(
+      `mailto:?subject=${encodeURIComponent(
+        'Xem bài viết này',
+      )}&body=${encodeURIComponent(
+        'Tôi muốn chia sẻ bài viết này với bạn: ' + url,
+      )}`,
+    );
+  };
+
+  const handleCopyLink = () => {
+    const url = window.location.href; // Lấy URL hiện tại của trang
+    navigator.clipboard.writeText(url).then(() => {
+      messageApi.success('Copy thành công');
+    });
+  };
   return (
     <div>
+      {contextHolder}
       <div className="grid grid-cols-9 text-[1.4rem] pb-32">
         <div className=""></div>
         <div>
@@ -72,31 +117,54 @@ const PostById = ({ data }: any) => {
               </div>
             </div>
             <Tippy
+              className="tippy-custom right-[7rem]"
+              arrow={false}
               trigger="click"
+              placement="bottom"
+              interactive
               content={
-                <div className="px-5">
-                  <div className="flex py-4 hover:text-[#974676] items-center cursor-pointer">
+                <div className="px-5 shadow-2xl text-[#111]">
+                  {/* Sửa bài viết */}
+                  <div
+                    className="flex py-4 hover:text-[#974676] items-center cursor-pointer"
+                    onClick={handleEdit}
+                  >
                     <FaPencil className="mr-5" /> Sửa bài viết
                   </div>
-                  <div className="flex py-4 hover:text-[#974676] items-center cursor-pointer">
+
+                  {/* Chia sẻ lên Facebook */}
+                  <div
+                    className="flex py-4 hover:text-[#974676] items-center cursor-pointer"
+                    onClick={handleShareFacebook}
+                  >
                     <FaFacebook className="mr-5" /> Chia sẻ lên Facebook
                   </div>
-                  <div className="flex py-4 hover:text-[#974676] items-center cursor-pointer">
+
+                  {/* Chia sẻ lên Twitter */}
+                  <div
+                    className="flex py-4 hover:text-[#974676] items-center cursor-pointer"
+                    onClick={handleShareTwitter}
+                  >
                     <FaTwitter className="mr-5" /> Chia sẻ lên Twitter
                   </div>
-                  <div className="flex py-4 hover:text-[#974676] items-center cursor-pointer">
+
+                  {/* Chia sẻ qua Email */}
+                  <div
+                    className="flex py-4 hover:text-[#974676] items-center cursor-pointer"
+                    onClick={handleShareEmail}
+                  >
                     <MdEmail className="mr-5" /> Chia sẻ với Email
                   </div>
-                  <div className="flex py-4 hover:text-[#974676] items-center cursor-pointer">
+
+                  {/* Sao chép liên kết */}
+                  <div
+                    className="flex py-4 hover:text-[#974676] items-center cursor-pointer"
+                    onClick={() => handleCopyLink()}
+                  >
                     <FaLink className="mr-5" /> Sao chép liên kết
                   </div>
                 </div>
               }
-              className="relative right-20"
-              interactive={true} // Cho phép tương tác
-              theme="light" // Giao diện sáng (tùy chọn)
-              arrow={false}
-              placement="bottom"
             >
               <div className="text-[2rem] cursor-pointer">
                 <IoIosMore />
@@ -105,7 +173,7 @@ const PostById = ({ data }: any) => {
           </div>
           <div className="mt-10">
             <div
-              className="markdown-body w-full"
+              className="w-full custom-textview custom-comment scrollbar-custom"
               dangerouslySetInnerHTML={{
                 __html: mdParser.render(data?.post?.content),
               }}

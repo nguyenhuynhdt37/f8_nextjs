@@ -131,9 +131,10 @@ const PostList = ({ types }: any) => {
                   onClick={() => handleRedirectProfile(post?.user?.id)}
                 >
                   <img
-                    className="w-12 mr-5 h-12 object-cover rounded-full"
-                    src="https://scontent.fhan4-6.fna.fbcdn.net/v/t39.30808-6/468977220_564916422807164_6425151126870756605_n.jpg?stp=dst-jpg_p526x296&_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeG8TzQrzH_SA2BHnR-a4SGNwRBo5TAL6sjBEGjlMAvqyD2Xzgy9yVCUnNMufq8S-tznyDzMrb21X-AjDmPagyxi&_nc_ohc=Sw70VhE53sAQ7kNvgE25JVT&_nc_zt=23&_nc_ht=scontent.fhan4-6.fna&_nc_gid=AQ9d5-L5fdLFtihHOrxJF0h&oh=00_AYCj_qqz0EP98v7scNa_2zGsVEpVMw4eoAYuhDDEwnSTnA&oe=67546FDC"
+                    className="w-12 mr-5 border-2 border-[#c7a829] h-12 object-cover rounded-full"
+                    src={data?.user?.avatar || '/images/avatar-empty.png'}
                     alt=""
+                    s
                   />
                   <div className="flex items-center">
                     {post?.user?.name}
@@ -143,9 +144,13 @@ const PostList = ({ types }: any) => {
                   </div>
                 </div>
                 <Tippy
+                  className="tippy-custom right-36"
+                  arrow={false}
                   trigger="click"
+                  placement="bottom"
+                  interactive
                   content={
-                    <div className="px-5">
+                    <div className="px-5 shadow-2xl rounded-xl text-[#111] z-20 bg-[#fff]">
                       {/* Sửa bài viết */}
                       <div
                         className="flex py-4 hover:text-[#974676] items-center cursor-pointer"
@@ -187,11 +192,6 @@ const PostList = ({ types }: any) => {
                       </div>
                     </div>
                   }
-                  className="relative right-36"
-                  interactive={true} // Cho phép tương tác
-                  theme="light" // Giao diện sáng (tùy chọn)
-                  arrow={false}
-                  placement="bottom"
                 >
                   <div className="text-[2rem] cursor-pointer">
                     <IoIosMore />

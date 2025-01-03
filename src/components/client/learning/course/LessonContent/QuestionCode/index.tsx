@@ -23,15 +23,32 @@ const QuessonCode = ({
   const [monacoInstance, setMonacoInstance] = useState<any>(null);
   const [isResult, setIsResult] = useState<boolean>(false);
   const [animateError, setAnimateError] = useState<boolean>(false);
+  const [code, setCode] = useState<string>('');
+  const [preCode, setPreCode] = useState<string>('');
+  const [isBlur, setIsBlur] = useState<number>(0);
   useEffect(() => {
     const getdata = async () => {
       const res = await getQuessonCode(id);
       if (res?.statusCode === 200 || res?.statusCode === 201) {
         setData(res?.data);
+        setPreCode(
+          res?.data?.userCode?.submittedCode ||
+            res?.data?.quesson?.starterCode ||
+            '',
+        );
       }
     };
     getdata();
   }, [id]);
+  useEffect(() => {
+    const saveCode = async () => {
+      if (code !== preCode) {
+        setPreCode(code);
+        await SaveCodeUser(id, code);
+      }
+    };
+    saveCode();
+  }, [isBlur]);
 
   useEffect(() => {
     loader.init().then(monaco => setMonacoInstance(monaco));
@@ -51,7 +68,6 @@ const QuessonCode = ({
   const handleCheckSyntax = async () => {
     if (!monacoInstance || !editorRef.current) return;
 
-    const code = editorRef.current.getValue();
     const markers: any[] = [];
     const errorMessages: string[] = [];
 
@@ -116,18 +132,17 @@ const QuessonCode = ({
   };
   const handleEditorDidMount = (editor: any, monaco: any) => {
     editor.updateOptions({
-      autoIndent: 'full',
-      suggestOnTriggerCharacters: true,
-      wordBasedSuggestions: true,
-      quickSuggestions: { other: true, comments: true, strings: true },
-      parameterHints: { enabled: true },
+      autoIndent: 'full', // Tự động thụt lề khi gõ
+      suggestOnTriggerCharacters: true, // Gợi ý tự động khi gặp ký tự trigger
+      wordBasedSuggestions: true, // Gợi ý từ khóa dựa trên từ đã nhập
+      quickSuggestions: { other: true, comments: true, strings: true }, // Gợi ý nhanh cho các phần khác nhau
+      parameterHints: { enabled: true }, // Hiển thị gợi ý tham số khi gọi hàm
     });
     editorRef.current = editor;
 
     // Sự kiện mất focus
     editor.onDidBlurEditorText(async () => {
-      const code = editor.getValue();
-      await SaveCodeUser(id, code);
+      setIsBlur(pre => pre + 1);
     });
   };
 
@@ -150,9 +165,16 @@ const QuessonCode = ({
       </div>
       <div className="border-s-[0.1rem]">
         <Editor
+          options={{
+            automaticLayout: true,
+            minimap: { enabled: false },
+          }}
           height="400px"
           theme="vs-dark"
           defaultLanguage={'javascript'}
+          onChange={(v: any) => {
+            setCode(v);
+          }}
           defaultValue={
             data?.userCode?.submittedCode || data?.quesson?.starterCode || ''
           }
@@ -188,7 +210,12 @@ const QuessonCode = ({
         ) : (
           <div className="p-5 flex items-center">
             {isResult && <FaCheck className="mr-2 text-[#71af3a]" />}
-            {data?.quesson?.solution || ''}
+            {data?.quesson?.solution && (
+              <div
+                className="custom-textview"
+                dangerouslySetInnerHTML={{ __html: data?.quesson?.solution }}
+              ></div>
+            )}
           </div>
         )}
       </div>

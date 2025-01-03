@@ -17,7 +17,6 @@ const VideoIframe: React.FC<any> = ({
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [isReady, setIsReady] = useState(false);
   const duration = data?.lessonVideo?.duration || 0;
-  console.log('watch', watchTime / duration, isCompleted);
   useEffect(() => {
     if (watchTime / duration >= 0.75 && !isCompleted?.isCompleted) {
       setIsCompleted({

@@ -1,3 +1,4 @@
+import { Chapter } from '@/components/admin/MainContent/Course/chapter';
 import axiosInstance from './axiosInstance';
 import { ICreateUser, IGetWithParam, IpageEdit } from '@/types/next-auth';
 
@@ -419,6 +420,20 @@ export const CourseCreate = async (formData: any): Promise<any> => {
     return error?.response?.data;
   }
 };
+export const CourseEditAsync = async (formData: any, courseId: number): Promise<any> => {
+  try {
+    const res = await axiosInstance.put(`/courses/edit/${courseId}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
 export const QuestionLessonCreate = async (
   courseId: number,
   data: any,
@@ -462,6 +477,24 @@ export const NoteCreateAsync = async (
   try {
     const res = await axiosInstance.post(
       `/courses/lesson/note/create/${courseId}`,
+      data,
+      {
+        withCredentials: true,
+      },
+    );
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const QuessonCodeCreate = async (
+  courseId: number,
+  data: any,
+): Promise<any> => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/quesson_code/create/${courseId}`,
       data,
       {
         withCredentials: true,
@@ -744,6 +777,36 @@ export const LikeChangeOrAdd = async (idComment: number, icon: string) => {
 export const getProcess = async (courseId: number) => {
   try {
     const res = await axiosInstance.get(`/courses/progress/${courseId}` ,{
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getLanguageCodes = async () => {
+  try {
+    const res = await axiosInstance.get(`/courses/quesson_code/get_all_langueCode` ,{
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getChapterById = async (chapterId : number) => {
+  try {
+    const res = await axiosInstance.get(`/courses/chapter/${chapterId}` ,{
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const ChapterEditAsync = async ({chapterId, name}: any) => {
+  try {
+    const res = await axiosInstance.put(`/courses/chapter/edit/${chapterId}`, name ,{
       withCredentials: true,
     });
     return res.data;

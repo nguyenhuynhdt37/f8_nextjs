@@ -9,7 +9,6 @@ const connectToSignalR = async () => {
 
   try {
     await connection.start();
-    console.log('SignalR connected!');
   } catch (err) {
     console.error('SignalR connection failed: ', err);
   }

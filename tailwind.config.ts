@@ -1,11 +1,8 @@
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-  darkMode: false, // or 'media' or 'class'
-  theme: {
-    extend: {},
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [require('tailwind-scrollbar'), require('@tailwindcss/typography')],
+  // ...
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
+  darkMode: 'media', // hoặc loại bỏ tùy chọn này
+  // ...
 };

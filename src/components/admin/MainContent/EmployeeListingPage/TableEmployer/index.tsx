@@ -6,6 +6,7 @@ import LoadingPage from '@/components/client/LoadingPage';
 import Table from './Table';
 import { message } from 'antd';
 import Paganation from '../../Pagination';
+import LoadingBar from 'react-top-loading-bar';
 
 const TableEmployer = () => {
   const timeoutRef = useRef<number | null>(null);
@@ -15,8 +16,9 @@ const TableEmployer = () => {
   const [pageList, setPageList] = useState<IPageListProps<IUser> | undefined>(
     undefined,
   );
+  const ref = useRef<any>(null);
   const [pageEdit, setPageEdit] = useState<IpageEdit>({
-    pageSize: 10,
+    pageSize: 9,
     pageNumber: 1,
     totalPage: 0,
     totalCount: 0,
@@ -34,6 +36,7 @@ const TableEmployer = () => {
         config: pageEdit,
       });
 
+      ref.current.complete();
       if (res?.statusCode === 200 || res?.statusCode === 201) {
         setPageList({
           data: res?.data?.data,
@@ -58,7 +61,6 @@ const TableEmployer = () => {
 
   const handleSearch = (e: any) => {
     const value = e.target.value;
-
     setPageEdit({
       ...pageEdit,
       searchTerm: value,
@@ -76,7 +78,7 @@ const TableEmployer = () => {
   return (
     <div className="text-[1.3rem]">
       {contextHolder}
-      {isLoading && <LoadingPage />}
+      <LoadingBar color="#0066df" ref={ref} />
       <div className="flex pb-5 pt-5">
         <input
           type="text"

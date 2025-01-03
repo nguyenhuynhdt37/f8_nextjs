@@ -73,7 +73,7 @@ const ProfileComment = ({
     <>
       {contextHolder}
       <LoadingBar color="#0066df" ref={ref} />
-      <div className="flex items-center pb-7">
+      <div className="flex items-center pb-4">
         <img
           className="w-16 h-16 border-2 border-[#b39836] object-cover mr-5 rounded-full"
           src={data?.user?.avatar || '/images/avatar-empty.png'}
@@ -94,7 +94,7 @@ const ProfileComment = ({
       </div>
       {data?.content && !data?.isDelete && !data?.prohibited && (
         <div
-          className="markdown-body custom-textview custom-comment w-full"
+          className="custom-textview custom-comment w-full"
           dangerouslySetInnerHTML={{
             __html: mdParser.render(data?.content || ''),
           }}
@@ -117,7 +117,7 @@ const ProfileComment = ({
           đồng
         </div>
       )}
-      <div className="pt-7 flex items-center justify-between font-medium text-[#217bb3]">
+      <div className="pt-4 flex items-center justify-between font-medium text-[#217bb3]">
         {data?.isDelete || data?.prohibited ? (
           <div className="flex text-[#888] items-start">
             <button disabled className="mr-5">

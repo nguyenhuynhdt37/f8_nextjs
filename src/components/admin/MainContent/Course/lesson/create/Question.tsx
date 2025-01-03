@@ -97,7 +97,6 @@ const Question = ({
     };
     ref.current.continuousStart();
     const res = await QuestionLessonCreate(courseId, dataSubmit);
-    ref.current.complete();
     if (res?.statusCode === 200 || res?.statusCode === 201) {
       messageApi.open({
         type: 'success',

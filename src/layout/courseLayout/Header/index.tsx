@@ -35,7 +35,6 @@ const Header = ({ data, courseId }: { data: any; courseId: number }) => {
         .build();
 
       connection.on('ReceiveProcess', dataCommentNew => {
-        console.log('dataCommentNew', dataCommentNew);
         setProgress(dataCommentNew);
       });
       connection.on('Error', error => {

@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Table from './Table';
 import Search from './Search';
-import Filter from './Filter';
 import Pagination from '../../Pagination';
 import { getAllCourses } from '@/api/api';
 import { IpageEdit } from '@/types/next-auth';
@@ -54,7 +53,7 @@ const Course = () => {
           setLoadData={setLoadData}
         />
         <div className="flex items-center">
-          <Filter />
+          <></>
           <Link href={'/admin/course/create'}>
             <button className="px-5 py-3 bg-[#3084d6] rounded-2xl text-[#fff]">
               + Thêm mới

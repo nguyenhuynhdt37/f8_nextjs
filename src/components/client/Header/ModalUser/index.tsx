@@ -5,9 +5,11 @@ import 'tippy.js/dist/tippy.css';
 import ModalInfo from './ModaInfo';
 import { useOutsideClick } from '@/hook/useOutsideClick';
 import Tippy from '@tippyjs/react';
+import LoadingBar from 'react-top-loading-bar';
 
 const ModalUser = ({ data }: any) => {
   const [visible, setVisible] = useState(false);
+  const ref = useRef<any>(null);
   const handleCloseMenu = () => {
     setVisible(false);
   };
@@ -17,6 +19,7 @@ const ModalUser = ({ data }: any) => {
   };
   return (
     <div className="flex text-[1.4rem] items-center text-[#333333] ">
+      <LoadingBar color="#0066df" ref={ref} />
       <div className="font-medium hidden md:block mr-12 cursor-pointer">
         Khoá học của tôi
       </div>
@@ -28,7 +31,7 @@ const ModalUser = ({ data }: any) => {
         arrow={false}
         content={
           <div ref={menuRef} className="transition ease-in-out duration-500">
-            <ModalInfo data={data} />
+            <ModalInfo ref={ref} data={data} />
           </div>
         }
         interactive={true}

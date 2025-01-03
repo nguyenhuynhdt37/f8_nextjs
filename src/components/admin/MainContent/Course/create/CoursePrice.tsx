@@ -39,8 +39,6 @@ const CoursePrice = ({ data, setData, error, setError }: any) => {
               setData({
                 ...data,
                 isFree: true,
-                price: undefined,
-                priceOld: undefined,
               })
             }
             className="mr-10 cursor-pointer text-[1.4rem]"

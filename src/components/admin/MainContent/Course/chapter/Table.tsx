@@ -6,12 +6,13 @@ import { CourseActive } from '@/api/api';
 import LoadingBar from 'react-top-loading-bar';
 import { useOutsideClick } from '@/hook/useOutsideClick';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Table = ({ data, params, setParams, setLoadData }: any) => {
   const ref = useRef<any>(null);
   const [messageApi, contextHolder] = message.useMessage();
   const [openMenu, setOpenMenu] = useState<number | null>(null);
-
+  const router = useRouter();
   const [showDelete, setShowDelete] = useState<boolean>(false);
   const [idDelete, setIdDelete] = useState<number>(-1);
   const handleDelete = (id: number) => {
@@ -37,6 +38,10 @@ const Table = ({ data, params, setParams, setLoadData }: any) => {
   const menuRef = useOutsideClick(handleCloseMenu);
   const handleToggleMenu = (id: number) => {
     setOpenMenu(openMenu === id ? null : id);
+  };
+  const handleEdit = (id: number) => {
+    ref.current.continuousStart();
+    router.push(`/admin/course/chapter/edit/${id}`);
   };
   return (
     <div className="flex flex-col pt-10">
@@ -78,8 +83,11 @@ const Table = ({ data, params, setParams, setLoadData }: any) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300 ">
-                {data?.data?.map((course: any) => (
-                  <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
+                {data?.data?.map((course: any, index: number) => (
+                  <tr
+                    key={course?.id || index}
+                    className="bg-white transition-all duration-500 hover:bg-gray-50"
+                  >
                     <td className="">
                       <div className="flex items-center py-5 px-5 ">
                         {course?.id}
@@ -96,7 +104,10 @@ const Table = ({ data, params, setParams, setLoadData }: any) => {
                     </td>
                     <td className="">
                       <div className="flex">
-                        <button className="p-2 rounded-full bg-white group transition-all duration-500 hover:bg-indigo-600 flex item-center">
+                        <button
+                          className="p-2 rounded-full bg-white group transition-all duration-500 hover:bg-indigo-600 flex item-center"
+                          onClick={() => handleEdit(course?.id)}
+                        >
                           <svg
                             className="cursor-pointer"
                             width="20"

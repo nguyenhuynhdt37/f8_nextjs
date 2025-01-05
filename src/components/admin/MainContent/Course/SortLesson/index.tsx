@@ -179,16 +179,18 @@ const datac = {
 
 const SortLesson = ({ courseId }: ISortLesson) => {
   const [data, setData] = useState<any>(datac.chapters);
-  const [activeLesson, setShowLesson] = useState<number>(-1);
-  const [activeChapter, setShowChapter] = useState<number>(data[0].chapterId);
+  const [activeShowLesson, setShowLesson] = useState<number>(-1);
+  const [activeShowChapter, setShowChapter] = useState<number>(
+    data[0].chapterId,
+  );
   const key1 = 1;
   console.log('data', data);
-  const handleActiveChapter = (id: number) => {
+  const handleShowChapter = (id: number) => {
     setShowChapter(id);
     setShowLesson(-1);
     console.log('id', id);
   };
-  const handleActiveLesson = (id: number) => {
+  const handleShowLesson = (id: number) => {
     setShowLesson(id);
     setShowChapter(-1);
     console.log('id', id);
@@ -234,23 +236,23 @@ const SortLesson = ({ courseId }: ISortLesson) => {
   return (
     <div className="text-[1.4rem] p-10">
       <div className="font-bold text-[2.5rem]">Sắp xếp chương học</div>
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-3">
         <div className="pt-10">
           <div className="font-medium text-[1.6rem] pb-5 border-b-[0.1rem]">
             Thông tin khoá học
           </div>
         </div>
-        <div className="pt-10">
+        <div className="pt-10 col-span-2">
           <div className="font-medium text-[1.6rem] pb-5">
             Danh sách chương và bài học
           </div>
-          <div className="border-x-[0.1rem] overflow-y-scroll scrollbar-custom">
+          <div className="border-x-[0.1rem] scrollbar-custom">
             {data?.map((chapter: any) => {
               return (
                 <div key={chapter.chapterId} className="">
                   <div
-                    onClick={() => handleActiveChapter(chapter.chapterId)}
-                    className={`flex items-center ${activeChapter === chapter.chapterId && 'bg-[#3498db] text-[#fff]'}  font-medium py-5 cursor-pointer border-y-[0.1rem] px-5 text-[1.6rem]`}
+                    onClick={() => handleShowChapter(chapter.chapterId)}
+                    className={`flex items-center ${activeShowChapter === chapter.chapterId && 'bg-[#3498db] text-[#fff]'}  font-medium py-5 cursor-pointer border-y-[0.1rem] px-5 text-[1.6rem]`}
                   >
                     <input
                       //   onChange={() => setIsAnswerSuccess(answer?.id)}
@@ -259,7 +261,7 @@ const SortLesson = ({ courseId }: ISortLesson) => {
                       type="checkbox"
                     />
                     {chapter.chapterName} - (Chương)
-                    {activeChapter === chapter.chapterId && (
+                    {activeShowChapter === chapter.chapterId && (
                       <>
                         <button
                           className="pl-5"
@@ -284,8 +286,8 @@ const SortLesson = ({ courseId }: ISortLesson) => {
                     {chapter.lessons?.map((lesson: any) => (
                       <div
                         key={lesson.lessonId}
-                        onClick={() => handleActiveLesson(lesson.lessonId)}
-                        className={`flex px-10 py-4 cursor-pointer border-b-[0.1rem] items-center ${activeLesson === lesson.lessonId && 'bg-[#3498db] text-[#fff]'} `}
+                        onClick={() => handleShowLesson(lesson.lessonId)}
+                        className={`flex px-10 py-4 cursor-pointer border-b-[0.1rem] items-center ${activeShowLesson === lesson.lessonId && 'bg-[#3498db] text-[#fff]'} `}
                       >
                         <input
                           onChange={() =>
@@ -302,7 +304,7 @@ const SortLesson = ({ courseId }: ISortLesson) => {
                         <div className="flex items-center">
                           <div className="font-medium flex items-center text-[1.4rem]">
                             {lesson.lessonName} - (Bài học)
-                            {activeLesson === lesson.lessonId && (
+                            {activeShowLesson === lesson.lessonId && (
                               <>
                                 <button
                                   className="pl-5"

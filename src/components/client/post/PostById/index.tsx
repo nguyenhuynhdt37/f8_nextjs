@@ -3,7 +3,7 @@ import MarkdownIt from 'markdown-it';
 import React, { useEffect } from 'react';
 import { FaTwitter } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
-import { FaLink } from 'react-icons/fa6';
+import { FaCircleCheck, FaLink } from 'react-icons/fa6';
 import { FaFacebook } from 'react-icons/fa';
 import Tippy from '@tippyjs/react'; // Import thư viện
 import 'tippy.js/dist/tippy.css'; // Import CSS
@@ -17,6 +17,7 @@ import 'highlight.js/styles/github.css';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
 import { message } from 'antd';
+import { timeAgo } from '@/Utils/functions';
 const PostById = ({ data }: any) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -86,33 +87,42 @@ const PostById = ({ data }: any) => {
         <div className=""></div>
         <div>
           <div className="sticky top-[9rem]">
-            <div className="border-b-[0.1rem] py-2">Nguyễn Xuân Huỳnh</div>
-            <div className="flex text-[#757575] pe-[6rem] justify-between mt-5">
-              <div className="flex items-center">
-                <FaRegHeart className="text-[1.6rem] cursor-pointer mr-5" />1
-              </div>
-              <div className="flex items-center">
-                <FaRegComment className="text-[1.6rem] cursor-pointer mr-5" />1
+            <div className="">
+              <div className="flex ml-20 text-[#757575] pe-[6rem] justify-between mt-5">
+                <div className="flex items-center mr-5">
+                  <FaRegHeart className="text-[1.6rem] cursor-pointer mr-5" />1
+                </div>
+                <div className="flex items-center">
+                  <FaRegComment className="text-[1.6rem] cursor-pointer mr-5" />
+                  1
+                </div>
               </div>
             </div>
-            <div className=""></div>
           </div>
         </div>
         <div className="col-span-5 px-20">
-          <div className="title font-bold text-[3rem]">Hello cả nhà</div>
-          <div className="flex items-center justify-between">
-            <div className="flex mt-10 items-center">
+          <div className="flex sticky top-[6.6rem] py-5 bg-[#fff] z-10 items-center mb-10 justify-between">
+            <div className="flex items-center">
               <div className="mr-5">
                 <img
-                  className="w-20 h-20 object-cover rounded-full"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgTyyEiNolp2zxJ_XR1SyeCA4_hIW_IO9T50YmN8Puq050lAvSnt3NyamC0hdwZFtWLFQ&usqp=CAU"
+                  className="w-16 h-16 object-cover rounded-full border-2 border-[#d2b523]"
+                  src={
+                    data?.user?.avatar ||
+                    'https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg'
+                  }
                   alt=""
                 />
               </div>
+
               <div className="">
-                <div className="pb-2">Nguyễn Xuân Huỳnh</div>
+                <div className="flex items-center pb-2">
+                  <div className="">{data?.user?.name}</div>
+                  {data?.user?.roleId === 2 && (
+                    <FaCircleCheck className="text-[#46a8ff] ml-4 text-[1.4rem]" />
+                  )}
+                </div>
                 <div className="text-[1.2rem] text-[#9c9b9b]">
-                  Một ngày trước
+                  {timeAgo(data?.post?.updatedAt)}
                 </div>
               </div>
             </div>
@@ -171,9 +181,10 @@ const PostById = ({ data }: any) => {
               </div>
             </Tippy>
           </div>
+          <div className="title font-bold text-[3rem]">{data?.post?.title}</div>
           <div className="mt-10">
             <div
-              className="w-full custom-textview custom-comment scrollbar-custom"
+              className="w-full custom-textview custom-comment scrollbar-custom custom-post "
               dangerouslySetInnerHTML={{
                 __html: mdParser.render(data?.post?.content),
               }}

@@ -16,9 +16,9 @@ export default function RootLayout({
   return (
     <div>
       <Header />
-      <div className="flex pt-[9rem]">
+      <div className="flex pt-[6.6rem]">
         <Slider />
-        <div className="flex-1 ">{children}</div>
+        <div className="flex-1 pb-20">{children}</div>
       </div>
       <Footer />
     </div>

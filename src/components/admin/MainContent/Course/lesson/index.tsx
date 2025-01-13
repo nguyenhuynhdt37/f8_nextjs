@@ -2,17 +2,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Table from './Table';
 import Search from './Search';
-import Filter from './Filter';
-import Pagination from '../../Pagination';
-import {
-  getAllCourses,
-  getLesonGroupById,
-  getLesonpByCourseId,
-} from '@/api/api';
+import { getLesonpByCourseId } from '@/api/api';
 import { IpageEdit } from '@/types/next-auth';
-import LoadingPage from '@/components/client/LoadingPage';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import LoadingBar from 'react-top-loading-bar';
 
 const Lesson = ({ id }: any) => {
@@ -28,6 +20,11 @@ const Lesson = ({ id }: any) => {
     sortField: '',
     sortOrder: '',
   });
+  const router = useRouter();
+  const handleCreate = () => {
+    ref.current.continuousStart();
+    router.push(`/admin/courses/${id}/lesson/create`);
+  };
   useEffect(() => {
     const handleGetData = async () => {
       ref.current.continuousStart();
@@ -58,11 +55,11 @@ const Lesson = ({ id }: any) => {
         />
         <div className="flex items-center">
           <></>
-          <Link href={`/admin/course/lesson/${id}/create`}>
+          <div onClick={handleCreate}>
             <button className="px-5 py-3 bg-[#3084d6] rounded-2xl text-[#fff]">
               + Thêm mới
             </button>
-          </Link>
+          </div>
         </div>
       </div>
       <Table

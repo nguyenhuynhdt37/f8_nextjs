@@ -2,26 +2,32 @@
 import ModalAuth from '@/components/client/Header/ModalAuth';
 import ModalUser from '@/components/client/Header/ModalUser';
 import Search from '@/components/client/Header/Search';
-import { useClientCookie } from '@/hook/cookieHeaderClient';
-import { useCookie } from '@/hook/useCookie';
 import { useAppSelector } from '@/redux/hook/hook';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { FiChevronLeft } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import LoadingBar from 'react-top-loading-bar';
 const Header = () => {
   const user = useAppSelector(state => state.auth.user);
+  const router = useRouter();
+  const ref = React.createRef<any>();
+  const handleRedirectHome = () => {
+    ref.current.continuousStart();
+    router.push('/');
+    ref.current.complete();
+  };
   return (
     <header>
+      <LoadingBar color="#0066df" ref={ref} />
       <div className="px-[2.8rem] z-50 fixed top-0 left-0 right-0 h-[6.6rem] border border-bottom-[0.1rem] bg-[#fff] flex items-center justify-between">
         <div className="flex items-center">
           <div className="mr-6">
-            <Link href={'/'}>
+            <div onClick={handleRedirectHome}>
               <img
                 src="https://fullstack.edu.vn/assets/f8-icon-lV2rGpF0.png"
                 alt=""
                 className="w-[3.8rem] rounded-xl"
               />
-            </Link>
+            </div>
           </div>
           <div className="font-bold text-[1.4rem] hidden lg:block">
             Học Lập Trình Để Đi Làm

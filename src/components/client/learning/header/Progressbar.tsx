@@ -17,7 +17,7 @@ const App = ({ progress }: any) => {
       <div className="w-[3.5rem] h-[3.5rem] mr-5">
         <CircularProgressbar
           value={percentage}
-          text={`${percentage}%`}
+          text={`${percentage || 0}%`}
           styles={buildStyles({
             pathColor: '#c65e5e', // Màu đường cong (progress)
             textColor: '#fff', // Màu văn bản

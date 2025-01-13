@@ -1,4 +1,3 @@
-import { Chapter } from '@/components/admin/MainContent/Course/chapter';
 import axiosInstance from './axiosInstance';
 import { ICreateUser, IGetWithParam, IpageEdit } from '@/types/next-auth';
 
@@ -420,7 +419,10 @@ export const CourseCreate = async (formData: any): Promise<any> => {
     return error?.response?.data;
   }
 };
-export const CourseEditAsync = async (formData: any, courseId: number): Promise<any> => {
+export const CourseEditAsync = async (
+  formData: any,
+  courseId: number,
+): Promise<any> => {
   try {
     const res = await axiosInstance.put(`/courses/edit/${courseId}`, formData, {
       headers: {
@@ -726,9 +728,13 @@ export const getAllCommentByLessonId = async (lessonId: any) => {
 
 export const ReportComment = async (idComment: any) => {
   try {
-    const res = await axiosInstance.post(`/lesson/comment/reportComment/${idComment}`, {}, {
-      withCredentials: true,
-    });
+    const res = await axiosInstance.post(
+      `/lesson/comment/reportComment/${idComment}`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
     return res.data;
   } catch (error: any) {
     return error?.response?.data;
@@ -736,19 +742,26 @@ export const ReportComment = async (idComment: any) => {
 };
 export const DeleteComment = async (idComment: any) => {
   try {
-    const res = await axiosInstance.delete(`/lesson/comment/delete/${idComment}`, {
-      withCredentials: true,
-    });
+    const res = await axiosInstance.delete(
+      `/lesson/comment/delete/${idComment}`,
+      {
+        withCredentials: true,
+      },
+    );
     return res.data;
   } catch (error: any) {
     return error?.response?.data;
   }
 };
-export const updateComment = async ({idComment, comment}: any) => {
+export const updateComment = async ({ idComment, comment }: any) => {
   try {
-    const res = await axiosInstance.put(`/lesson/comment/edit/${idComment}`, comment, {
-      withCredentials: true,
-    });
+    const res = await axiosInstance.put(
+      `/lesson/comment/edit/${idComment}`,
+      comment,
+      {
+        withCredentials: true,
+      },
+    );
     return res.data;
   } catch (error: any) {
     return error?.response?.data;
@@ -756,9 +769,12 @@ export const updateComment = async ({idComment, comment}: any) => {
 };
 export const UnlikeComment = async (idComment: any) => {
   try {
-    const res = await axiosInstance.delete(`/comment/like/unlike/${idComment}`, {
-      withCredentials: true,
-    });
+    const res = await axiosInstance.delete(
+      `/comment/like/unlike/${idComment}`,
+      {
+        withCredentials: true,
+      },
+    );
     return res.data;
   } catch (error: any) {
     return error?.response?.data;
@@ -766,9 +782,13 @@ export const UnlikeComment = async (idComment: any) => {
 };
 export const LikeChangeOrAdd = async (idComment: number, icon: string) => {
   try {
-    const res = await axiosInstance.post(`/comment/like/add_or_change/${idComment}`,icon ,{
-      withCredentials: true,
-    });
+    const res = await axiosInstance.post(
+      `/comment/like/add_or_change/${idComment}`,
+      icon,
+      {
+        withCredentials: true,
+      },
+    );
     return res.data;
   } catch (error: any) {
     return error?.response?.data;
@@ -776,7 +796,7 @@ export const LikeChangeOrAdd = async (idComment: number, icon: string) => {
 };
 export const getProcess = async (courseId: number) => {
   try {
-    const res = await axiosInstance.get(`/courses/progress/${courseId}` ,{
+    const res = await axiosInstance.get(`/courses/progress/${courseId}`, {
       withCredentials: true,
     });
     return res.data;
@@ -786,7 +806,20 @@ export const getProcess = async (courseId: number) => {
 };
 export const getLanguageCodes = async () => {
   try {
-    const res = await axiosInstance.get(`/courses/quesson_code/get_all_langueCode` ,{
+    const res = await axiosInstance.get(
+      `/courses/quesson_code/get_all_langueCode`,
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getChapterById = async (chapterId: number) => {
+  try {
+    const res = await axiosInstance.get(`/courses/chapter/${chapterId}`, {
       withCredentials: true,
     });
     return res.data;
@@ -794,9 +827,126 @@ export const getLanguageCodes = async () => {
     return error?.response?.data;
   }
 };
-export const getChapterById = async (chapterId : number) => {
+export const ChapterEditAsync = async ({ chapterId, name }: any) => {
   try {
-    const res = await axiosInstance.get(`/courses/chapter/${chapterId}` ,{
+    const res = await axiosInstance.put(
+      `/courses/chapter/edit/${chapterId}`,
+      name,
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getChapterAndLesson = async (courseId: number) => {
+  try {
+    const res = await axiosInstance.get(
+      `/courses/get-chapter-and-lesson/${courseId}`,
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const ToggleChapterActive = async (chapterId: number) => {
+  try {
+    const res = await axiosInstance.get(
+      `/courses/chapter/toggerActive/${chapterId}`,
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const ToggleLessonActiveAsync = async (lessonId: number) => {
+  try {
+    const res = await axiosInstance.get(
+      `/courses/lesson/toggerActive/${lessonId}`,
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const MoveUpChapterPosition = async ({
+  courseid,
+  chapterId,
+  position,
+}: any) => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/chapter/move-up/${courseid}`,
+      { chapterId, postion: position },
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const MoveDownChapterPosition = async ({
+  courseid,
+  chapterId,
+  position,
+}: any) => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/chapter/move-down/${courseid}`,
+      { chapterId, postion: position },
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const MoveUpLessonPositionAsync = async (lessonId: number) => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/lesson/move-up/${lessonId}`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const MoveDownLessonPositionAsync = async (lessonId: number) => {
+  try {
+    const res = await axiosInstance.post(
+      `/courses/lesson/move-down/${lessonId}`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const GetPostOutstandingAsync = async () => {
+  try {
+    const res = await axiosInstance.get(`/post/outstanding`, {
       withCredentials: true,
     });
     return res.data;
@@ -804,9 +954,9 @@ export const getChapterById = async (chapterId : number) => {
     return error?.response?.data;
   }
 };
-export const ChapterEditAsync = async ({chapterId, name}: any) => {
+export const getCourseInfoAsync = async (courseId: number) => {
   try {
-    const res = await axiosInstance.put(`/courses/chapter/edit/${chapterId}`, name ,{
+    const res = await axiosInstance.get(`/courses/${courseId}/info`, {
       withCredentials: true,
     });
     return res.data;

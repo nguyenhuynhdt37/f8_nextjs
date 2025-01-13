@@ -8,7 +8,7 @@ const Content = ({ data }: any) => {
       <div className="title font-bold text-[3rem]">{data?.title}</div>
       <div className="py-2">{data?.courseDetail?.description}</div>
       <div className="pt-10">
-        <ResultCourse />
+        <ResultCourse description={data?.courseDetails?.description} />
         <ContentMain data={data?.lessonGroups} />
       </div>
     </div>

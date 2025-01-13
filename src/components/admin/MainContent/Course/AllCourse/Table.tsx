@@ -45,6 +45,18 @@ const Table = ({ data, params, setParams, setLoadData }: any) => {
     ref.current.continuousStart();
     router?.push('course/edit/' + id);
   };
+  const handleRedirectChapter = (id: number) => {
+    ref.current.continuousStart();
+    router?.push('course/chapter/' + id);
+  };
+  const handleRedirectLesson = (id: number) => {
+    ref.current.continuousStart();
+    router?.push('course/lesson/' + id);
+  };
+  const handleRedirectSort = (id: number) => {
+    ref.current.continuousStart();
+    router?.push('course/sort/' + id);
+  };
   return (
     <div className="flex flex-col pt-10">
       {contextHolder}
@@ -193,27 +205,31 @@ const Table = ({ data, params, setParams, setLoadData }: any) => {
                               className="absolute z-50 right-0 mt-2 w-48 bg-white border top-11 border-gray-200 rounded-md shadow-lg"
                             >
                               <ul>
-                                <Link
-                                  href={`/admin/course/chapter/${course?.id}`}
+                                <div
+                                  onClick={() =>
+                                    handleRedirectChapter(course?.id)
+                                  }
                                 >
                                   <li className="px-4 py-5 hover:bg-gray-100 cursor-pointer">
                                     Quản lý chương
                                   </li>
-                                </Link>
-                                <Link
-                                  href={`/admin/course/lesson/${course?.id}`}
+                                </div>
+                                <div
+                                  onClick={() =>
+                                    handleRedirectLesson(course?.id)
+                                  }
                                 >
                                   <li className="px-4 py-5 hover:bg-gray-100 cursor-pointer">
                                     Quản lý bài học
                                   </li>
-                                </Link>
-                                <Link
-                                  href={`/admin/course/lesson/${course?.id}`}
+                                </div>
+                                <div
+                                  onClick={() => handleRedirectSort(course?.id)}
                                 >
                                   <li className="px-4 py-5 hover:bg-gray-100 cursor-pointer">
                                     Sắp xếp chương và bài học
                                   </li>
-                                </Link>
+                                </div>
                               </ul>
                             </div>
                           )}

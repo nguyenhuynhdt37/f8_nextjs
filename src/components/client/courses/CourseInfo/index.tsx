@@ -8,6 +8,7 @@ import ButtonRegiterStudy from './ButtonRegiterStudy';
 import { useEffect, useState } from 'react';
 import { Modal } from 'antd';
 import ModalIntroduce from './ModalIntroduce';
+import { log } from 'console';
 const CourseInfo = ({
   data,
   timeCourse,
@@ -18,7 +19,7 @@ const CourseInfo = ({
   totalLesson: number;
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+  console.log('data', data);
   return (
     <div>
       <div className="sticky top-[10.5rem] px-10">

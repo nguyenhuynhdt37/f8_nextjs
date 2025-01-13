@@ -1,7 +1,7 @@
 'use client';
 import { getAllPost } from '@/api/api';
 import Pagination from './Pagination';
-import { useAppDispatch } from '@/redux/hook/hook';
+import { useAppDispatch, useAppSelector } from '@/redux/hook/hook';
 import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
 import { IpageEdit } from '@/types/next-auth';
 import React, { useEffect, useRef, useState } from 'react';
@@ -26,10 +26,11 @@ const PostList = ({ types }: any) => {
   useEffect(() => {
     dispatch(setStateNav(3));
   }, []);
+  const user = useAppSelector(state => state.auth?.user?.user);
   const [messageApi, contextHolder] = message.useMessage();
-  const handleRedirectById = (id: number) => {
+  const handleRedirectById = (name: string) => {
     ref.current.continuousStart();
-    router.push(`/profle/${id}`);
+    router.push(`/post/${name}`);
   };
   const [loadData, setLoadData] = useState<number>(0);
   const [data, setData] = useState<any>();
@@ -42,6 +43,8 @@ const PostList = ({ types }: any) => {
     sortField: '',
     sortOrder: '',
   });
+  console.log('params', user);
+
   useEffect(() => {
     const handleGetData = async () => {
       ref.current.continuousStart();
@@ -69,9 +72,9 @@ const PostList = ({ types }: any) => {
     ref.current.continuousStart();
     router.push(`/post/${id}`);
   };
-  const handleEdit = () => {
-    // Xử lý khi người dùng chọn sửa bài viết
-    // Thực hiện các hành động cần thiết như điều hướng hoặc mở modal
+  const handleEdit = (id: number) => {
+    ref.current.continuousStart();
+    router.push('/post/edit/' + id);
   };
 
   const handleShareFacebook = () => {
@@ -134,7 +137,6 @@ const PostList = ({ types }: any) => {
                     className="w-12 mr-5 border-2 border-[#c7a829] h-12 object-cover rounded-full"
                     src={data?.user?.avatar || '/images/avatar-empty.png'}
                     alt=""
-                    s
                   />
                   <div className="flex items-center">
                     {post?.user?.name}
@@ -152,12 +154,14 @@ const PostList = ({ types }: any) => {
                   content={
                     <div className="px-5 shadow-2xl rounded-xl text-[#111] z-20 bg-[#fff]">
                       {/* Sửa bài viết */}
-                      <div
-                        className="flex py-4 hover:text-[#974676] items-center cursor-pointer"
-                        onClick={handleEdit}
-                      >
-                        <FaPencil className="mr-5" /> Sửa bài viết
-                      </div>
+                      {user?.id === post?.user?.id && (
+                        <div
+                          className="flex py-4 hover:text-[#974676] items-center cursor-pointer"
+                          onClick={() => handleEdit(post?.blog?.id)}
+                        >
+                          <FaPencil className="mr-5" /> Sửa bài viết
+                        </div>
+                      )}
 
                       {/* Chia sẻ lên Facebook */}
                       <div
@@ -247,7 +251,7 @@ const PostList = ({ types }: any) => {
                 if (type?.bloggerCount >= 1) {
                   return (
                     <button
-                      onClick={() => handleRedirectById(type?.id)}
+                      onClick={() => handleRedirectById(type?.name)}
                       key={type?.id || index}
                       className="px-10 py-3 rounded-3xl my-3 mr-5 bg-[#e8e8e8]"
                     >

@@ -4,7 +4,7 @@ import Login from '@/components/client/Login';
 import { useAppSelector } from '@/redux/hook/hook';
 import { message } from 'antd';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import LoadingBar from 'react-top-loading-bar';
 import Swal from 'sweetalert2';
 const ButtonRegiterStudy = ({ idCourse }: { idCourse: number }) => {
@@ -13,6 +13,13 @@ const ButtonRegiterStudy = ({ idCourse }: { idCourse: number }) => {
   const ref = useRef<any>(null);
   const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
+  console.log('auth', auth);
+
+  useEffect(() => {
+    // if (auth?.user?.) {
+    //   setIsLoginOpen(false);
+    // }
+  }, []);
   const handleSubmit = async () => {
     if (!auth) {
       setIsLoginOpen(true);
@@ -31,12 +38,14 @@ const ButtonRegiterStudy = ({ idCourse }: { idCourse: number }) => {
           if (result.isConfirmed) {
             ref.current.continuousStart();
             router.push(`/learning/${idCourse}`);
+          } else {
+            messageApi.error('Có lỗi xảy ra, vui lòng thử lại sau');
           }
         });
       } else {
         messageApi.open({
           type: 'error',
-          content: 'Lỗi khi đăng ký khoá học, vui lòng thử lại cho',
+          content: 'Lỗi khi đăng ký khoá học, vui lòng thử lại sau',
         });
       }
     }

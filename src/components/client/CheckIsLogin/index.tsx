@@ -5,7 +5,6 @@ import { getInfoRedux } from '@/redux/reducers/slices/AuthSlice';
 import { message } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import Swal from 'sweetalert2';
 
 const CheckIsLogin = ({ cookie }: any) => {
   const dispatch = useAppDispatch();
@@ -17,16 +16,7 @@ const CheckIsLogin = ({ cookie }: any) => {
       dispatch(getInfoRedux())
         .unwrap()
         .then((data: any) => {})
-        .catch(() => {
-          logoutApi();
-          Swal.fire({
-            icon: 'info',
-            title: 'Thông tin!',
-            text: 'Hết phiên đăng nhập.',
-            confirmButtonText: 'Đóng',
-          });
-          return;
-        });
+        .catch(() => {});
     }
   }, [cookie]);
 

@@ -4,6 +4,7 @@ import Category from './Category';
 import { getAllCourseByLevel } from '@/api/api';
 import { useAppDispatch, useAppSelector } from '@/redux/hook/hook';
 import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
+import FeaturedPost from './FeaturedPost';
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +29,7 @@ const Home = () => {
     <div className="px-32 pt-16">
       <Category data={courseOne} />
       <Category data={courseTwo} />
+      <FeaturedPost />
     </div>
   );
 };

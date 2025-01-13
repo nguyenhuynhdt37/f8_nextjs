@@ -158,3 +158,20 @@ section-container::-webkit-scrollbar-thumb {
   box-shadow: none !important;
   border: none !important;
 }
+
+.custom-post {
+  p {
+    font-size: 1.6rem;
+    line-height: 2.5rem;
+    font-weight: 300;
+    text-align: justify;
+  }
+  img {
+    width: 100% !important;
+    object-fit: cover;
+    border-radius: 1rem;
+  }
+  div {
+    text-align: justify;
+  }
+}

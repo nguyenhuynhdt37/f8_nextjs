@@ -17,6 +17,7 @@ const ModalUser = ({ data }: any) => {
   const handleToggleMenu = () => {
     setVisible(prevVisible => !prevVisible);
   };
+
   return (
     <div className="flex text-[1.4rem] items-center text-[#333333] ">
       <LoadingBar color="#0066df" ref={ref} />
@@ -31,12 +32,12 @@ const ModalUser = ({ data }: any) => {
         arrow={false}
         content={
           <div ref={menuRef} className="transition ease-in-out duration-500">
-            <ModalInfo ref={ref} data={data} />
+            <ModalInfo refInfo={ref} data={data} />
           </div>
         }
         interactive={true}
         placement="bottom"
-        trigger="click"
+        // trigger="click"
       >
         <img
           onClick={handleToggleMenu}

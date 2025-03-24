@@ -1,7 +1,6 @@
 import LoginHome from '@/components/Login/LoginHome';
 import LoginWithEmail from '@/components/Login/LoginWithEmail';
 import SentEmail from '@/components/Login/SentEmail';
-import { useAppSelector } from '@/redux/hook/hook';
 import { Modal } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FiChevronLeft } from 'react-icons/fi';

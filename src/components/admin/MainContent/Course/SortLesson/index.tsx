@@ -12,7 +12,6 @@ import {
 import { timeAgo } from '@/Utils/functions';
 import Tippy from '@tippyjs/react';
 import { message } from 'antd';
-import { log } from 'console';
 import { useEffect, useState } from 'react';
 import { IoChevronUpCircleSharp } from 'react-icons/io5';
 import { IoChevronDownCircleSharp } from 'react-icons/io5';
@@ -20,7 +19,14 @@ interface ISortLesson {
   courseId: number;
 }
 const SortLesson = ({ courseId }: ISortLesson) => {
+  console.log('courseId', courseId);
   const [refetch, setRefetch] = useState<number>(-1);
+
+  const [messageApi, contextHolder] = message.useMessage();
+  const [dataCourse, setDataCourse] = useState<any>();
+  const [data, setData] = useState<any>();
+  const [activeShowLesson, setShowLesson] = useState<number>(-1);
+  const [activeShowChapter, setShowChapter] = useState<number>();
   useEffect(() => {
     const handleGetRequest = async () => {
       if (courseId) {
@@ -48,11 +54,7 @@ const SortLesson = ({ courseId }: ISortLesson) => {
     };
     handleGetRequest();
   }, [refetch]);
-  const [messageApi, contextHolder] = message.useMessage();
-  const [dataCourse, setDataCourse] = useState<any>();
-  const [data, setData] = useState<any>();
-  const [activeShowLesson, setShowLesson] = useState<number>(-1);
-  const [activeShowChapter, setShowChapter] = useState<number>();
+
   console.log('data', data);
   const handleShowChapter = (id: number) => {
     setShowChapter(id);

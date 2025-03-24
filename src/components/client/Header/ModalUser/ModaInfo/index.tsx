@@ -66,11 +66,9 @@ const ModalInfo = ({ data, refInfo }: any) => {
           </div>
         </div>
         <div className="text-[1.3rem] w-full">
-          <button onClick={handleRedirectProfile}>
-            <div className="py-6 w-full border-y-[0.1rem] cursor-pointer hover:text-[#000000]">
-              Trang cá nhân
-            </div>
-          </button>
+          <div className="py-6 w-full border-y-[0.1rem] cursor-pointer hover:text-[#000000]">
+            <button onClick={handleRedirectProfile}>Trang cá nhân</button>
+          </div>
           <div
             onClick={handleRedirectPostCreate}
             className="py-3 mt-2 cursor-pointer hover:text-[#000000]"

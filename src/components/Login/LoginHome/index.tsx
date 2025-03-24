@@ -1,3 +1,4 @@
+import GoogleAuth from '@/components/GoogleAuth';
 import React, { Dispatch, SetStateAction } from 'react';
 
 const LoginHome = ({
@@ -5,9 +6,22 @@ const LoginHome = ({
 }: {
   setStep: Dispatch<SetStateAction<number>>;
 }) => {
+  const handleLoginGoogle = () => {
+    const googleAuthURL =
+      `https://accounts.google.com/o/oauth2/v2/auth?` +
+      `client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&` +
+      `redirect_uri=${encodeURIComponent(process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI!)}&` +
+      `response_type=code&` + // Lấy Authorization Code
+      `scope=openid%20email%20profile`;
+
+    window.location.href = googleAuthURL;
+  };
   return (
-    <div className="flex justify-center   flex-wrap">
-      <button className="relative w-11/12 bg-[#fff] my-2 justify-center font-medium rounded-full border-2 hover:bg-[#dce0e3] flex items-center px-5 py-[0.8rem]">
+    <div className="flex justify-center flex-wrap">
+      <button
+        onClick={handleLoginGoogle}
+        className="relative w-11/12 bg-[#fff] my-2 justify-center font-medium rounded-full border-2 hover:bg-[#dce0e3] flex items-center px-5 py-[0.8rem]"
+      >
         <img
           src="data:image/svg+xml,%3csvg%20width='18'%20height='18'%20viewBox='0%200%2018%2018'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20transform=''%3e%3cg%20fill-rule='evenodd'%3e%3cpath%20d='m17.64%209.2a10.341%2010.341%200%200%200%20-.164-1.841h-8.476v3.481h4.844a4.14%204.14%200%200%201%20-1.8%202.716v2.264h2.909a8.777%208.777%200%200%200%202.687-6.62z'%20fill='%234285f4'/%3e%3cpath%20d='m9%2018a8.592%208.592%200%200%200%205.956-2.18l-2.909-2.258a5.43%205.43%200%200%201%20-8.083-2.852h-3.007v2.332a9%209%200%200%200%208.043%204.958z'%20fill='%2334a853'/%3e%3cpath%20d='m3.964%2010.71a5.321%205.321%200%200%201%200-3.42v-2.332h-3.007a9.011%209.011%200%200%200%200%208.084z'%20fill='%23fbbc05'/%3e%3cpath%20d='m9%203.58a4.862%204.862%200%200%201%203.44%201.346l2.581-2.581a8.649%208.649%200%200%200%20-6.021-2.345%209%209%200%200%200%20-8.043%204.958l3.007%202.332a5.364%205.364%200%200%201%205.036-3.71z'%20fill='%23ea4335'/%3e%3c/g%3e%3cpath%20d='m0%200h18v18h-18z'%20fill='none'/%3e%3c/g%3e%3c/svg%3e"
           alt=""

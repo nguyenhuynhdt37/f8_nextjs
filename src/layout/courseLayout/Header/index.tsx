@@ -1,6 +1,6 @@
 'use client';
 import { getProcess } from '@/api/api';
-import Progressbar from '@/components/client/learning/header/Progressbar';
+import Progressbar from '@/components/client/Learning/header/Progressbar';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useRef, useState } from 'react';

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p 3001",
+    "dev": "next dev -H 0.0.0.0 -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -19,6 +19,7 @@
     "@monaco-editor/react": "^4.6.0",
     "@namo-io/react-reactions": "^0.5.2-alpha.1",
     "@next/font": "^14.2.15",
+    "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.2.8",
     "@tailwindcss/typography": "^0.5.15",
     "@tinymce/tinymce-react": "^5.1.1",

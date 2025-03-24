@@ -964,3 +964,17 @@ export const getCourseInfoAsync = async (courseId: number) => {
     return error?.response?.data;
   }
 };
+export const googleAuthAsync = async (code: string) => {
+  try {
+    const res = await axiosInstance.post(
+      `/auth/google/callback`,
+      { code },
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};

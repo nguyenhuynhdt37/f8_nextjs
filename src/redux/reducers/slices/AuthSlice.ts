@@ -1,5 +1,5 @@
 import { getInfoUser } from '@/api/api';
- 
+
 import { GetUserInfoByToken, login } from '@/api/api';
 import { IAuthSlice } from '@/types/next-auth';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';

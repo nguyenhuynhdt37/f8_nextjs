@@ -14,9 +14,6 @@ const ModalUser = ({ data }: any) => {
     setVisible(false);
   };
   const menuRef = useOutsideClick(handleCloseMenu);
-  const handleToggleMenu = () => {
-    setVisible(prevVisible => !prevVisible);
-  };
 
   return (
     <div className="flex text-[1.4rem] items-center text-[#333333] ">
@@ -37,10 +34,9 @@ const ModalUser = ({ data }: any) => {
         }
         interactive={true}
         placement="bottom"
-        // trigger="click"
+        trigger="click"
       >
         <img
-          onClick={handleToggleMenu}
           className="object-cover cursor-pointer h-12 w-12 rounded-full"
           src={
             data?.user?.avatar ||

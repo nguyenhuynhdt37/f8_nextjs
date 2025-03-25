@@ -16,6 +16,11 @@ const LoginHome = ({
 
     window.location.href = googleAuthURL;
   };
+  const handleLoginGithub = () => {
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_GITHUB_REDIRECT_URI}&scope=user:email`;
+
+    window.location.href = githubAuthUrl;
+  };
   return (
     <div className="flex justify-center flex-wrap">
       <button
@@ -29,7 +34,10 @@ const LoginHome = ({
         />
         Đăng nhập với Google
       </button>
-      <button className="relative w-11/12 my-2 bg-[#fff] justify-center font-medium rounded-full border-2 hover:bg-[#dce0e3] flex items-center px-5 py-[0.8rem]">
+      <button
+        onClick={handleLoginGithub}
+        className="relative w-11/12 my-2 bg-[#fff] justify-center font-medium rounded-full border-2 hover:bg-[#dce0e3] flex items-center px-5 py-[0.8rem]"
+      >
         <img
           src="data:image/svg+xml,%3csvg%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M10%200C4.476%200%200%204.477%200%2010c0%204.418%202.865%208.166%206.84%209.49.5.09.68-.218.68-.483%200-.237-.007-.866-.012-1.7-2.782.603-3.37-1.34-3.37-1.34-.454-1.157-1.11-1.464-1.11-1.464-.907-.62.07-.608.07-.608%201.003.07%201.53%201.03%201.53%201.03.893%201.53%202.342%201.087%202.912.83.09-.645.35-1.085.634-1.335-2.22-.253-4.555-1.11-4.555-4.943%200-1.09.39-1.984%201.03-2.683-.105-.253-.448-1.27.096-2.647%200%200%20.84-.268%202.75%201.026A9.555%209.555%200%200110%204.836a9.59%209.59%200%20012.504.337c1.91-1.294%202.747-1.026%202.747-1.026.548%201.377.204%202.394.1%202.647.64.7%201.03%201.592%201.03%202.683%200%203.842-2.34%204.687-4.566%204.935.36.308.678.92.678%201.852%200%201.336-.01%202.415-.01%202.743%200%20.267.18.578.687.48A10%2010%200%200020%2010c0-5.522-4.478-10-10-10'%20fill='%23191717'%20fill-rule='evenodd'%3e%3c/path%3e%3c/svg%3e"
           alt=""

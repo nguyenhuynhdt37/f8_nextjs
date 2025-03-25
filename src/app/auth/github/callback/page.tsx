@@ -1,25 +1,25 @@
 'use client';
 import { useEffect } from 'react';
-import { googleAuthAsync, login } from '@/api/api';
+import { githubAuthAsync, googleAuthAsync, login } from '@/api/api';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { getInfoRedux } from '@/redux/reducers/slices/AuthSlice';
 
-export default function GoogleCallback() {
+export default function GithubCallback() {
   const router = useRouter();
   const dispatch: any = useAppDispatch();
   useEffect(() => {
-    const handleGoogleAuth = async () => {
+    const handleGithubAuth = async () => {
       const code = new URLSearchParams(window.location.search).get('code');
       if (!code) return;
       console.log('code', code);
 
-      const res = await googleAuthAsync(code);
+      const res = await githubAuthAsync(code);
       dispatch(getInfoRedux());
       router.push('/');
     };
 
-    handleGoogleAuth();
+    handleGithubAuth();
   }, []);
 
   return (

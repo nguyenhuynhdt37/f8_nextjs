@@ -978,3 +978,17 @@ export const googleAuthAsync = async (code: string) => {
     return error?.response?.data;
   }
 };
+export const githubAuthAsync = async (code: string) => {
+  try {
+    const res = await axiosInstance.post(
+      `/auth/github/callback`,
+      { code },
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};

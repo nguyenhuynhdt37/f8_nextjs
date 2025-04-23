@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Table from './Table';
 import Search from './Search';
-import { getLesonpByCourseId } from '@/api/api';
+import { getLesonpByCourseId } from '@/api/axios/api';
 import { IpageEdit } from '@/types/next-auth';
 import { useRouter } from 'next/navigation';
 import LoadingBar from 'react-top-loading-bar';

@@ -1,5 +1,5 @@
 'use client';
-import { DeleteUser, getAllUser } from '@/api/api';
+import { DeleteUser, getAllUser } from '@/api/axios/api';
 import { useEffect, useRef, useState } from 'react';
 import { IpageEdit, IPageListProps, IUser } from '@/types/next-auth';
 import LoadingPage from '@/components/client/LoadingPage';

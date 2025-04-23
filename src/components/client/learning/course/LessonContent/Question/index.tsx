@@ -1,5 +1,5 @@
 'use client';
-import { ViewNoteLesson, ViewQuestionLesson } from '@/api/api';
+import { ViewNoteLesson, ViewQuestionLesson } from '@/api/axios/api';
 import { getCurrentMonthAndYear } from '@/Utils/functions';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
@@ -17,6 +17,8 @@ const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
       const data = await ViewQuestionLesson(id);
       if (data?.statusCode === 200) {
         let dataCopy = { ...data?.data };
+        console.log('dataCopy', dataCopy);
+
         dataCopy.tblQuestionsLesson.tblQuestionsLessonDetails =
           dataCopy.tblQuestionsLesson.tblQuestionsLessonDetails
             ?.slice()
@@ -73,17 +75,15 @@ const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
             <motion.button
               key={detail.id}
               onClick={() => handleClick(detail)}
-              className={`px-5 my-4 py-6 cursor-pointer ${
-                isAnswer?.error && isAnswer?.id === detail?.id
-                  ? 'border-[#d06868] bg-[#ea8787]'
-                  : detail?.id !== isAnswer?.id
-                    ? 'border-[#f6f7f9]'
-                    : 'border-[#0093fc]'
-              } ${
-                isAnswer?.error === false &&
+              className={`px-5 my-4 py-6 cursor-pointer ${isAnswer?.error && isAnswer?.id === detail?.id
+                ? 'border-[#d06868] bg-[#ea8787]'
+                : detail?.id !== isAnswer?.id
+                  ? 'border-[#f6f7f9]'
+                  : 'border-[#0093fc]'
+                } ${isAnswer?.error === false &&
                 isAnswer?.id === detail?.id &&
                 'border-[#48bd79] bg-[#b0f4b0]'
-              } border-2 rounded-2xl bg-[#f6f7f9] focus:outline-none w-full`}
+                } border-2 rounded-2xl bg-[#f6f7f9] focus:outline-none w-full`}
               animate={
                 isAnswer?.error && isAnswer?.id === detail?.id
                   ? { x: [-10, 10, -10, 10, 0] }

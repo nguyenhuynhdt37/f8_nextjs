@@ -1,5 +1,5 @@
 'use client';
-import { getFirstLesson } from '@/api/api';
+import { getFirstLesson } from '@/api/axios/api';
 import { getVideoIdFromUrl } from '@/Utils/functions';
 import { Modal } from 'antd';
 import React, { useState, useEffect } from 'react';

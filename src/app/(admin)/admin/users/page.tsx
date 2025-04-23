@@ -1,4 +1,4 @@
-import { getAllUser } from '@/api/api';
+import { getAllUser } from '@/api/axios/api';
 import EmployeeListingPage from '@/components/admin/MainContent/EmployeeListingPage';
 import React from 'react';
 

@@ -1,4 +1,4 @@
-import { DeleteUser } from '@/api/api';
+import { DeleteUser } from '@/api/axios/api';
 import { message } from 'antd';
 import React from 'react';
 

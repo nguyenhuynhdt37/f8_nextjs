@@ -1,5 +1,5 @@
 'use client';
-import { getUserByID, UpdateImageUser, UpdateUser } from '@/api/api';
+import { getUserByID, UpdateImageUser, UpdateUser } from '@/api/axios/api';
 import NotFound from '@/app/not-found';
 import LoadingPage from '@/components/client/LoadingPage';
 import RichTextEditor from '@/components/RichTextEditor';

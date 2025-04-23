@@ -4,7 +4,7 @@ import LoadingPage from '@/components/client/LoadingPage';
 import { useAppSelector } from '@/redux/hook/hook';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { message } from 'antd';
-import { activeShowLesson, CheckLessonComplete } from '@/api/api';
+import { activeShowLesson, CheckLessonComplete } from '@/api/axios/api';
 import LoadingBar from 'react-top-loading-bar';
 import { group } from 'console';
 import { FooterBar, LessonContent, SideBar } from './course';

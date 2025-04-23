@@ -1,4 +1,4 @@
-import { CheckCodeActive, sendEmailAsync } from '@/api/api';
+import { CheckCodeActive, sendEmailAsync } from '@/api/axios/api';
 import Loading from '@/components/client/Loading';
 import { RootState } from '@/redux/store';
 import { error } from 'console';
@@ -134,9 +134,8 @@ const SentEmail = ({
       <div className="relative my-2">
         <input
           type="text"
-          className={`${
-            codeError && 'border-[#f33a58] bg-[#eedce4]'
-          } px-6 rounded-full border-[0.15rem]  text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
+          className={`${codeError && 'border-[#f33a58] bg-[#eedce4]'
+            } px-6 rounded-full border-[0.15rem]  text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
           placeholder="Mã xác nhận"
           // disabled={isDistable}
           name="code"
@@ -147,11 +146,10 @@ const SentEmail = ({
         />
         <button
           onClick={handleSentEmail}
-          className={`${
-            !isDistable
+          className={`${!isDistable
               ? 'text-[#fff] bg-[#f97525]'
               : 'text-[#757575] bg-[#cccccc]'
-          } absolute py-[1rem] top-1/2 -translate-y-1/2 text-[1.4rem] font-medium w-44 right-[0.26rem] rounded-full `}
+            } absolute py-[1rem] top-1/2 -translate-y-1/2 text-[1.4rem] font-medium w-44 right-[0.26rem] rounded-full `}
         >
           {loading && (
             <div className="flex justify-center">

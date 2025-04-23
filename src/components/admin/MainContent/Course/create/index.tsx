@@ -6,7 +6,7 @@ import { useState } from 'react';
 import CoursePrice from './CoursePrice';
 import Levels from './Levels';
 import { hasValue } from '@/Utils/functions';
-import { CourseCreate } from '@/api/api';
+import { CourseCreate } from '@/api/axios/api';
 import { useRouter } from 'next/navigation';
 import Banner from './Banner';
 

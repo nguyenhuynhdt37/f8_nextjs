@@ -3,7 +3,7 @@ import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { PiListBold } from 'react-icons/pi';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
-import { getNextLesson, getPrevLesson } from '@/api/api';
+import { getNextLesson, getPrevLesson } from '@/api/axios/api';
 import { message } from 'antd';
 import { log } from 'node:console';
 const FooterBar = ({
@@ -60,7 +60,7 @@ const FooterBar = ({
               repeat: Infinity, // Lặp vô hạn
             }}
             className="px-2 justify-center font-medium flex items-center py-3 border-[0.1rem] text-[#fff] text-2xl bg-[#0093fc] border-[#0093fc] rounded-2xl"
-            onClick={() => {}}
+            onClick={() => { }}
           >
             <span className="mr-4"></span> Bài tiếp theo
             <FiChevronRight className="text-3xl text-[#fff] text mr-2" />

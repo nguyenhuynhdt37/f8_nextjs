@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Category from './Category';
-import { getAllCourseByLevel } from '@/api/api';
+import { getAllCourseByLevel } from '@/api/axios/api';
 import { useAppDispatch, useAppSelector } from '@/redux/hook/hook';
 import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
 import FeaturedPost from './FeaturedPost';

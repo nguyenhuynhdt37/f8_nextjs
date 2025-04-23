@@ -1,4 +1,4 @@
-import { LessonCreateAsync } from '@/api/api';
+import { LessonCreateAsync } from '@/api/axios/api';
 import RichTextEditor from '@/components/RichTextEditor';
 import { getVideoIdFromUrl, isValidYoutubeUrlFunc } from '@/Utils/functions';
 import { message } from 'antd';

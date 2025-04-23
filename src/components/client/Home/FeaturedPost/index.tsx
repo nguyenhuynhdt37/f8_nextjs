@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Post from './Post';
-import { GetPostOutstandingAsync } from '@/api/api';
+import { GetPostOutstandingAsync } from '@/api/axios/api';
 
 const FeaturedPost = () => {
   const [data, setData] = useState<any>(null);

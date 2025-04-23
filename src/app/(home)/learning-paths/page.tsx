@@ -1,8 +1,10 @@
-import LearningPaths from '@/components/client/LearningPaths';
-import React from 'react';
+import LearningPaths from '@/components/client/LearningPaths'
+import React from 'react'
 
-const LearningPathsPage = () => {
-  return <LearningPaths />;
-};
+function LearningPathsPage() {
+    return (
+        <LearningPaths />
+    )
+}
 
-export default LearningPathsPage;
+export default LearningPathsPage

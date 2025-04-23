@@ -7,7 +7,7 @@ import { RiContactsLine } from 'react-icons/ri';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
 import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
 import { redirect } from 'next/navigation';
-import { getUserByID } from '@/api/api';
+import { getUserByID } from '@/api/axios/api';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 const breadcrumbItems = [

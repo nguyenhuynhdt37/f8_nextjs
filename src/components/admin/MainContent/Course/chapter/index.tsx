@@ -4,7 +4,7 @@ import Table from './Table';
 import Search from './Search';
 import Filter from './SortPotion';
 import Pagination from '../../Pagination';
-import { getAllCourses, getLesonGroupById } from '@/api/api';
+import { getAllCourses, getLesonGroupById } from '@/api/axios/api';
 import { IpageEdit } from '@/types/next-auth';
 import LoadingPage from '@/components/client/LoadingPage';
 import { useRouter } from 'next/navigation';

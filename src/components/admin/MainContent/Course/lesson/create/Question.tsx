@@ -1,4 +1,4 @@
-import { QuestionLessonCreate } from '@/api/api';
+import { QuestionLessonCreate } from '@/api/axios/api';
 import RichTextEditor from '@/components/RichTextEditor';
 import { message } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -142,11 +142,10 @@ const Question = ({
         {answers?.map(answer => (
           <div
             key={answer?.id}
-            className={`${
-              isAnswerSuccess === answer?.id
+            className={`${isAnswerSuccess === answer?.id
                 ? 'border-[#609fd6] bg-[#d8e3ed]'
                 : 'border-[#ffd1db] bg-[#fef0f1]'
-            } border-2 rounded-xl my-5 px-10 flex`}
+              } border-2 rounded-xl my-5 px-10 flex`}
           >
             <input
               onChange={() => setIsAnswerSuccess(answer?.id)}
@@ -155,16 +154,14 @@ const Question = ({
               type="checkbox"
             />
             <input
-              className={`${
-                isAnswerSuccess === answer?.id
+              className={`${isAnswerSuccess === answer?.id
                   ? 'placeholder-[#9bc2de] text-[#609fd6]'
                   : 'placeholder-[#de9b9b] text-[#cf6363]'
-              } flex-1 px-20 py-7 bg-inherit focus:outline-none`}
-              placeholder={`${
-                isAnswerSuccess === answer?.id
+                } flex-1 px-20 py-7 bg-inherit focus:outline-none`}
+              placeholder={`${isAnswerSuccess === answer?.id
                   ? 'Nhập câu trả lời đúng vào đây'
                   : 'Nhập câu trả lời sai vào đây'
-              }`}
+                }`}
               type="text"
               value={answer.answer}
               onChange={e => handleOnchange(e, answer?.id)}

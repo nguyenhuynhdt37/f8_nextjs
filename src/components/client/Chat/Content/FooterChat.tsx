@@ -10,7 +10,8 @@ const FooterChat = () => {
       <div className="flex-1">
         <input
           type="text"
-          className="px-10 py-3 w-full rounded-full focus:outline-none text-[#191919] font-light bg-[#f0f2f5]"
+          className="px-10 py-3 w-full rounded-full focus:outline-none text-[#191919] font-light bg-[#f0f2f5] text-[1.4rem] font-sans"
+          placeholder="Nhập tin nhắn..."
         />
       </div>
       <div className="pl-10">

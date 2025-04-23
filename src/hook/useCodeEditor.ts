@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { getQuessonCode, SaveCodeUser, SubmitCode } from '@/api/api';
+import { getQuessonCode, SaveCodeUser, SubmitCode } from '@/api/axios/api';
 
 export const useQuessonCode = (id: string, courseId: string) => {
   const [data, setData] = useState<any>(null);

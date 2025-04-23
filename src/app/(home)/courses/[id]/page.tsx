@@ -1,4 +1,4 @@
-import { getCourseInfo } from '@/api/api';
+import { getCourseInfo } from '@/api/axios/api';
 import { Content, CourseInfo } from '@/components/client/courses';
 import LoadingPage from '@/components/client/LoadingPage';
 import { useCookie } from '@/hook/useCookie';

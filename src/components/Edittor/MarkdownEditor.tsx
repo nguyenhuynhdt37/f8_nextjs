@@ -2,7 +2,7 @@ import React from 'react';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
-import { uploadImage } from '@/api/api';
+import { uploadImage } from '@/api/axios/api';
 import { v4 as uuidv4 } from 'uuid';
 // Khởi tạo parser Markdown
 const mdParser = new MarkdownIt();

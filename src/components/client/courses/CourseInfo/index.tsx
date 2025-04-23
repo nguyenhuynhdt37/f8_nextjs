@@ -35,7 +35,7 @@ const CourseInfo = ({
           <div className="rounded-3xl bg-gradient-to-b opacity-70 top-0 left-0 from-transparent to-[#000] absolute w-full h-full"></div>
         </div>
         <div className="pt-5 text-[#494949]">
-          {data?.courseDetail.isFree && (
+          {data?.courseDetail?.isFree && (
             <div className="text-[3rem] text-[#f05123] text-center">
               Miễn phí
             </div>

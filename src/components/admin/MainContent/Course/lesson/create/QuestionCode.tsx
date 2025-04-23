@@ -2,7 +2,7 @@ import {
   getLanguageCodes,
   NoteCreateAsync,
   QuessonCodeCreate,
-} from '@/api/api';
+} from '@/api/axios/api';
 import RichTextEditor from '@/components/RichTextEditor';
 import { message } from 'antd';
 import { useRouter } from 'next/navigation';

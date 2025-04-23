@@ -1,4 +1,4 @@
-import { login } from '@/api/api';
+import { login } from '@/api/axios/api';
 import Loading from '@/components/client/Loading';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { getInfoRedux, setEmailRedux } from '@/redux/reducers/slices/AuthSlice';
@@ -83,9 +83,8 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
         <div className="font-medium mb-4">Tên đăng nhập</div>
         <input
           type="text"
-          className={`${
-            error?.email && 'border-[#f33a58] bg-[#eedce4]'
-          } px-6 rounded-full border-[0.15rem] my-2 text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
+          className={`${error?.email && 'border-[#f33a58] bg-[#eedce4]'
+            } px-6 rounded-full border-[0.15rem] my-2 text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
           placeholder="Email của bạn"
           name="email"
           value={email}
@@ -105,9 +104,8 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
         >
           <input
             type={`${showPass ? 'text' : 'password'}`}
-            className={`${
-              error?.password && 'border-[#f33a58] bg-[#eedce4]'
-            } px-6 rounded-full border-[0.15rem] my-2 text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
+            className={`${error?.password && 'border-[#f33a58] bg-[#eedce4]'
+              } px-6 rounded-full border-[0.15rem] my-2 text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
             placeholder="Mật khẩu"
             value={password}
             name="password"

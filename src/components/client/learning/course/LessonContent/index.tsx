@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import Lesson from './Lessson';
-import { AddCourseComplete, getdataLesson } from '@/api/api';
+import { AddCourseComplete, getdataLesson } from '@/api/axios/api';
 import Note from './Note';
 import Question from './Question';
 import QuessonCode from './QuestionCode';
@@ -55,11 +55,10 @@ const LessonContent = ({
 
   return (
     <div
-      className={`${
-        isShowSideBar ? 'col-span-3' : 'col-span-full'
-      } scrollbar-custom text-[1.4rem] relative mb-[5rem] overflow-y-scroll`}
+      className={`${isShowSideBar ? 'col-span-3' : 'col-span-full'
+        } scrollbar-custom text-[1.4rem] relative mb-[5rem] overflow-y-scroll`}
     >
-      {data?.lesson?.lessonType?.id === 1 && (
+      {data?.lesson.lessontype?.id === 1 && (
         <Lesson
           isCompleteLesson={isCompleteLesson}
           setIsCompletedLesson={setIsCompletedLesson}
@@ -67,21 +66,21 @@ const LessonContent = ({
           data={data?.lesson}
         />
       )}
-      {data?.lesson?.lessonType?.id === 3 && (
+      {data?.lesson.lessontype?.id === 3 && (
         <Question
           id={data?.lesson?.id}
           isCompleteLesson={isCompleteLesson}
           setIsCompletedLesson={setIsCompletedLesson}
         />
       )}
-      {data?.lesson?.lessonType?.id === 4 && (
+      {data?.lesson.lessontype?.id === 4 && (
         <Note
           id={data?.lesson?.id}
           isCompleteLesson={isCompleteLesson}
           setIsCompletedLesson={setIsCompletedLesson}
         />
       )}
-      {data?.lesson?.lessonType?.id === 2 && (
+      {data?.lesson.lessontype?.id === 2 && (
         <QuessonCode
           courseId={courseId}
           isCompleteLesson={isCompleteLesson}

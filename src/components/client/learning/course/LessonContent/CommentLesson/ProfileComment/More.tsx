@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/redux/hook/hook';
 import { Button, message, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { DeleteComment, ReportComment } from '@/api/api';
+import { DeleteComment, ReportComment } from '@/api/axios/api';
 const More = ({ data, comment, setComment, setFeedback }: any) => {
   const [messageApi, contextHolder] = message.useMessage();
   const key = 'updatable';

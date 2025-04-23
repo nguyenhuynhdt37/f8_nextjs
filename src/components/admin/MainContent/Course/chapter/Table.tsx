@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import Pagination from '../../Pagination';
 import { message, Modal, Switch } from 'antd';
 import Delete from './Delete';
-import { CourseActive } from '@/api/api';
+import { CourseActive } from '@/api/axios/api';
 import LoadingBar from 'react-top-loading-bar';
 import { useOutsideClick } from '@/hook/useOutsideClick';
 import Link from 'next/link';

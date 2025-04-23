@@ -1,4 +1,4 @@
-import { NoteCreateAsync } from '@/api/api';
+import { NoteCreateAsync } from '@/api/axios/api';
 import RichTextEditor from '@/components/RichTextEditor';
 import { message } from 'antd';
 import { useRouter } from 'next/navigation';

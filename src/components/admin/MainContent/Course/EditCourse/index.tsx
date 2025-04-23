@@ -4,7 +4,7 @@ import { message } from 'antd';
 import { useEffect, useState } from 'react';
 
 import { fetchFile, hasValue } from '@/Utils/functions';
-import { CourseCreate, CourseEditAsync } from '@/api/api';
+import { CourseCreate, CourseEditAsync } from '@/api/axios/api';
 import { useRouter } from 'next/navigation';
 import CoursePrice from '../create/CoursePrice';
 import Levels from '../create/Levels';

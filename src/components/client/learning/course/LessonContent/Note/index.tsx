@@ -1,5 +1,5 @@
 'use client';
-import { ViewNoteLesson } from '@/api/api';
+import { ViewNoteLesson } from '@/api/axios/api';
 import confetti from 'canvas-confetti';
 
 import { useRouter } from 'next/navigation';

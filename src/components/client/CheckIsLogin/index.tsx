@@ -1,5 +1,5 @@
 'use client';
-import { logoutApi } from '@/api/api';
+import { logoutApi } from '@/api/axios/api';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { getInfoRedux } from '@/redux/reducers/slices/AuthSlice';
 import { message } from 'antd';
@@ -15,8 +15,8 @@ const CheckIsLogin = ({ cookie }: any) => {
     } else {
       dispatch(getInfoRedux())
         .unwrap()
-        .then((data: any) => {})
-        .catch(() => {});
+        .then((data: any) => { })
+        .catch(() => { });
     }
   }, [cookie]);
 

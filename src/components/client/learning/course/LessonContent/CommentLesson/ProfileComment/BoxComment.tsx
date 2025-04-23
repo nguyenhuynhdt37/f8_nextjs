@@ -1,6 +1,6 @@
 import React, { use, useState } from 'react';
 import ReactQuillEditorComment from '../ReactQuillEditorComment';
-import { CreateComment, updateComment } from '@/api/api';
+import { CreateComment, updateComment } from '@/api/axios/api';
 import { message } from 'antd';
 import { playSound } from '@/Utils/functions/SoundNumber';
 import MarkdownIt from 'markdown-it';

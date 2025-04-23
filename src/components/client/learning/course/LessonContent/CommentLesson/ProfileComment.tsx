@@ -13,7 +13,7 @@ import LoadingBar from 'react-top-loading-bar';
 import { useRouter } from 'next/navigation';
 import { timeAgo } from '@/Utils/functions';
 import { useAppSelector } from '@/redux/hook/hook';
-import { LikeChangeOrAdd, UnlikeComment } from '@/api/api';
+import { LikeChangeOrAdd, UnlikeComment } from '@/api/axios/api';
 import { message } from 'antd';
 import { playSound } from '@/Utils/functions/SoundNumber';
 import ListReaction from './ListReaction';
@@ -42,10 +42,9 @@ const ProfileComment = ({
     highlight: (code, lang) => {
       if (lang && hljs.getLanguage(lang)) {
         try {
-          return `<pre class="hljs"><code>${
-            hljs.highlight(lang, code, true).value
-          }</code></pre>`;
-        } catch (_) {}
+          return `<pre class="hljs"><code>${hljs.highlight(lang, code, true).value
+            }</code></pre>`;
+        } catch (_) { }
       }
       return `<pre class="hljs"><code>${mdParser.utils.escapeHtml(
         code,

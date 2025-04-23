@@ -1,5 +1,5 @@
 'use client';
-import { RegiterCourseFree } from '@/api/api';
+import { RegiterCourseFree } from '@/api/axios/api';
 import Login from '@/components/client/Login';
 import { useAppSelector } from '@/redux/hook/hook';
 import { message } from 'antd';

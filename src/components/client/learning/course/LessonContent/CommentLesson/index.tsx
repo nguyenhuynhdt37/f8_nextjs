@@ -2,7 +2,7 @@ import { Button, Drawer } from 'antd';
 import { useEffect, useState } from 'react';
 import BoxComment from './ProfileComment/BoxComment';
 import * as signalR from '@microsoft/signalr';
-import { getAllCommentByLessonId } from '@/api/api';
+import { getAllCommentByLessonId } from '@/api/axios/api';
 import ContentComment from './ContentComment';
 import { useAppSelector } from '@/redux/hook/hook';
 const CommentLesson = ({

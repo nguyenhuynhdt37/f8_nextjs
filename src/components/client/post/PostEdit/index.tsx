@@ -6,7 +6,7 @@ import { message, Modal } from 'antd';
 import React, { useState } from 'react';
 import 'react-markdown-editor-lite/lib/index.css';
 import MarkdownIt from 'markdown-it';
-import { CreatePost } from '@/api/api';
+import { CreatePost } from '@/api/axios/api';
 import { useRouter } from 'next/navigation';
 import { getFileFromUrl } from '@/Utils/functions';
 const PostEdit = ({ types, post }: any) => {

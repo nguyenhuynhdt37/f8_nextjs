@@ -1,6 +1,6 @@
 'use client';
 import { useEffect } from 'react';
-import { googleAuthAsync, login } from '@/api/api';
+import { googleAuthAsync, login } from '@/api/axios/api';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { getInfoRedux } from '@/redux/reducers/slices/AuthSlice';

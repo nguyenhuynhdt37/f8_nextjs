@@ -8,7 +8,7 @@ import {
   MoveUpLessonPositionAsync,
   ToggleChapterActive,
   ToggleLessonActiveAsync,
-} from '@/api/api';
+} from '@/api/axios/api';
 import { timeAgo } from '@/Utils/functions';
 import Tippy from '@tippyjs/react';
 import { message } from 'antd';
@@ -166,13 +166,13 @@ const SortLesson = ({ courseId }: ISortLesson) => {
       dataEdit = dataEdit?.map((chapter: any) =>
         chapter?.id === chapterId
           ? {
-              ...chapter,
-              tblLectureDetails: chapter.tblLectureDetails.map((lesson: any) =>
-                lesson.id === lessonId
-                  ? { ...lesson, isActive: !isActive }
-                  : lesson,
-              ),
-            }
+            ...chapter,
+            tblLectureDetails: chapter.tblLectureDetails.map((lesson: any) =>
+              lesson.id === lessonId
+                ? { ...lesson, isActive: !isActive }
+                : lesson,
+            ),
+          }
           : chapter,
       );
       setData(dataEdit);
@@ -308,18 +308,17 @@ const SortLesson = ({ courseId }: ISortLesson) => {
                                   }
                                 >
                                   <IoChevronUpCircleSharp
-                                    className={`text-[2.7rem] ${
-                                      chapter?.id === data[0]?.id &&
+                                    className={`text-[2.7rem] ${chapter?.id === data[0]?.id &&
                                       lesson?.level === 1 &&
                                       'text-[#ccc]'
-                                    }`}
+                                      }`}
                                   />
                                 </button>
                                 <button
                                   className="px-2"
                                   disabled={
                                     chapter?.id ===
-                                      data[data?.length - 1]?.id &&
+                                    data[data?.length - 1]?.id &&
                                     lesson?.level === 1
                                   }
                                   onClick={() =>
@@ -327,12 +326,11 @@ const SortLesson = ({ courseId }: ISortLesson) => {
                                   }
                                 >
                                   <IoChevronDownCircleSharp
-                                    className={`text-[2.7rem] ${
-                                      chapter?.id ===
-                                        data[data?.length - 1]?.id &&
+                                    className={`text-[2.7rem] ${chapter?.id ===
+                                      data[data?.length - 1]?.id &&
                                       lesson?.level === 1 &&
                                       'text-[#ccc]'
-                                    }`}
+                                      }`}
                                   />
                                 </button>
                               </>

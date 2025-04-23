@@ -1,5 +1,5 @@
 'use client';
-import { getAllPost, getAllPostByType } from '@/api/api';
+import { getAllPost, getAllPostByType } from '@/api/axios/api';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
 import { IpageEdit } from '@/types/next-auth';
@@ -54,7 +54,7 @@ const PostListByType = ({ types, id }: any) => {
     ref.current.continuousStart();
     router.push(`/profile/${id}`);
   };
-  const handleRedirectByBlogId = (id: number) => {};
+  const handleRedirectByBlogId = (id: number) => { };
   const handleRedirectByPostId = (id: number) => {
     ref.current.continuousStart();
     router.push(`/post/${id}`);

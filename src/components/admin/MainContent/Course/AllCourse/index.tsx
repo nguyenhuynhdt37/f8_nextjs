@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Table from './Table';
 import Search from './Search';
 import Pagination from '../../Pagination';
-import { getAllCourses } from '@/api/api';
+import { getAllCourses } from '@/api/axios/api';
 import { IpageEdit } from '@/types/next-auth';
 import LoadingPage from '@/components/client/LoadingPage';
 import { useRouter } from 'next/navigation';

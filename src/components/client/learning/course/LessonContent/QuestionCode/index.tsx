@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Editor, { loader } from '@monaco-editor/react';
 import * as esprima from 'esprima';
-import { getQuessonCode, SaveCodeUser, SubmitCode } from '@/api/api';
+import { getQuessonCode, SaveCodeUser, SubmitCode } from '@/api/axios/api';
 import { getCurrentMonthAndYear } from '@/Utils/functions';
 import 'prismjs/components/prism-typescript';
 import 'prism-themes/themes/prism-coldark-cold.css';
@@ -33,8 +33,8 @@ const QuessonCode = ({
         setData(res?.data);
         setPreCode(
           res?.data?.userCode?.submittedCode ||
-            res?.data?.quesson?.starterCode ||
-            '',
+          res?.data?.quesson?.starterCode ||
+          '',
         );
       }
     };
@@ -191,9 +191,8 @@ const QuessonCode = ({
                 ease: 'easeOut',
                 repeat: Infinity, // Lặp vô hạn
               }}
-              className={`rounded-full duration-200 px-10 py-3 ${
-                animateError ? 'bg-[#c94534]' : 'bg-[#3490c9]'
-              } text-[#fff]`}
+              className={`rounded-full duration-200 px-10 py-3 ${animateError ? 'bg-[#c94534]' : 'bg-[#3490c9]'
+                } text-[#fff]`}
             >
               Kiểm tra
             </motion.button>

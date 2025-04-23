@@ -1,4 +1,4 @@
-import { DeleteCourse, DeleteLessonGroup, DeleteUser } from '@/api/api';
+import { DeleteCourse, DeleteLessonGroup, DeleteUser } from '@/api/axios/api';
 import { message } from 'antd';
 
 import React from 'react';

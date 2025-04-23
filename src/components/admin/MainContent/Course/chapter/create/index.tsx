@@ -1,6 +1,6 @@
 'use client';
 import { useAppSelector } from '@/redux/hook/hook';
-import { CreateLessonGroup, CreateUser } from '@/api/api';
+import { CreateLessonGroup, CreateUser } from '@/api/axios/api';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

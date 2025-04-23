@@ -1,4 +1,4 @@
-import { logoutApi } from '@/api/api';
+import { logoutApi } from '@/api/axios/api';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { logout } from '@/redux/reducers/slices/AuthSlice';
 import { message } from 'antd';

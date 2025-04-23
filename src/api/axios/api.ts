@@ -1,5 +1,6 @@
 import axiosInstance from './axiosInstance';
 import { ICreateUser, IGetWithParam, IpageEdit } from '@/types/next-auth';
+import mockLearningPathDetail from '@/data/mock-learning-path-detail.json';
 
 interface LoginParams {
   email: string;
@@ -990,5 +991,27 @@ export const githubAuthAsync = async (code: string) => {
     return res.data;
   } catch (error: any) {
     return error?.response?.data;
+  }
+};
+export const getStudySechedule = async () => {
+  try {
+    const res = await axiosInstance.get(
+      `/study-schedule/get_all_study`,
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+
+export const getLearningPathDetail = async (id: string) => {
+  try {
+    return mockLearningPathDetail;
+  } catch (error) {
+    console.error('Error fetching learning path detail:', error);
+    throw error;
   }
 };

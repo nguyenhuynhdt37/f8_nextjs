@@ -135,7 +135,7 @@ const Table = ({ data, params, setParams, setLoadData }: any) => {
                           </svg>
                         </button>
                         <button
-                          onClick={() => handleDelete(course?.id)}
+                          onClick={() => handleDelete(data?.lesson?.id)}
                           className="p-2 rounded-full bg-white group transition-all duration-500 hover:bg-red-600 flex item-center"
                         >
                           <svg

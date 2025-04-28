@@ -4,6 +4,7 @@ import { useAppDispatch } from '@/redux/hook/hook';
 import { getInfoRedux, setEmailRedux } from '@/redux/reducers/slices/AuthSlice';
 import { isValidEmail } from '@/Utils/functions';
 import { message, notification } from 'antd';
+import { AppDispatch } from '@/redux/store';
 
 import { useSnackbar } from 'notistack';
 import React, {
@@ -23,7 +24,7 @@ interface IProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch() as AppDispatch;
   const containerRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -65,6 +66,7 @@ const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
         type: 'success',
         content: 'Đăng nhập thành công',
       });
+      // @ts-ignore
       dispatch(getInfoRedux());
       setOpen(false);
     }

@@ -1,6 +1,5 @@
 import { IUser } from '@/types/next-auth';
 import { Modal } from 'antd';
-import button from 'next/button';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { CiCircleMore, CiEdit, CiUser } from 'react-icons/ci';
@@ -118,11 +117,10 @@ const Table = ({ data }: { data: IUser[] | undefined }) => {
               <td className="border-b border-slate-200 p-4">
                 <div className="w-max">
                   <div
-                    className={`relative grid select-none items-center whitespace-nowrap rounded-md px-3 py-1 font-sans text-[1.1rem] font-medium uppercase ${
-                      item.isActive === 1
+                    className={`relative grid select-none items-center whitespace-nowrap rounded-md px-3 py-1 font-sans text-[1.1rem] font-medium uppercase ${item.isActive === 1
                         ? 'bg-green-500/20 text-green-900'
                         : 'bg-[#fee4e2] text-[#883c3a]'
-                    } `}
+                      } `}
                   >
                     <span className="">
                       {item?.isActive === 1 ? 'Đã kích hoạt' : 'Chưa kích hoạt'}

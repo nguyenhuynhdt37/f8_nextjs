@@ -36,7 +36,7 @@ const ChapterEdit = ({ dataChapter }: any) => {
       return;
     }
     setIsLoading(true);
-    const chapterId: number = datachapter?.id;
+    const chapterId: number = dataChapter?.id;
     const result = await ChapterEditAsync({ chapterId, name: data.name });
     setIsLoading(false);
     if (result?.statusCode === 200 || result?.statusCode === 201) {

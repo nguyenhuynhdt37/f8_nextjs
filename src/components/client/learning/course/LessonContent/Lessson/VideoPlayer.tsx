@@ -43,6 +43,8 @@ const VideoIframe: React.FC<any> = ({
 
       (window as any).onYouTubeIframeAPIReady = () => {
         const videoId = getVideoIdFromUrl(data?.lessonVideo?.videoLink);
+        if (!videoId) return;
+
         playerRef.current = new YT.Player('youtube-player', {
           height: '100%',
           width: '100%',
@@ -59,6 +61,8 @@ const VideoIframe: React.FC<any> = ({
       loadYouTubeAPI();
     } else {
       const videoId = getVideoIdFromUrl(data?.lessonVideo?.videoLink);
+      if (!videoId) return;
+
       playerRef.current = new YT.Player('youtube-player', {
         height: '100%',
         width: '100%',

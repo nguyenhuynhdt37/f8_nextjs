@@ -6,7 +6,6 @@ import ModalInfo from './ModaInfo';
 import { useOutsideClick } from '@/hook/useOutsideClick';
 import Tippy from '@tippyjs/react';
 import LoadingBar from 'react-top-loading-bar';
-
 const ModalUser = ({ data }: any) => {
   const [visible, setVisible] = useState(false);
   const ref = useRef<any>(null);

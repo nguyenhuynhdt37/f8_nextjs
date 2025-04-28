@@ -10,7 +10,7 @@ export const useQuessonCode = (id: string, courseId: string) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getQuessonCode(id);
+      const res = await getQuessonCode(Number(id));
       if (res?.statusCode === 200 || res?.statusCode === 201) {
         setData(res?.data);
       }
@@ -31,12 +31,12 @@ export const useQuessonCode = (id: string, courseId: string) => {
   }, [animateError]);
 
   const handleSave = async (code: string) => {
-    await SaveCodeUser(id, code);
+    await SaveCodeUser(Number(id), code);
   };
 
   const handleSubmit = async (code: string) => {
     const result = await SubmitCode({
-      lessonId: id,
+      lessonId: Number(id),
       code,
       coursesId: Number(courseId),
     });

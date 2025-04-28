@@ -4,7 +4,8 @@ import rootReducer from './reducers/index';
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(),
+  // @ts-ignore
+  middleware: getDefaultMiddleware => getDefaultMiddleware(),
 });
 
 export type AppDispatch = typeof store.dispatch;

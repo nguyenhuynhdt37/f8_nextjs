@@ -1015,3 +1015,39 @@ export const getLearningPathDetail = async (id: string) => {
     throw error;
   }
 };
+export const getSearch = async (q: string) => {
+  try {
+    const res = await axiosInstance.get(
+      `/search`,
+      {
+        params: {
+          'keyword': q
+        },
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+export const getSearchWithType = async (q: string, type: string, pageNumber: number) => {
+  try {
+    const res = await axiosInstance.get(
+      `/search/search-users`,
+      {
+        params: {
+          "keyword": q,
+          "type": type,
+          "page": pageNumber,
+          "pageSize": 5
+        },
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
+

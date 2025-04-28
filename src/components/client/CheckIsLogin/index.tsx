@@ -5,14 +5,21 @@ import { getInfoRedux } from '@/redux/reducers/slices/AuthSlice';
 import { message } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { AppDispatch } from '@/redux/store';
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
-const CheckIsLogin = ({ cookie }: any) => {
+interface CheckIsLoginProps {
+  cookie: ReadonlyRequestCookies;
+}
+
+const CheckIsLogin = ({ cookie }: CheckIsLoginProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   useEffect(() => {
-    if (cookie?.length === 0) {
+    if (!cookie) {
       return;
     } else {
+      // @ts-ignore
       dispatch(getInfoRedux())
         .unwrap()
         .then((data: any) => { })

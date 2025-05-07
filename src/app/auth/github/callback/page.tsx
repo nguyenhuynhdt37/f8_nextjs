@@ -12,7 +12,6 @@ export default function GithubCallback() {
     const handleGithubAuth = async () => {
       const code = new URLSearchParams(window.location.search).get('code');
       if (!code) return;
-      console.log('code', code);
 
       const res = await githubAuthAsync(code);
       dispatch(getInfoRedux());

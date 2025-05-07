@@ -89,6 +89,7 @@ const LessonContent = ({
         />
       )}
       <CommentLesson
+        courseId={courseId}
         title={data?.lesson?.title}
         idLesson={data?.lesson?.id}
         isShowComment={isShowComment}

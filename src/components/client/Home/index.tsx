@@ -2,14 +2,16 @@
 import { useEffect, useState } from 'react';
 import Category from './Category';
 import { getAllCourseByLevel } from '@/api/axios/api';
-import { useAppDispatch, useAppSelector } from '@/redux/hook/hook';
+import { useAppDispatch } from '@/redux/hook/hook';
 import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
 import FeaturedPost from './FeaturedPost';
+import { toast, Toaster } from 'sonner';
 
 const Home = () => {
   const dispatch = useAppDispatch();
   const [courseOne, setCourseOne] = useState<any>(null);
   const [courseTwo, setCourseTwo] = useState<any>(null);
+
   useEffect(() => {
     dispatch(setStateNav(1));
     const getDataAsync = async () => {
@@ -23,7 +25,7 @@ const Home = () => {
       }
     };
     getDataAsync();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="px-32 pt-16">

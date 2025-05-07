@@ -13,7 +13,6 @@ const ButtonRegiterStudy = ({ idCourse }: { idCourse: number }) => {
   const ref = useRef<any>(null);
   const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
-  console.log('auth', auth);
 
   useEffect(() => {
     // if (auth?.user?.) {

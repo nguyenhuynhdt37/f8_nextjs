@@ -61,7 +61,6 @@ const ListReaction = ({ data }: any) => {
       setListSortData(listSort);
     }
   }, [data]);
-  console.log('listSortdata', listSortdata);
   return (
     <>
       <LoadingBar color="#0066df" ref={ref} />
@@ -82,26 +81,24 @@ const ListReaction = ({ data }: any) => {
         <div className="flex items-center mr-5">
           <div className="">
             {listSortdata.map((item: any, index: number) => {
-              console.log('item', item);
-
               if (item?.count > 0 && index < 3) {
                 if (item?.icon === 'satisfaction') {
-                  return <span className="mr-1">👍</span>;
+                  return <span key={item?.id} className="mr-1">👍</span>;
                 }
                 if (item?.icon === 'love') {
-                  return <span className="mr-1">❤️</span>;
+                  return <span key={item?.id} className="mr-1">❤️</span>;
                 }
                 if (item?.icon === 'happy') {
-                  return <span className="mr-1">😆</span>;
+                  return <span key={item?.id} className="mr-1">😆</span>;
                 }
                 if (item?.icon === 'sad') {
-                  return <span className="mr-1">😥</span>;
+                  return <span key={item?.id} className="mr-1">😥</span>;
                 }
                 if (item?.icon === 'surprise') {
-                  return <span className="mr-1">😮</span>;
+                  return <span key={item?.id} className="mr-1">😮</span>;
                 }
                 if (item?.icon === 'angry') {
-                  return <span className="mr-1">😡</span>;
+                  return <span key={item?.id} className="mr-1">😡</span>;
                 }
               }
             })}
@@ -123,40 +120,40 @@ const Modal = ({ data, handleRedirectProfile, listSortdata }: any) => {
       className="p-5 pt-0 overflow-y-scroll scrollbar-custom max-h-[24em] rounded-xl bg-[#fff] text-[#000]"
     >
       <div className="sticky flex top-0 left-0 right-0 bg-[#fff]  z-10 border-b-[0.1rem] py-5 items-center">
-        {listSortdata?.map((item: any) => {
+        {listSortdata?.map((item: any, index: number) => {
           if (item?.icon === 'satisfaction' && item?.count > 0)
             return (
-              <span className="flex items-center mr-5 mr-5">
+              <span key={index} className="flex items-center mr-5 mr-5">
                 👍 <span className="ml-2">{item?.count}</span>
               </span>
             );
           if (item?.icon === 'love' && item?.count > 0)
             return (
-              <span className="flex items-center mr-5">
+              <span key={index} className="flex items-center mr-5">
                 ❤️ <span className="ml-2">{item?.count}</span>
               </span>
             );
           if (item?.icon === 'happy' && item?.count > 0)
             return (
-              <span className="flex items-center mr-5">
+              <span key={index} className="flex items-center mr-5">
                 😆 <span className="ml-2">{item?.count}</span>
               </span>
             );
           if (item?.icon === 'sad' && item?.count > 0)
             return (
-              <span className="flex items-center mr-5">
+              <span key={index} className="flex items-center mr-5">
                 😥 <span className="ml-2">{item?.count}</span>
               </span>
             );
           if (item?.icon === 'surprise' && item?.count > 0)
             return (
-              <span className="flex items-center mr-5">
+              <span key={index} className="flex items-center mr-5">
                 😮 <span className="ml-2">{item?.count}</span>
               </span>
             );
           if (item?.icon === 'angry' && item?.count > 0)
             return (
-              <span className="flex items-center mr-5">
+              <span key={index} className="flex items-center mr-5">
                 😡 <span className="ml-2">{item?.count}</span>
               </span>
             );

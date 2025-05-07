@@ -5,8 +5,10 @@ import * as signalR from '@microsoft/signalr';
 import { getAllCommentByLessonId } from '@/api/axios/api';
 import ContentComment from './ContentComment';
 import { useAppSelector } from '@/redux/hook/hook';
+import { startSignalRConnection } from '@/lib/signalr';
 const CommentLesson = ({
   title,
+  courseId,
   idLesson,
   isShowComment,
   setIsShowComment,
@@ -39,35 +41,47 @@ const CommentLesson = ({
       handleRequest();
     }
   }, [idLesson, isShowComment]);
-  // Kết nối SignalR khi component mount
-  useEffect(() => {
-    const connect = async () => {
-      const connection = new signalR.HubConnectionBuilder()
-        .withUrl('http://localhost:5217/commentHub')
-        .withAutomaticReconnect()
-        .build();
 
-      connection.on('ReceiveComment', dataCommentNew => {
-        setData(dataCommentNew);
+  useEffect(() => {
+    const initializeConnection = async () => {
+      const connection = await startSignalRConnection('commentHub');
+
+      connection.on('ReceiveMessage', (message) => {
+        console.log('ReceiveMessage:', message);
       });
-      connection.on('Error', error => {
-        console.log(error);
+
+      connection.on('ReceiveComment', (comment) => {
+        console.log('ReceiveComment:', comment);
+
+        setData(comment);
       });
 
       try {
         await connection.start();
-        setConnection(connection);
-      } catch (err: any) {
-        console.error('Connection failed: ', err.toString());
+        console.log('SignalR connected');
+        // Ví dụ gửi comment
+        connection.invoke('GrantReceiveMessage', {
+          lessonId: idLesson,
+          courseId: courseId
+        });
+      } catch (err) {
+        console.error('SignalR error:', err);
       }
+
+      setConnection(connection);
     };
 
-    connect();
+    initializeConnection();
 
     return () => {
-      connection?.stop();
+      if (connection && connection.state !== signalR.HubConnectionState.Disconnected) {
+        connection.stop();
+      }
     };
   }, []);
+
+
+
   const showDrawer = () => {
     setIsShowComment(true);
   };

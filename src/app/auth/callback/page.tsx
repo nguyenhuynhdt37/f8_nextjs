@@ -12,7 +12,6 @@ export default function GoogleCallback() {
     const handleGoogleAuth = async () => {
       const code = new URLSearchParams(window.location.search).get('code');
       if (!code) return;
-      console.log('code', code);
 
       const res = await googleAuthAsync(code);
       dispatch(getInfoRedux());

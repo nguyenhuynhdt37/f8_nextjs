@@ -39,7 +39,6 @@ const ModalInfo = ({ data, refInfo }: any) => {
     router.push('/post/me');
     refInfo.current.complete();
   };
-  console.log('ref', refInfo);
   return (
     <>
       <div

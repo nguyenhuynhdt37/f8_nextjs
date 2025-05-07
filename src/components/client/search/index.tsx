@@ -223,6 +223,7 @@ const Search = () => {
             await fetchData(keyword, tab, page[tab])
         }
     }
+    console.log('data', data['user']);
 
     const render = () => {
         return (

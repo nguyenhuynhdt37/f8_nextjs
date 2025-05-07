@@ -43,6 +43,7 @@ const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
       clearTimeout(timeout);
     };
   }, []);
+  console.log('note', note);
 
   return (
     <div className="container mx-auto px-[20rem] pt-[5rem] text-[1.4rem]">
@@ -50,10 +51,10 @@ const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
       <div className="text-[1.3rem] pt-3 text-[#6d6d6d]">
         Cập nhật tháng 11 năm 2023
       </div>
-      {note?.tblNote?.description ? (
+      {note?.tblnote?.description ? (
         <div
           className="custom-textview"
-          dangerouslySetInnerHTML={{ __html: note?.tblNote?.description }}
+          dangerouslySetInnerHTML={{ __html: note?.tblnote?.description }}
         />
       ) : (
         <div className="font-medium text-center">Chưa cập nhật</div>

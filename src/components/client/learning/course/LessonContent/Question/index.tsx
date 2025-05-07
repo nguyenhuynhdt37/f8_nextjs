@@ -19,8 +19,8 @@ const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
         let dataCopy = { ...data?.data };
         console.log('dataCopy', dataCopy);
 
-        dataCopy.tblQuestionsLesson.tblQuestionsLessonDetails =
-          dataCopy.tblQuestionsLesson.tblQuestionsLessonDetails
+        dataCopy.tblquestionslesson.tblquestionslessondetails =
+          dataCopy.tblquestionslesson.tblquestionslessondetails
             ?.slice()
             .sort(() => Math.random() - 0.5);
         setQuestion(dataCopy);
@@ -62,15 +62,15 @@ const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
         Cập nhật {getCurrentMonthAndYear(question?.updatedAt)}
       </div>
       <div className="my-10">
-        {question?.tblQuestionsLesson?.question ? (
-          <CodeBlock code={question?.tblQuestionsLesson?.question} />
+        {question?.tblquestionslesson?.question ? (
+          <CodeBlock code={question?.tblquestionslesson?.question} />
         ) : (
           <div className="font-medium text-center">Chưa cập nhật</div>
         )}
       </div>
       <div className="">Chọn câu trả lời đúng</div>
       <div className="mb-5">
-        {question?.tblQuestionsLesson?.tblQuestionsLessonDetails.map(
+        {question?.tblquestionslesson?.tblquestionslessondetails.map(
           (detail: any) => (
             <motion.button
               key={detail.id}

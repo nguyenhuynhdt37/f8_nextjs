@@ -1050,4 +1050,22 @@ export const getSearchWithType = async (q: string, type: string, pageNumber: num
     return error?.response?.data;
   }
 };
+export const getDataFriendRequests = async (pageSize: number, pageNumber: number, q?: string) => {
+  try {
+    const res = await axiosInstance.get(
+      `/friend/get_friend_requests`,
+      {
+        params: {
+          "keyword": q,
+          "pageIndex": pageNumber,
+          "pageSize": pageSize
+        },
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
 

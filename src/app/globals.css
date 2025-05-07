@@ -48,18 +48,21 @@ body {
 }
 
 .scrollbar-custom::-webkit-scrollbar {
-  width: 0.9rem;
+  width: 6px;
   height: 0.9rem;
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb {
-  background-color: #d2d2d7;
-  border-radius: 1.2rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .scrollbar-custom::-webkit-scrollbar-track {
-  /* background-color: #ebebeb; */
-  /* border-radius: 1.2rem; */
+  background: transparent;
   border-right: 0.1rem solid #dcdbdb;
 }
 .scrollbar-custom .ql-editor::-webkit-scrollbar-thumb {
@@ -174,4 +177,18 @@ section-container::-webkit-scrollbar-thumb {
   div {
     text-align: justify;
   }
+}
+
+/* Thêm animation cho modal chat */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out forwards;
 }

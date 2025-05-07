@@ -26,8 +26,8 @@ const SideBar = ({
   const ref = useRef<any>(null);
   const [activeShowGroupLesson, setActiveShowGroupLesson] = useState<number[]>([
     lessonActive?.groupId ||
-      (data && data?.lessonGroups && data?.lessonGroups[0]?.id) ||
-      null,
+    (data && data?.lessonGroups && data?.lessonGroups[0]?.id) ||
+    null,
   ]);
 
   const handleShowLesson = (id: number) => {
@@ -39,11 +39,11 @@ const SideBar = ({
       setActiveShowGroupLesson([...activeShowGroupLesson, id]);
     }
   };
+
   return (
     <div
-      className={`${
-        isShowSideBar ? 'col-span-1' : 'hidden'
-      }  scrollbar-custom mb-[5rem] relative overflow-y-scroll`}
+      className={`${isShowSideBar ? 'col-span-1' : 'hidden'
+        }  scrollbar-custom mb-[5rem] relative overflow-y-scroll`}
     >
       <LoadingBar color="#0066df" ref={ref} />
       <div className="py-7 sticky bg-[#fff] z-20 top-0 left-0 px-8 font-medium text-2xl">
@@ -66,7 +66,7 @@ const SideBar = ({
                     {convertSecondsToYMDHMS(
                       groupLesson?.lectureDetails?.reduce(
                         (data: number, item: any) => {
-                          if (item?.lessonType?.id === 1) {
+                          if (item?.lessontype?.id === 1) {
                             data += item?.lessonVideo?.duration || 0;
                           }
                           return data;
@@ -87,11 +87,10 @@ const SideBar = ({
                 </button>
               </div>
               <div
-                className={`lesson ${
-                  activeShowGroupLesson.find(value => value === groupLesson?.id)
-                    ? 'block'
-                    : 'hidden'
-                }`}
+                className={`lesson ${activeShowGroupLesson.find(value => value === groupLesson?.id)
+                  ? 'block'
+                  : 'hidden'
+                  }`}
               >
                 {groupLesson?.lectureDetails?.map(
                   (lesson: any, index: number) => {
@@ -105,11 +104,10 @@ const SideBar = ({
                           )
                         }
                         key={lesson?.id}
-                        className={`flex justify-between cursor-pointer pr-10 ps-14 py-4 ${
-                          lessonActive?.lessonId === lesson?.id
-                            ? 'bg-[#fcdcd3]'
-                            : 'hover:bg-[#f7f8fa]'
-                        }`}
+                        className={`flex justify-between cursor-pointer pr-10 ps-14 py-4 ${lessonActive?.lessonId === lesson?.id
+                          ? 'bg-[#fcdcd3]'
+                          : 'hover:bg-[#f7f8fa]'
+                          }`}
                       >
                         <div className="">
                           <div className="font-medium pb-2">
@@ -120,22 +118,22 @@ const SideBar = ({
                               <GiBeastEye className="mr-2 text-[#f26d46]" />
                             )}
                             {lessonActive?.lessonId !== lesson?.id &&
-                              lesson?.lessonType?.id === 1 && (
+                              lesson?.lessontype?.id === 1 && (
                                 <FaCirclePlay className="mr-2 text-[#888]" />
                               )}
                             {lessonActive?.lessonId !== lesson?.id &&
-                              lesson?.lessonType?.id === 2 && (
+                              lesson?.lessontype?.id === 2 && (
                                 <FaCode className="mr-2 text-[#888]" />
                               )}
                             {lessonActive?.lessonId !== lesson?.id &&
-                              lesson?.lessonType?.id === 3 && (
+                              lesson?.lessontype?.id === 3 && (
                                 <FaBluesky className="mr-2 text-[#888]" />
                               )}
                             {lessonActive?.lessonId !== lesson?.id &&
-                              lesson?.lessonType?.id === 4 && (
+                              lesson?.lessontype?.id === 4 && (
                                 <MdEventNote className="mr-2 text-[#888]" />
                               )}
-                            {lesson?.lessonType?.id === 1 &&
+                            {lesson?.lessontype?.id === 1 &&
                               convertSecondsToYMDHMS(
                                 lesson?.lessonVideo?.duration,
                               )}

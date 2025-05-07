@@ -19,7 +19,6 @@ const CourseInfo = ({
   totalLesson: number;
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  console.log('data', data);
   return (
     <div>
       <div className="sticky top-[10.5rem] px-10">

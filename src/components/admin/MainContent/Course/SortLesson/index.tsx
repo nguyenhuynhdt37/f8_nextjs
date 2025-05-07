@@ -19,7 +19,6 @@ interface ISortLesson {
   courseId: number;
 }
 const SortLesson = ({ courseId }: ISortLesson) => {
-  console.log('courseId', courseId);
   const [refetch, setRefetch] = useState<number>(-1);
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -34,7 +33,6 @@ const SortLesson = ({ courseId }: ISortLesson) => {
         if (res?.statusCode === 200) {
           setDataCourse(res.data);
         } else {
-          console.log('error');
         }
       }
     };
@@ -48,14 +46,12 @@ const SortLesson = ({ courseId }: ISortLesson) => {
           setData(res.data);
           if (refetch === -1) setShowChapter(res.data[0]?.id);
         } else {
-          console.log('error');
         }
       }
     };
     handleGetRequest();
   }, [refetch]);
 
-  console.log('data', data);
   const handleShowChapter = (id: number) => {
     setShowChapter(id);
     setShowLesson(-1);
@@ -83,11 +79,6 @@ const SortLesson = ({ courseId }: ISortLesson) => {
   const handleDownPositionChapter = async (id: number, positon: number) => {
     if (id && positon) {
       positon = positon + 1;
-      console.log({
-        courseid: courseId,
-        chapterId: id,
-        position: positon,
-      });
       const res = await MoveDownChapterPosition({
         courseid: courseId,
         chapterId: id,
@@ -114,11 +105,6 @@ const SortLesson = ({ courseId }: ISortLesson) => {
   const handleUpPositionChapter = async (id: number, positon: number) => {
     if (id && positon) {
       positon = positon - 1;
-      console.log({
-        courseid: courseId,
-        chapterId: id,
-        position: positon,
-      });
       const res = await MoveUpChapterPosition({
         courseid: courseId,
         chapterId: id,

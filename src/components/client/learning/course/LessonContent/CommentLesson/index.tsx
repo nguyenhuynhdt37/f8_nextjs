@@ -1,11 +1,11 @@
 import { Button, Drawer } from 'antd';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import BoxComment from './ProfileComment/BoxComment';
 import * as signalR from '@microsoft/signalr';
 import { getAllCommentByLessonId } from '@/api/axios/api';
 import ContentComment from './ContentComment';
 import { useAppSelector } from '@/redux/hook/hook';
-import { startSignalRConnection } from '@/lib/signalr';
+import { createOrGetConnection } from '@/services/signalRService';
 const CommentLesson = ({
   title,
   courseId,
@@ -23,7 +23,7 @@ const CommentLesson = ({
   const [isPostReq, setIsPostReq] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [comment, setComment] = useState<any>('');
-  const [connection, setConnection] = useState<any>(null);
+  const refConnection = useRef<any>(null);
   useEffect(() => {
     setIsPostReq(true);
   }, [idLesson]);
@@ -44,8 +44,8 @@ const CommentLesson = ({
 
   useEffect(() => {
     const initializeConnection = async () => {
-      const connection = await startSignalRConnection('commentHub');
-
+      const connection = await createOrGetConnection('commentHub');
+      refConnection.current = connection;
       connection.on('ReceiveMessage', (message) => {
         console.log('ReceiveMessage:', message);
       });
@@ -56,26 +56,14 @@ const CommentLesson = ({
         setData(comment);
       });
 
-      try {
-        await connection.start();
-        console.log('SignalR connected');
-        // Ví dụ gửi comment
-        connection.invoke('GrantReceiveMessage', {
-          lessonId: idLesson,
-          courseId: courseId
-        });
-      } catch (err) {
-        console.error('SignalR error:', err);
-      }
-
-      setConnection(connection);
     };
 
     initializeConnection();
 
     return () => {
-      if (connection && connection.state !== signalR.HubConnectionState.Disconnected) {
-        connection.stop();
+      if (refConnection.current && refConnection.current.state !== signalR.HubConnectionState.Disconnected) {
+        refConnection.current.stop();
+        refConnection.current = null;
       }
     };
   }, []);

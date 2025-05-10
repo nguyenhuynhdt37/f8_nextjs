@@ -25,7 +25,7 @@ const Header = () => {
               <img
                 src="https://fullstack.edu.vn/assets/f8-icon-lV2rGpF0.png"
                 alt=""
-                className="w-[3.8rem] rounded-xl"
+                className="w-[3.8rem] rounded-xl cursor-pointer"
               />
             </div>
           </div>

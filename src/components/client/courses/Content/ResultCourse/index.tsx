@@ -1,13 +1,13 @@
 import React from 'react';
 import { FaCheck } from 'react-icons/fa6';
-const ResultCourse = ({ description }: any) => {
+const ResultCourse = ({ introduce }: any) => {
   return (
     <>
       <div className="text-[2rem] font-bold pb-2">Mô tả khoá học</div>
-      {description ? (
+      {introduce ? (
         <div
-          className="custom-textview"
-          dangerouslySetInnerHTML={{ __html: description }}
+          className="custom-textview leading-10 text-[#ccc]"
+          dangerouslySetInnerHTML={{ __html: introduce }}
         />
       ) : (
         <div className="font-medium">Chưa cập nhật</div>

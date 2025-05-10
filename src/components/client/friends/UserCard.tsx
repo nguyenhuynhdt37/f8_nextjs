@@ -18,7 +18,7 @@ const UserCard: React.FC<any> = ({
     }, []);
 
     return (
-        <div className="shadow-md border-[0.1rem] rounded-lg overflow-hidden bg-white flex flex-col">
+        <div className="shadow-md cursor-pointer border-[0.1rem] rounded-lg overflow-hidden bg-white flex flex-col">
             {/* Image */}
             <img
                 src={data?.senderAvatar}

@@ -1,5 +1,5 @@
-import { getInfoUser } from '@/api/axios/api';
 
+import { getInfoUser } from '@/api/axios/api';
 import { GetUserInfoByToken, login } from '@/api/axios/api';
 import { IAuthSlice } from '@/types/next-auth';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';

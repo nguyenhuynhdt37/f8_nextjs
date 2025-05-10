@@ -12,15 +12,8 @@ html {
   font-size: 62.5%;
 }
 body {
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: var(--font-lexend), system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 /* Ghi đè các lớp CSS của Ant Design */
 .custom-modal .ant-modal-content {

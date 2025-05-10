@@ -6,6 +6,9 @@ import { getAllCommentByLessonId } from '@/api/axios/api';
 import ContentComment from './ContentComment';
 import { useAppSelector } from '@/redux/hook/hook';
 import { createOrGetConnection } from '@/services/signalRService';
+import { id } from 'date-fns/locale';
+import { number } from 'framer-motion';
+import { set } from 'date-fns';
 const CommentLesson = ({
   title,
   courseId,
@@ -23,10 +26,12 @@ const CommentLesson = ({
   const [isPostReq, setIsPostReq] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [comment, setComment] = useState<any>('');
-  const refConnection = useRef<any>(null);
+  const refConnection = useRef<signalR.HubConnection | null>(null);
+
   useEffect(() => {
     setIsPostReq(true);
   }, [idLesson]);
+
   useEffect(() => {
     if (idLesson && isShowComment && isPostReq) {
       const handleRequest = async () => {
@@ -42,33 +47,51 @@ const CommentLesson = ({
     }
   }, [idLesson, isShowComment]);
 
+
   useEffect(() => {
-    const initializeConnection = async () => {
-      const connection = await createOrGetConnection('commentHub');
-      refConnection.current = connection;
-      connection.on('ReceiveMessage', (message) => {
-        console.log('ReceiveMessage:', message);
-      });
+    let isMounted = true;
 
-      connection.on('ReceiveComment', (comment) => {
-        console.log('ReceiveComment:', comment);
+    async function setupAndJoin() {
+      if (!courseId || !idLesson || !isShowComment) return;
 
-        setData(comment);
-      });
+      // 1) Khởi tạo hoặc lấy connection đã tồn tại
+      let conn = refConnection.current;
+      if (!conn) {
+        conn = await createOrGetConnection('commentHub');
+        refConnection.current = conn;
 
-    };
+        // 2) Đăng ký handlers
+        conn.on('ReceiveMessage', message => {
+          console.log('ReceiveMessage:', message);
+        });
+        conn.on('ReceiveComment', comments => {
+          console.log('ReceiveComment:', comments);
+          setData(comments);
+        });
+        conn.on('ErrorMessage', errMsg => {
+          console.error('ErrorMessage từ server:', errMsg);
+        });
+      }
 
-    initializeConnection();
+      // 3) Chỉ invoke khi đã thực sự connected
+      if (conn.state === signalR.HubConnectionState.Connected) {
+        try {
+          await conn.invoke("PostGrant", Number(courseId), Number(idLesson));
+        } catch (err) {
+          console.error('❌ invoke GrantReceiveMessage thất bại:', err);
+        }
+      }
+    }
+
+    setupAndJoin();
 
     return () => {
-      if (refConnection.current && refConnection.current.state !== signalR.HubConnectionState.Disconnected) {
+      if (!isShowComment && refConnection.current) {
         refConnection.current.stop();
         refConnection.current = null;
       }
     };
-  }, []);
-
-
+  }, [courseId, idLesson, isShowComment]);
 
   const showDrawer = () => {
     setIsShowComment(true);
@@ -86,9 +109,10 @@ const CommentLesson = ({
     const newMoreComment = moreComment.filter(item => item !== id);
     setMoreComment(newMoreComment);
   };
+
   const handleClick = () => {
-    connection.send('SendComment2', 'hello xin chào cả nhà');
-  };
+
+  }
   return (
     <div>
       <Drawer

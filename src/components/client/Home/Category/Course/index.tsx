@@ -22,7 +22,7 @@ const Course = ({ data }: any) => {
         onClick={handleClick}
         className="bg-[#f7f7f7] transform transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-lg cursor-pointer rounded-3xl overflow-hidden"
       >
-        <img src={data?.course?.banner} alt="" />
+        <img src={data?.course?.banner} className='max-h-[19.6rem] object-cover w-full' alt="" />
         <div className="p-7 text-[1.4rem]">
           <div className="text-[1.6rem] font-medium">{data?.course?.title}</div>
           {data?.detail?.isFree && (

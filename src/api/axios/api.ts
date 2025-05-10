@@ -172,6 +172,24 @@ export const RegiterCourseFree = async ({
     return error?.response?.data;
   }
 };
+export const CheckIsCourseRegister = async ({
+  idCourse,
+}: {
+  idCourse: number;
+}): Promise<any> => {
+  try {
+    const res = await axiosInstance.get(
+      `/courses/user/check-course-is-register/${idCourse}`,
+      {
+        withCredentials: true,
+      },
+    );
+
+    return res.data;
+  } catch (error: any) {
+    return error?.response?.data;
+  }
+};
 
 export const CreateUser = async (user: ICreateUser): Promise<any> => {
   try {

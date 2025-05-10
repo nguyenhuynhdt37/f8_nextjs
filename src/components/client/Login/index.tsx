@@ -42,7 +42,7 @@ const Login = ({
             <img
               src="https://fullstack.edu.vn/assets/f8-icon-lV2rGpF0.png"
               alt=""
-              className="w-[3.8rem] rounded-xl"
+              className="w-[3.8rem] cursor-pointer rounded-xl"
             />
           </div>
           <h1 className="font-bold text-[2.8rem] pt-7 pb-4">

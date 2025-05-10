@@ -81,24 +81,24 @@ const ListReaction = ({ data }: any) => {
         <div className="flex items-center mr-5">
           <div className="">
             {listSortdata.map((item: any, index: number) => {
-              if (item?.count > 0 && index < 3) {
-                if (item?.icon === 'satisfaction') {
-                  return <span key={item?.id} className="mr-1">👍</span>;
+              if (item.count > 0 && index < 3) {
+                if (item.icon === 'satisfaction') {
+                  return <span key={item.icon} className="mr-1">👍</span>;
                 }
-                if (item?.icon === 'love') {
-                  return <span key={item?.id} className="mr-1">❤️</span>;
+                if (item.icon === 'love') {
+                  return <span key={item.icon} className="mr-1">❤️</span>;
                 }
-                if (item?.icon === 'happy') {
-                  return <span key={item?.id} className="mr-1">😆</span>;
+                if (item.icon === 'happy') {
+                  return <span key={item.icon} className="mr-1">😆</span>;
                 }
-                if (item?.icon === 'sad') {
-                  return <span key={item?.id} className="mr-1">😥</span>;
+                if (item.icon === 'sad') {
+                  return <span key={item.icon} className="mr-1">😥</span>;
                 }
-                if (item?.icon === 'surprise') {
-                  return <span key={item?.id} className="mr-1">😮</span>;
+                if (item.icon === 'surprise') {
+                  return <span key={item.icon} className="mr-1">😮</span>;
                 }
-                if (item?.icon === 'angry') {
-                  return <span key={item?.id} className="mr-1">😡</span>;
+                if (item.icon === 'angry') {
+                  return <span key={item.icon} className="mr-1">😡</span>;
                 }
               }
             })}
@@ -120,48 +120,48 @@ const Modal = ({ data, handleRedirectProfile, listSortdata }: any) => {
       className="p-5 pt-0 overflow-y-scroll scrollbar-custom max-h-[24em] rounded-xl bg-[#fff] text-[#000]"
     >
       <div className="sticky flex top-0 left-0 right-0 bg-[#fff]  z-10 border-b-[0.1rem] py-5 items-center">
-        {listSortdata?.map((item: any, index: number) => {
-          if (item?.icon === 'satisfaction' && item?.count > 0)
+        {listSortdata?.map((item: any) => {
+          if (item.icon === 'satisfaction' && item.count > 0)
             return (
-              <span key={index} className="flex items-center mr-5 mr-5">
-                👍 <span className="ml-2">{item?.count}</span>
+              <span key={item.icon} className="flex items-center mr-5">
+                👍 <span className="ml-2">{item.count}</span>
               </span>
             );
-          if (item?.icon === 'love' && item?.count > 0)
+          if (item.icon === 'love' && item.count > 0)
             return (
-              <span key={index} className="flex items-center mr-5">
-                ❤️ <span className="ml-2">{item?.count}</span>
+              <span key={item.icon} className="flex items-center mr-5">
+                ❤️ <span className="ml-2">{item.count}</span>
               </span>
             );
-          if (item?.icon === 'happy' && item?.count > 0)
+          if (item.icon === 'happy' && item.count > 0)
             return (
-              <span key={index} className="flex items-center mr-5">
-                😆 <span className="ml-2">{item?.count}</span>
+              <span key={item.icon} className="flex items-center mr-5">
+                😆 <span className="ml-2">{item.count}</span>
               </span>
             );
-          if (item?.icon === 'sad' && item?.count > 0)
+          if (item.icon === 'sad' && item.count > 0)
             return (
-              <span key={index} className="flex items-center mr-5">
-                😥 <span className="ml-2">{item?.count}</span>
+              <span key={item.icon} className="flex items-center mr-5">
+                😥 <span className="ml-2">{item.count}</span>
               </span>
             );
-          if (item?.icon === 'surprise' && item?.count > 0)
+          if (item.icon === 'surprise' && item.count > 0)
             return (
-              <span key={index} className="flex items-center mr-5">
-                😮 <span className="ml-2">{item?.count}</span>
+              <span key={item.icon} className="flex items-center mr-5">
+                😮 <span className="ml-2">{item.count}</span>
               </span>
             );
-          if (item?.icon === 'angry' && item?.count > 0)
+          if (item.icon === 'angry' && item.count > 0)
             return (
-              <span key={index} className="flex items-center mr-5">
-                😡 <span className="ml-2">{item?.count}</span>
+              <span key={item.icon} className="flex items-center mr-5">
+                😡 <span className="ml-2">{item.count}</span>
               </span>
             );
         })}
       </div>
       <div className="">
-        {data?.map((item: any, index: number) => (
-          <div className="flex border-b-[0.1rem] py-5 border-[#e6e6e6] items-center">
+        {data?.map((item: any) => (
+          <div key={`${item.user.id}-${item.icon}`} className="flex border-b-[0.1rem] py-5 border-[#e6e6e6] items-center">
             <div className="relative">
               <img
                 className="w-16 h-16 object-cover border-2 border-[#ceae30] mr-5 rounded-full"

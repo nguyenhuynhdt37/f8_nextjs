@@ -11,15 +11,19 @@ interface Iprops {
   id: number;
 }
 const ModalIntroduce = ({ isModalOpen, setIsModalOpen, id }: Iprops) => {
-  const { data, isLoading, error } = useSWR(
-    ['getFistLesson', id],
-    () => getFirstLesson({ id }),
-    {
-      revalidateOnFocus: false, // Tắt refetch khi người dùng quay lại trang
-      // revalidateOnReconnect: false, // Tắt refetch khi kết nối lại mạng
-    },
-  );
-  const result = data?.data;
+  const [data, setData] = useState<any>(null);
+  useEffect(() => {
+    const handeFetchApi = async () => {
+      if (id) {
+        const res = await getFirstLesson({ id });
+        if (res?.statusCode === 200) {
+          setData(res?.data);
+        };
+      }
+
+    }
+    handeFetchApi();
+  }, [id])
 
   return (
     <Modal
@@ -32,11 +36,11 @@ const ModalIntroduce = ({ isModalOpen, setIsModalOpen, id }: Iprops) => {
       destroyOnClose={true}
     >
       <div className="">
-        <div className="font-bold text-[2.5rem]">{result?.title}</div>
+        <div className="font-bold text-[2.5rem]">{data?.title}</div>
         <div className="w-full h-[50rem] mt-10">
           <iframe
             src={`https://www.youtube.com/embed/${getVideoIdFromUrl(
-              result?.lesson?.videoLink,
+              data?.lesson?.videoLink,
             )}?autoplay=1`}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

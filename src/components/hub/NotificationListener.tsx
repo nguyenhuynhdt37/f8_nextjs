@@ -1,6 +1,6 @@
 "use client";
 
-import { startSignalRConnection } from "@/lib/signalr";
+import { createOrGetConnection } from "@/lib/signalr";
 import { useAppDispatch } from "@/redux/hook/hook";
 import { addNotification } from "@/redux/reducers/slices/NotificationSlice";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export default function NotificationListener() {
     const [connection, setConnection] = useState<any>(null);
     useEffect(() => {
         const initializeConnection = async () => {
-            const connection = await startSignalRConnection('notificationHub');
+            const connection = await createOrGetConnection('notificationHub');
             console.log('SignalR connection noti', connection);
 
             connection.on('ReceiveMessage', (message) => {
@@ -57,7 +57,6 @@ export default function NotificationListener() {
             });
 
             try {
-                // Kiểm tra nếu kết nối đã được thiết lập thì không kết nối lại
                 if (connection.state === signalR.HubConnectionState.Disconnected) {
                     await connection.start();
                     console.log('SignalR connected');

@@ -242,7 +242,7 @@ const Search = () => {
                             </div>
                             <div className="flex pt-5 items-center">
                                 <MdPlayLesson className="text-3xl mr-2 text-[#656565]" />
-                                {course?.countLesson} học viên
+                                {course?.countLesson} bài học
                             </div>
                         </div>
                     </div>

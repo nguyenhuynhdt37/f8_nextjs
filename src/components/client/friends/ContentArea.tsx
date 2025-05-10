@@ -68,9 +68,9 @@ const ContentArea: React.FC = () => {
     const renderData = () => {
         return (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
-                {data.map((item: any) => (
+                {data.map((item: any, index: number) => (
                     <UserCard
-                        key={item.id}
+                        key={item.id || index}
                         data={item}
                         type="request"
                     />

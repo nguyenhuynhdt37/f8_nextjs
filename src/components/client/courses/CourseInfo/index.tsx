@@ -19,6 +19,13 @@ const CourseInfo = ({
   totalLesson: number;
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  console.log('data1', data);
+
+  // Price details
+  const price = data?.courseDetail?.price || 0;
+  const oldPrice = data?.courseDetail?.priceOld;
+  const discountPercent = oldPrice ? Math.round((oldPrice - price) / oldPrice * 100) : 0;
+
   return (
     <div>
       <div className="sticky top-[10.5rem] px-10">
@@ -34,9 +41,30 @@ const CourseInfo = ({
           <div className="rounded-3xl bg-gradient-to-b opacity-70 top-0 left-0 from-transparent to-[#000] absolute w-full h-full"></div>
         </div>
         <div className="pt-5 text-[#494949]">
-          {data?.courseDetail?.isFree && (
-            <div className="text-[3rem] text-[#f05123] text-center">
+          {data?.courseDetail?.isFree ? (
+            <div className="text-5xl font-extrabold text-green-600 text-center py-4 animate-pulse">
               Miễn phí
+            </div>
+          ) : (
+            <div className="relative py-6 px-6 bg-gradient-to-r from-red-50 to-white rounded-2xl shadow-lg overflow-hidden">
+              {oldPrice > price && (
+                <div className="absolute top-2 right-2 bg-yellow-400 text-sm font-bold px-2 py-1 rounded-bl-lg animate-bounce">
+                  -{discountPercent}%
+                </div>
+              )}
+              <div className="text-center">
+                {oldPrice > price && (
+                  <div className="text-lg text-gray-500 line-through mb-2">
+                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(oldPrice)}
+                  </div>
+                )}
+                <div className="text-5xl font-extrabold text-red-600 animate-fade-in">
+                  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)}
+                </div>
+                <div className="mt-2 text-sm text-gray-600">
+                  Thanh toán ngay để nhận ưu đãi
+                </div>
+              </div>
             </div>
           )}
           <div className=" py-2 px-40">

@@ -1,11 +1,10 @@
-import React, { memo, useState } from 'react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { PiListBold } from 'react-icons/pi';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6';
-import { motion } from 'framer-motion';
+'use client';
+import React, { memo, useState, useEffect } from 'react';
+import { FiChevronLeft, FiChevronRight, FiMenu, FiX } from 'react-icons/fi';
 import { getNextLesson, getPrevLesson } from '@/api/axios/api';
 import { message } from 'antd';
-import { log } from 'node:console';
+import { motion, AnimatePresence } from '@/lib/motion';
+
 const FooterBar = ({
   isShowSideBar,
   setIsShowSideBar,
@@ -13,87 +12,157 @@ const FooterBar = ({
   lessonActive,
   onShowLesson,
 }: any) => {
-  const [is, setIs] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [lessonProgress, setLessonProgress] = useState(0);
+  const [currentLessonTitle, setCurrentLessonTitle] = useState('');
+
+  // Tìm thông tin về bài học hiện tại
+  useEffect(() => {
+    if (data?.lessonGroups && lessonActive?.lessonId) {
+      let totalLessons = 0;
+      let currentLessonIndex = -1;
+      let foundTitle = '';
+
+      // Tính tổng số bài học và vị trí hiện tại
+      for (const group of data.lessonGroups) {
+        if (group.lectureDetails) {
+          for (let i = 0; i < group.lectureDetails.length; i++) {
+            const lesson = group.lectureDetails[i];
+            totalLessons++;
+
+            if (lesson.id === lessonActive.lessonId) {
+              currentLessonIndex = totalLessons;
+              foundTitle = lesson.title || '';
+            }
+          }
+        }
+      }
+
+      // Tính phần trăm tiến độ
+      if (totalLessons > 0 && currentLessonIndex > 0) {
+        setLessonProgress(Math.round((currentLessonIndex / totalLessons) * 100));
+        setCurrentLessonTitle(foundTitle);
+      }
+    }
+  }, [data, lessonActive]);
 
   const handleNextLesson = async () => {
     if (lessonActive?.lessonId) {
-      const res = await getNextLesson(lessonActive?.lessonId);
-      if (res?.statusCode === 200 || res?.statusCode === 201) {
-        const dataCopy = res?.data;
-        onShowLesson(dataCopy?.id, dataCopy?.lessonGroup, false);
-      } else {
-        messageApi.warning('Bài giảng của khoá học này đã hết!!');
+      setIsAnimating(true);
+      try {
+        const res = await getNextLesson(lessonActive?.lessonId);
+        if (res?.statusCode === 200 || res?.statusCode === 201) {
+          const dataCopy = res?.data;
+          onShowLesson(dataCopy?.id, dataCopy?.lessonGroup, false);
+        } else {
+          messageApi.warning('Bạn đã hoàn thành tất cả bài học!');
+        }
+      } finally {
+        setTimeout(() => setIsAnimating(false), 500);
       }
     }
   };
+
   const handlePrevLesson = async () => {
     if (lessonActive?.lessonId) {
-      const res = await getPrevLesson(lessonActive?.lessonId);
-      if (res?.statusCode === 200 || res?.statusCode === 201) {
-        const dataCopy = res?.data;
-        onShowLesson(dataCopy?.id, dataCopy?.lessonGroup, false);
-      } else {
-        messageApi.warning('Bài giảng của khoá học này đã hết!!');
+      setIsAnimating(true);
+      try {
+        const res = await getPrevLesson(lessonActive?.lessonId);
+        if (res?.statusCode === 200 || res?.statusCode === 201) {
+          const dataCopy = res?.data;
+          onShowLesson(dataCopy?.id, dataCopy?.lessonGroup, false);
+        } else {
+          messageApi.warning('Đây là bài học đầu tiên!');
+        }
+      } finally {
+        setTimeout(() => setIsAnimating(false), 500);
       }
     }
   };
+
   return (
-    <div className="fixed h-[5rem] bg-[#f0f0f0] bottom-0 left-0 right-0">
+    <motion.div
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, type: "spring", stiffness: 300, damping: 30 }}
+      className="fixed h-16 bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg z-50"
+    >
       {contextHolder}
-      <div className="flex h-full justify-center items-center">
-        <button
+
+      {/* Progress bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700">
+        <motion.div
+          className="h-full bg-gradient-to-r from-indigo-500 to-purple-600"
+          initial={{ width: 0 }}
+          animate={{ width: `${lessonProgress}%` }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        />
+      </div>
+
+      <div className="flex h-full items-center justify-between px-4 md:px-8">
+        {/* Left section - Previous button */}
+        <motion.button
           onClick={handlePrevLesson}
-          className="px-5 flex items-center py-3 font-medium border-[0.2rem] mr-5
-         text-2xl text-[#0093fc] border-[#52b1f4] rounded-2xl"
+          whileHover={{ scale: 1.05, x: -5 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center space-x-2 px-4 py-2 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
         >
-          <FiChevronLeft className="text-3xl text-[#0093fc] text mr-2" />
-          Bài trước
-        </button>
-        <div className="" onClick={handleNextLesson}>
+          <FiChevronLeft className="text-xl" />
+          <span className="font-medium hidden sm:inline">Bài trước</span>
+        </motion.button>
+
+        {/* Center section - Current lesson info */}
+        <div className="flex-1 mx-4 hidden md:block">
+          <div className="text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Bài học hiện tại</p>
+            <h3 className="font-medium text-gray-800 dark:text-gray-200 truncate max-w-lg mx-auto">
+              {currentLessonTitle || 'Đang tải...'}
+            </h3>
+          </div>
+        </div>
+
+        {/* Right section - Next button and sidebar toggle */}
+        <div className="flex items-center space-x-4">
           <motion.button
-            initial={{ scale: 1 }}
-            animate={is ? { scale: [1, 1.1, 1] } : {}} // Chỉ chạy hiệu ứng khi `is` là true
-            transition={{
-              duration: 0.5,
-              ease: 'easeOut',
-              repeat: Infinity, // Lặp vô hạn
-            }}
-            className="px-2 justify-center font-medium flex items-center py-3 border-[0.1rem] text-[#fff] text-2xl bg-[#0093fc] border-[#0093fc] rounded-2xl"
-            onClick={() => { }}
+            onClick={handleNextLesson}
+            whileHover={{ scale: 1.05, x: 5 }}
+            whileTap={{ scale: 0.95 }}
+            animate={isAnimating ? { scale: [1, 1.1, 1] } : {}}
+            transition={{ duration: 0.5 }}
+            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg shadow-md hover:shadow-lg"
           >
-            <span className="mr-4"></span> Bài tiếp theo
-            <FiChevronRight className="text-3xl text-[#fff] text mr-2" />
+            <span className="font-medium hidden sm:inline">Bài tiếp theo</span>
+            <FiChevronRight className="text-xl" />
+          </motion.button>
+
+          <motion.button
+            onClick={() => setIsShowSideBar(!isShowSideBar)}
+            whileHover={{ rotate: isShowSideBar ? -180 : 180, scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          >
+            {isShowSideBar ? <FiX className="text-xl" /> : <FiMenu className="text-xl" />}
           </motion.button>
         </div>
       </div>
-      {isShowSideBar && (
-        <div
-          onClick={() => setIsShowSideBar(false)}
-          className="cursor-pointer text-end text-[1.4rem] font-medium flex items-center h-full absolute top-0 right-0 text-[#000]"
-        >
-          <div className="">Thu gọn</div>
-          <div className="">
-            <button className="mx-5 w-[3rem] bg-[#fff] flex items-center justify-center rounded-full h-[3rem]">
-              <FaArrowRight className="text-2xl" />
-            </button>
-          </div>
-        </div>
-      )}
-      {!isShowSideBar && (
-        <div
-          onClick={() => setIsShowSideBar(true)}
-          className="cursor-pointer text-end text-[1.4rem] font-medium flex items-center h-full absolute top-0 right-0 text-[#000]"
-        >
-          <div className="">Mở rộng</div>
-          <div className="">
-            <button className="mx-5 w-[3rem] bg-[#fff] flex items-center justify-center rounded-full h-[3rem]">
-              <FaArrowLeft className="text-2xl" />
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+
+      {/* Mobile lesson title - only visible on small screens */}
+      <AnimatePresence>
+        {currentLessonTitle && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="absolute left-0 right-0 bottom-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-3 md:hidden"
+          >
+            <p className="text-sm text-center font-medium text-gray-800 dark:text-gray-200 truncate">
+              {currentLessonTitle}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

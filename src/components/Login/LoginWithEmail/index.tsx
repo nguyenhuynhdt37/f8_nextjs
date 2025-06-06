@@ -3,179 +3,194 @@ import Loading from '@/components/client/Loading';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { getInfoRedux, setEmailRedux } from '@/redux/reducers/slices/AuthSlice';
 import { isValidEmail } from '@/Utils/functions';
-import { message, notification } from 'antd';
+import { message } from 'antd';
 import { AppDispatch } from '@/redux/store';
-
-import { useSnackbar } from 'notistack';
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { motion } from 'framer-motion';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { FiEye, FiEyeOff, FiMail, FiLock } from 'react-icons/fi';
 
 interface IError {
   email: string;
   password: string;
 }
+
 interface IProps {
   setStep: Dispatch<SetStateAction<number>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
+
 const LoginWithEmail = ({ setStep, setOpen }: IProps) => {
   const dispatch = useAppDispatch() as AppDispatch;
   const containerRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPass, setShowPass] = useState<boolean>(false);
-  const [showEye, setShowEye] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [error, setError] = useState<IError>({
     email: '',
     password: '',
   });
-  const handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (
-      containerRef.current &&
-      !containerRef.current.contains(event.relatedTarget)
-    ) {
-      setShowEye(false);
-    }
-  };
-  const handleInputBlur = (e: any) => {
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const name = e.target.name;
+
     if (value === '') {
-      setError({ ...error, [e.target.name]: 'Trường không được để trống' });
+      setError({ ...error, [name]: 'Trường không được để trống' });
       return;
     }
-    if (name === 'email' && !isValidEmail(value))
-      setError({ ...error, [e.target.name]: 'Không đúng định dạng email' });
+
+    if (name === 'email' && !isValidEmail(value)) {
+      setError({ ...error, [name]: 'Không đúng định dạng email' });
+    }
   };
+
   const handleSubmit = async () => {
-    if (email === '' || password === '') return;
+    if (email === '' || password === '') {
+      setError({
+        email: email === '' ? 'Trường không được để trống' : '',
+        password: password === '' ? 'Trường không được để trống' : '',
+      });
+      return;
+    }
 
     if (error.email || error.password) return;
 
     setLoading(true);
     const res = await login({ email, password });
+
     if (res?.statusCode === 200 || res?.statusCode === 201) {
       messageApi.open({
         type: 'success',
         content: 'Đăng nhập thành công',
       });
-      // @ts-ignore
       dispatch(getInfoRedux());
       setOpen(false);
     }
+
     if (res?.statusCode === 401) {
       dispatch(setEmailRedux(email));
       setStep(2);
+    } else {
+      setError({ ...error, password: res?.message?.message });
     }
-    setError({ ...error, password: res?.message?.message });
+
     setLoading(false);
+  };
+
+  const inputVariants = {
+    focus: { scale: 1.01, boxShadow: "0 0 0 2px rgba(66, 153, 225, 0.5)" },
+    error: { scale: 1.01, boxShadow: "0 0 0 2px rgba(245, 101, 101, 0.5)" }
   };
 
   return (
     <>
       {contextHolder}
-      <div className="text-start px-5">
-        <div className="font-medium mb-4">Tên đăng nhập</div>
-        <input
-          type="text"
-          className={`${error?.email && 'border-[#f33a58] bg-[#eedce4]'
-            } px-6 rounded-full border-[0.15rem] my-2 text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
-          placeholder="Email của bạn"
-          name="email"
-          value={email}
-          onFocus={e => setError({ ...error, [e.target.name]: '' })}
-          onChange={e => setEmail(e.target.value)}
-          onBlur={handleInputBlur}
-        />
-        <div className="pb-2 text-[#f33a58] ps-4 font-medium">
-          {error.email}
-        </div>
-        <div
-          className="relative"
-          onFocus={() => setShowEye(true)}
-          onBlur={handleBlur}
-          tabIndex={-1}
-          ref={containerRef}
-        >
-          <input
-            type={`${showPass ? 'text' : 'password'}`}
-            className={`${error?.password && 'border-[#f33a58] bg-[#eedce4]'
-              } px-6 rounded-full border-[0.15rem] my-2 text-2xl focus:outline-none focus:border-[#1dbfaf] py-[1.2rem] w-full`}
-            placeholder="Mật khẩu"
-            value={password}
-            name="password"
-            onFocus={e => setError({ ...error, [e.target.name]: '' })}
-            onChange={e => setPassword(e.target.value)}
-            onBlur={handleInputBlur}
-          ></input>
-
-          {showEye && (
-            <>
-              {!showPass && (
-                <button
-                  className="absolute top-1/2 -translate-y-1/2 right-6 w-8 text-[#838383] cursor-pointer"
-                  onClick={() => setShowPass(true)}
-                >
-                  <svg
-                    className="svg-inline--fa fa-eye  "
-                    aria-hidden="true"
-                    focusable="false"
-                    data-prefix="fas"
-                    data-icon="eye"
-                    role="img"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 576 512"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"
-                    ></path>
-                  </svg>
-                </button>
-              )}
-              {showPass && (
-                <button
-                  className="absolute top-1/2 -translate-y-1/2 right-6 w-8 text-[#838383] cursor-pointer"
-                  onClick={() => setShowPass(false)}
-                >
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    data-prefix="fas"
-                    data-icon="eye-slash"
-                    className="svg-inline--fa fa-eye-slash "
-                    role="img"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 512"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"
-                    ></path>
-                  </svg>
-                </button>
-              )}
-            </>
-          )}
+      <div className="space-y-4">
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            Email
+          </label>
+          <div className="relative">
+            <motion.div
+              animate={error.email ? "error" : ""}
+              variants={inputVariants}
+              className="relative"
+            >
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FiMail className="text-gray-400" />
+              </div>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                onFocus={e => setError({ ...error, [e.target.name]: '' })}
+                onBlur={handleInputBlur}
+                className={`block w-full pl-10 pr-3 py-2.5 border ${error.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                  } rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm`}
+                placeholder="Nhập địa chỉ email"
+              />
+            </motion.div>
+            {error.email && (
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-1 text-sm text-red-600"
+              >
+                {error.email}
+              </motion.p>
+            )}
+          </div>
         </div>
 
-        <div className="pb-2 text-[#f33a58] ps-4 font-medium">
-          {error.password}
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            Mật khẩu
+          </label>
+          <div className="relative">
+            <motion.div
+              animate={error.password ? "error" : ""}
+              variants={inputVariants}
+              className="relative"
+              ref={containerRef}
+            >
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FiLock className="text-gray-400" />
+              </div>
+              <input
+                id="password"
+                type={showPass ? 'text' : 'password'}
+                name="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                onFocus={e => setError({ ...error, [e.target.name]: '' })}
+                onBlur={handleInputBlur}
+                className={`block w-full pl-10 pr-10 py-2.5 border ${error.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                  } rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm`}
+                placeholder="Nhập mật khẩu"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {showPass ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+              </button>
+            </motion.div>
+            {error.password && (
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-1 text-sm text-red-600"
+              >
+                {error.password}
+              </motion.p>
+            )}
+          </div>
         </div>
-        <button
+
+        <motion.button
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.98 }}
           onClick={handleSubmit}
-          className={`w-full flex justify-center py-[1.2rem] bg-gradient-to-r from-[#8de0f9] to-[#88eae0] rounded-full mt-9 font-bold text-[#fff]`}
+          disabled={loading}
+          className="w-full mt-4 py-2.5 px-4 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-lg text-white font-medium shadow-md hover:shadow-lg transition-all flex items-center justify-center"
         >
-          {!loading && 'Đăng nhập'}
-          {loading && <Loading />}
-        </button>
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Đang xử lý...</span>
+            </div>
+          ) : (
+            <span>Đăng nhập</span>
+          )}
+        </motion.button>
       </div>
     </>
   );

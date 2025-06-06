@@ -1,4 +1,5 @@
 import Profile from '@/components/client/Profile';
+import PageTransition from '@/components/ui/PageTransition';
 import { useCookie } from '@/hook/useCookie';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -9,7 +10,9 @@ interface Iprops {
 const ProfilePage = async () => {
   return (
     <>
-      <Profile user={null} />
+      <PageTransition>
+        <Profile user={null} />
+      </PageTransition>
     </>
   );
 };

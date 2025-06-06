@@ -1,0 +1,129 @@
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.gradientText {
+  background: linear-gradient(to right, #4f46e5, #9333ea, #4f46e5);
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: shine 3s linear infinite;
+}
+
+.heroBackground {
+  background: linear-gradient(135deg, #2793f0 0%, #81abbf 100%);
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+}
+
+.cardHover {
+  transition: all 0.3s ease;
+}
+
+.cardHover:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.floatingElement {
+  animation: float 6s ease-in-out infinite;
+}
+
+.searchInput {
+  transition: all 0.3s ease;
+}
+
+.searchInput:focus {
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.filterPanel {
+  backdrop-filter: blur(10px);
+}
+
+.courseImage {
+  transition: transform 0.5s ease;
+}
+
+.courseCard:hover .courseImage {
+  transform: scale(1.05);
+}
+
+.badgeGlow {
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px rgba(79, 70, 229, 0.5);
+  }
+  to {
+    box-shadow: 0 0 15px rgba(79, 70, 229, 0.8);
+  }
+}
+
+.paginationItem {
+  transition: all 0.2s ease;
+}
+
+.paginationItem:hover {
+  transform: scale(1.05);
+}
+
+.paginationActive {
+  position: relative;
+  overflow: hidden;
+}
+
+.paginationActive::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #4f46e5, #9333ea, #4f46e5);
+  background-size: 200% 200%;
+  animation: gradient 3s linear infinite;
+  z-index: -1;
+  border-radius: 0.375rem;
+}
+
+.loadingSpinner {
+  border-top-color: #4f46e5;
+  border-left-color: #9333ea;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .gradientText {
+    font-size: 2.5rem;
+  }
+}

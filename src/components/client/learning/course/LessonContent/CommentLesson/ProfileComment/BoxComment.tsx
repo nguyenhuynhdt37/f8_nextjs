@@ -1,13 +1,9 @@
-import React, { use, useState } from 'react';
-import ReactQuillEditorComment from '../ReactQuillEditorComment';
+import React, { useState } from 'react';
 import { CreateComment, updateComment } from '@/api/axios/api';
 import { message } from 'antd';
 import { playSound } from '@/Utils/functions/SoundNumber';
-import MarkdownIt from 'markdown-it';
-import hljs from 'highlight.js';
-import 'github-markdown-css';
-import 'highlight.js/styles/github.css';
-import MarkdownEditor from '@/components/Edittor/MarkdownEditor';
+import ReactQuillEditorComment from '../ReactQuillEditorComment';
+
 const BoxComment = ({
   lessonId,
   data,
@@ -21,6 +17,8 @@ const BoxComment = ({
 }: any) => {
   const [messageApi, contextHolder] = message.useMessage();
   const key = 'updatable';
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
+
   const handlesubmit = () => {
     if (!comment) {
       alert('Bạn chưa nhập bình luận');
@@ -60,6 +58,7 @@ const BoxComment = ({
             alert('Có lỗi xảy ra vui lòng thử lại sau');
           }
           setComment('');
+          setImageUploadError(null);
         };
         handlePostData();
       } else if (feedback?.type === 'edit') {
@@ -92,25 +91,44 @@ const BoxComment = ({
               id: -1,
               type: 'add',
             });
-            alert('Có lỗi xảy ra vui lòng thử lại sau');
           } else {
+            alert('Có lỗi xảy ra vui lòng thử lại sau');
           }
           setComment('');
+          setImageUploadError(null);
         };
         handleEdit();
       }
     }
   };
-  const handleEditorChange = (editorState: any) => {
-    setComment(editorState);
+
+  const handleEditorChange = (htmlContent: string) => {
+    setComment(htmlContent);
   };
+
+  const handleImageUploadError = (error: string) => {
+    setImageUploadError(error);
+    messageApi.open({
+      key: 'imageError',
+      type: 'error',
+      content: `Lỗi tải ảnh: ${error}`,
+      duration: 3,
+    });
+  };
+
   return (
     <div className="flex-1">
       {contextHolder}
-      <MarkdownEditor
-        value={comment} // Truyền giá trị editorState vào
-        onChange={handleEditorChange} // Lắng nghe thay đổi
-        height="30rem"
+      {imageUploadError && (
+        <div className="text-red-500 mb-2 text-sm">
+          Lỗi tải ảnh: {imageUploadError}
+        </div>
+      )}
+      <ReactQuillEditorComment
+        comment={comment || ''}
+        setComment={handleEditorChange}
+        height="200px"
+        onImageUploadError={handleImageUploadError}
       />
       <div className="mt-10 flex justify-end">
         <button

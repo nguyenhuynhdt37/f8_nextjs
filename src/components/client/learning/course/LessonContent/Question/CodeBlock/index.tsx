@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-jsx';
 import 'prism-themes/themes/prism-coldark-cold.css';
 
 interface CodeBlockProps {
@@ -16,12 +18,14 @@ const cleanCode = (code: string): string => {
 const CodeBlock: React.FC<CodeBlockProps> = ({ code }: CodeBlockProps) => {
   useEffect(() => {
     Prism.highlightAll();
-  }, []);
+  }, [code]);
 
   return (
-    <pre className=" rounded-2xl bg-[#f2f9ff] p-10">
-      <code className="language-ts text-2xl">{cleanCode(code)}</code>
-    </pre>
+    <div className="rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700">
+      <pre className="p-4 overflow-x-auto">
+        <code className="language-js text-sm md:text-base">{cleanCode(code)}</code>
+      </pre>
+    </div>
   );
 };
 

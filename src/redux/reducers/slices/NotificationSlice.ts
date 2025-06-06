@@ -1,4 +1,3 @@
-
 import { getInfoUser } from '@/api/axios/api';
 import { GetUserInfoByToken, login } from '@/api/axios/api';
 import { IAuthSlice } from '@/types/next-auth';
@@ -49,6 +48,30 @@ const notificationSlice = createSlice({
         addNotification: (state, action: PayloadAction<Notification>) => {
             state.notifications = [action.payload, ...state.notifications];
         },
+        markAsRead: (state, action: PayloadAction<string>) => {
+            state.notifications = state.notifications.map(notification =>
+                notification.entityId === action.payload ? { ...notification, isRead: true } : notification
+            );
+        },
+        markAllAsRead: (state) => {
+            state.notifications = state.notifications.map(notification => ({ ...notification, isRead: true }));
+        },
+        deleteNotification: (state, action: PayloadAction<string>) => {
+            state.notifications = state.notifications.filter(notification => notification.entityId !== action.payload);
+        },
+        setNotifications: (state, action: PayloadAction<any[]>) => {
+            // This is a helper action to initialize notifications from mock data
+            state.notifications = action.payload.map(notification => ({
+                userId: 1,
+                title: notification.title,
+                message: notification.message,
+                entityType: notification.type,
+                entityId: notification.id,
+                isRead: notification.read,
+                createdAt: notification.timestamp,
+                extraData: { avatar: notification.image }
+            }));
+        },
     },
     // extraReducers: builder => {
     //     builder
@@ -67,6 +90,6 @@ const notificationSlice = createSlice({
     // },
 });
 
-export const { addNotification } = notificationSlice.actions;
+export const { addNotification, markAsRead, markAllAsRead, deleteNotification, setNotifications } = notificationSlice.actions;
 
 export default notificationSlice.reducer;

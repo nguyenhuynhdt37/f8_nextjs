@@ -91,6 +91,8 @@ interface IpageEdit {
   searchTerm: string;
   sortField: string;
   sortOrder: string;
+  status?: string;
+  role?: string;
 }
 interface IGetWithParam {
   config: IpageEdit;

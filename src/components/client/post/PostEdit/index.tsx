@@ -1,131 +1,667 @@
 'use client';
 import Banner from '@/components/admin/MainContent/Course/create/Banner';
 import OptionType from '@/components/admin/MainContent/Course/lesson/create/OptionType';
-import MarkdownEditor from '@/components/Edittor/MarkdownEditor';
-import { message, Modal } from 'antd';
-import React, { useState } from 'react';
-import 'react-markdown-editor-lite/lib/index.css';
-import MarkdownIt from 'markdown-it';
-import { CreatePost } from '@/api/axios/api';
-import { useRouter } from 'next/navigation';
+import { message, Alert, Tooltip } from 'antd';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { UpdatePost } from '@/api/axios/api';
+import uploadImage, { generateUniqueFileName } from '@/Utils/functions/uploadImage';
 import { getFileFromUrl } from '@/Utils/functions';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { FiInfo, FiImage, FiTag, FiEye, FiX, FiCheck, FiArrowLeft } from 'react-icons/fi';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { generateSlug } from '@/Utils/functions/slugify';
+
+// Validation constants
+const TITLE_MIN_LENGTH = 10;
+const TITLE_MAX_LENGTH = 150;
+const CONTENT_MIN_LENGTH = 100;
+
+interface ValidationErrors {
+  title?: string;
+  content?: string;
+  banner?: string;
+  type?: string;
+}
+
+// Custom Button Component with proper TypeScript types
+interface ButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  className?: string;
+  type?: 'primary' | 'secondary' | 'danger' | 'success';
+  icon?: React.ReactNode;
+}
+
+const Button: React.FC<ButtonProps> = ({
+  children,
+  onClick,
+  disabled = false,
+  className = '',
+  type = 'primary',
+  icon = null
+}) => {
+  const baseClasses = "rounded-full font-medium transition-all duration-300 flex items-center justify-center";
+
+  const typeClasses = {
+    primary: "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white",
+    secondary: "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50",
+    danger: "bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white",
+    success: "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+  };
+
+  return (
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      disabled={disabled}
+      className={`${baseClasses} ${typeClasses[type]} ${className} ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`}
+    >
+      {icon && <span className="mr-2">{icon}</span>}
+      {children}
+    </motion.button>
+  );
+};
+
 const PostEdit = ({ types, post }: any) => {
-  const [content, setContent] = useState<string>(post?.post?.content);
-  const mdParser = new MarkdownIt();
+  const [content, setContent] = useState<string>(post?.post?.content || '');
   const [messageApi, contextHolder] = message.useMessage();
   const [data, setData] = useState<any>({
     title: post?.post?.title || '',
-    banner: getFileFromUrl(post?.post?.banner) || null,
+    banner: post?.post?.banner || null,
   });
-  const [openModal, setOpenModal] = useState(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState('editor'); // 'editor' or 'preview'
+  const [isUploading, setIsUploading] = useState(false);
+  const quillRef = useRef<any>(null);
   const router = useRouter();
   const [type, setType] = useState<any>(() => {
     const typeChoise = types.find((c: any) => c.id == post?.post?.blogTypeId);
     return typeChoise;
   });
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append('content', content || '');
-    formData.append('blogTypeId', type?.id || '');
-    formData.append('banner', data?.banner || '');
-    const res = await CreatePost(formData);
-    if (res?.statusCode === 200 || res?.statusCode === 200) {
-      messageApi.open({
-        type: 'success',
-        content: 'Tạo mới thành công',
-      });
-      await new Promise(resolve => setTimeout(resolve, 500));
-      router.push('/post/');
+
+  // Custom image handler for Quill
+  const imageHandler = useCallback(() => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/jpeg, image/png, image/gif, image/jpg');
+    input.click();
+
+    input.onchange = async () => {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+
+        setIsUploading(true);
+
+        try {
+          // Generate a unique filename
+          const renamedFile = generateUniqueFileName(file);
+
+          // Use the utility function to upload the image
+          const imageUrl = await uploadImage(renamedFile);
+
+          if (imageUrl && quillRef.current) {
+            const quill = quillRef.current.getEditor();
+            const range = quill.getSelection(true);
+
+            // Insert image at cursor position
+            quill.insertEmbed(range.index, 'image', imageUrl);
+
+            // Move cursor after image
+            quill.setSelection(range.index + 1, 0);
+            messageApi.success('Tải ảnh thành công');
+          }
+        } catch (error) {
+          console.error('Failed to upload image:', error);
+          messageApi.error('Không thể tải ảnh lên. Vui lòng thử lại sau.');
+        } finally {
+          setIsUploading(false);
+        }
+      }
+    };
+  }, [messageApi]);
+
+  // Quill modules configuration with custom image handler
+  const modules = {
+    toolbar: {
+      container: [
+        [{ header: '1' }, { header: '2' }, { font: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ align: [] }],
+        [{ color: [] }, { background: [] }],
+        ['link', 'image'],
+        ['clean'],
+        ['code-block'],
+      ],
+      handlers: {
+        image: imageHandler,
+      },
+    },
+  };
+
+  // Custom styles for the Quill editor
+  useEffect(() => {
+    // Add custom styles to the Quill editor
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .ql-toolbar.ql-snow {
+        border: none !important;
+        border-bottom: 1px solid #e5e7eb !important;
+        padding: 16px !important;
+        border-top-left-radius: 8px !important;
+        border-top-right-radius: 8px !important;
+        background: #f9fafb !important;
+      }
+      
+      .ql-container.ql-snow {
+        border: none !important;
+        font-size: 1.125rem !important;
+        font-family: var(--font-lexend), system-ui, sans-serif !important;
+      }
+      
+      .ql-editor {
+        min-height: 60vh !important;
+        max-height: 70vh !important;
+        padding: 24px !important;
+        font-size: 1.125rem !important;
+        line-height: 1.8 !important;
+      }
+      
+      .ql-editor p {
+        margin-bottom: 1rem !important;
+      }
+      
+      .ql-editor h1, .ql-editor h2, .ql-editor h3 {
+        font-weight: 700 !important;
+        margin-top: 1.5rem !important;
+        margin-bottom: 1rem !important;
+      }
+      
+      .ql-editor h1 {
+        font-size: 2rem !important;
+      }
+      
+      .ql-editor h2 {
+        font-size: 1.75rem !important;
+      }
+      
+      .ql-editor h3 {
+        font-size: 1.5rem !important;
+      }
+      
+      .ql-editor img {
+        max-width: 100% !important;
+        border-radius: 8px !important;
+        margin: 1rem 0 !important;
+      }
+      
+      .ql-editor blockquote {
+        border-left: 4px solid #6366f1 !important;
+        padding-left: 16px !important;
+        color: #4b5563 !important;
+        font-style: italic !important;
+      }
+      
+      .ql-editor pre {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+        border-radius: 8px !important;
+        padding: 16px !important;
+        font-family: monospace !important;
+      }
+      
+      .ql-editor code {
+        background: #f1f5f9 !important;
+        padding: 2px 4px !important;
+        border-radius: 4px !important;
+        font-family: monospace !important;
+      }
+      
+      .ql-snow .ql-tooltip {
+        border-radius: 8px !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+        border: none !important;
+      }
+      
+      .ql-snow .ql-picker.ql-expanded .ql-picker-options {
+        border-radius: 8px !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+        border: 1px solid #e5e7eb !important;
+      }
+      
+      /* Dark mode support */
+      .dark .ql-toolbar.ql-snow {
+        background: #1e293b !important;
+        border-bottom: 1px solid #334155 !important;
+      }
+      
+      .dark .ql-container.ql-snow {
+        color: #e2e8f0 !important;
+      }
+      
+      .dark .ql-editor code {
+        background: #334155 !important;
+        color: #e2e8f0 !important;
+      }
+      
+      .dark .ql-snow .ql-stroke {
+        stroke: #94a3b8 !important;
+      }
+      
+      .dark .ql-snow .ql-fill {
+        fill: #94a3b8 !important;
+      }
+      
+      .dark .ql-snow .ql-picker {
+        color: #94a3b8 !important;
+      }
+      
+      .dark .ql-snow .ql-picker-options {
+        background: #1e293b !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  // Validate form before submission
+  const validateForm = (): ValidationErrors => {
+    const errors: ValidationErrors = {};
+
+    // Validate title
+    if (!data.title) {
+      errors.title = 'Tiêu đề không được để trống';
+    } else if (data.title.length < TITLE_MIN_LENGTH) {
+      errors.title = `Tiêu đề phải có ít nhất ${TITLE_MIN_LENGTH} ký tự`;
+    } else if (data.title.length > TITLE_MAX_LENGTH) {
+      errors.title = `Tiêu đề không được vượt quá ${TITLE_MAX_LENGTH} ký tự`;
+    }
+
+    // Validate content
+    if (!content) {
+      errors.content = 'Nội dung bài viết không được để trống';
     } else {
-      messageApi.open({
-        type: 'error',
-        content: 'Có lỗi xẩy ra, vui lòng thử lại sau',
-      });
+      // Strip HTML to check actual content length
+      const textContent = content.replace(/<[^>]*>/g, '').trim();
+      if (textContent.length < CONTENT_MIN_LENGTH) {
+        errors.content = `Nội dung bài viết phải có ít nhất ${CONTENT_MIN_LENGTH} ký tự`;
+      }
+    }
+
+    // Validate type
+    if (!type) {
+      errors.type = 'Vui lòng chọn chủ đề cho bài viết';
+    }
+
+    // Validate banner
+    if (!data.banner) {
+      errors.banner = 'Vui lòng thêm ảnh bìa cho bài viết';
+    }
+
+    return errors;
+  };
+
+  // Validate title as user types
+  const validateTitle = (value: string): string | undefined => {
+    if (!value) {
+      return 'Tiêu đề không được để trống';
+    } else if (value.length < TITLE_MIN_LENGTH) {
+      return `Tiêu đề phải có ít nhất ${TITLE_MIN_LENGTH} ký tự (hiện tại: ${value.length})`;
+    } else if (value.length > TITLE_MAX_LENGTH) {
+      return `Tiêu đề không được vượt quá ${TITLE_MAX_LENGTH} ký tự (hiện tại: ${value.length})`;
+    }
+    return undefined;
+  };
+
+  // Handle title change
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setData({
+      ...data,
+      title: newTitle,
+    });
+
+    // Update just the title error
+    const titleError = validateTitle(newTitle);
+    setErrors(prev => ({
+      ...prev,
+      title: titleError,
+    }));
+  };
+
+  // Handle content change
+  const handleContentChange = (value: string) => {
+    setContent(value);
+
+    // Validate content length
+    const textContent = value.replace(/<[^>]*>/g, '').trim();
+    if (textContent.length < CONTENT_MIN_LENGTH) {
+      setErrors(prev => ({
+        ...prev,
+        content: `Nội dung bài viết phải có ít nhất ${CONTENT_MIN_LENGTH} ký tự (hiện tại: ${textContent.length})`,
+      }));
+    } else {
+      setErrors(prev => ({
+        ...prev,
+        content: undefined,
+      }));
     }
   };
 
+  const handleSubmit = async () => {
+    // Final validation before submission
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      const firstError = Object.values(validationErrors)[0];
+      messageApi.error(firstError || 'Vui lòng kiểm tra lại thông tin bài viết');
+
+      // Switch to editor tab if there are content errors
+      if (validationErrors.content) {
+        setActiveTab('editor');
+      }
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('Id', post?.post?.id);
+      formData.append('Content', content || '');
+      formData.append('BlogTypeId', type?.id?.toString() || '');
+      formData.append('Title', data?.title || '');
+
+      // Only append Banner if it's a new file object (user changed the banner)
+      // If it's still a URL string (unchanged), don't include it so server keeps existing banner
+      if (data?.banner instanceof File) {
+        formData.append('Banner', data.banner);
+      }
+      // We don't convert URL strings to File objects anymore as it's causing server errors
+
+      console.log('Submitting edit form with data:', {
+        id: post?.post?.id,
+        content: content?.substring(0, 100) + '...',
+        blogTypeId: type?.id,
+        title: data?.title,
+        banner: data?.banner instanceof File ?
+          `File: ${data.banner.name}, size: ${data.banner.size}` :
+          (typeof data?.banner === 'string' ? 'URL string (keeping existing banner)' : 'No banner')
+      });
+
+      const res = await UpdatePost(formData);
+
+      if (res?.statusCode === 200) {
+        messageApi.success('Cập nhật bài viết thành công');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        router.push(`/post/${generateSlug(data?.title, post?.post?.id)}`);
+      } else {
+        throw new Error(res?.message || 'Có lỗi xảy ra khi cập nhật bài viết');
+      }
+    } catch (error: any) {
+      console.error('Error updating post:', error);
+      messageApi.error(error.message || 'Có lỗi xảy ra, vui lòng thử lại sau');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleGoBack = () => {
+    router.back();
+  };
+
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-16">
       {contextHolder}
-      <div className="container mx-auto">
-        <div className="flex items-center justify-between">
-          <input
-            value={data.title}
-            onChange={e =>
-              setData({
-                ...data,
-                title: e.target.value,
-              })
-            }
-            type="text"
-            placeholder="Tiêu đề"
-            className="w-full flex-1 focus:outline-none py-5 text-[3rem]"
-          />
-          <button
-            disabled={!((content && data.title) || !openModal)}
-            onClick={e => setOpenModal(true)}
-            className="w-[15rem] disabled:bg-[#7fc9fd] py-3 rounded-full bg-[#4dacf0] px-10 text-[#fff] font-medium text-2xl"
-          >
-            XUẤT BẢN
-          </button>
-        </div>
-        <div className="pb-10">
-          <MarkdownEditor value={content} onChange={setContent} height="80vh" />
+
+      {/* Header with gradient */}
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+              <button
+                onClick={handleGoBack}
+                className="flex items-center mb-4 text-indigo-100 hover:text-white transition-colors"
+              >
+                <FiArrowLeft className="mr-2" /> Quay lại
+              </button>
+              <input
+                value={data.title}
+                onChange={handleTitleChange}
+                type="text"
+                placeholder="Tiêu đề bài viết..."
+                className={`w-full text-3xl md:text-4xl font-bold text-white bg-transparent focus:outline-none ${errors.title ? 'border-b-2 border-red-500' : ''}`}
+              />
+              <div className="flex justify-between items-center mt-2">
+                {errors.title ? (
+                  <p className="text-red-300 text-sm">{errors.title}</p>
+                ) : (
+                  <p className={`text-sm ${data.title.length > 0 && data.title.length < TITLE_MIN_LENGTH
+                    ? 'text-amber-300'
+                    : 'text-indigo-200'
+                    }`}>
+                    {data.title.length}/{TITLE_MAX_LENGTH} ký tự
+                  </p>
+                )}
+                <div className="flex items-center">
+                  <Tooltip title="Tiêu đề nên ngắn gọn, hấp dẫn và mô tả chính xác nội dung bài viết">
+                    <span className="text-indigo-200 flex items-center">
+                      <FiInfo className="mr-1" /> Gợi ý tiêu đề hay
+                    </span>
+                  </Tooltip>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 md:mt-0 flex space-x-3">
+              <Button
+                onClick={handleGoBack}
+                type="secondary"
+                className="px-5 py-2.5 text-sm"
+              >
+                Hủy
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className="px-6 py-2.5 text-sm"
+                icon={<FiCheck />}
+              >
+                {isSubmitting ? 'Đang cập nhật...' : 'Cập nhật'}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
-      <Modal
-        title={null}
-        footer={null}
-        onCancel={() => setOpenModal(false)}
-        width={1000}
-        open={openModal}
-        centered
-      >
-        <div className="font-medium">Xem trước</div>
-        <div className="grid grid-cols-2 gap-11">
-          <div className="">
-            <Banner data={data.banner} setData={setData} />
-            <div className="">
-              <input type="text" className="w-full" />
-            </div>
-          </div>
-          <div className="">
-            <div className="">Chọn chủ đề của bạn</div>
-            <div className="pt-5">
-              <OptionType
-                className="px-10 py-5"
-                data={types}
-                typeChoise={type}
-                setTypeChoise={setType}
-              />
-            </div>
-            <button
-              onClick={() => handleSubmit()}
-              disabled={!(data.title && data.banner)}
-              className="w-[15rem] mt-10 disabled:bg-[#7fc9fd] py-3 rounded-full bg-[#4dacf0] px-1 text-[#fff] font-medium text-2xl"
+
+      {/* Main content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left column - Editor */}
+          <div className="lg:col-span-2">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden"
             >
-              XUẤT BẢN NGAY
-            </button>
+              {/* Editor/Preview tabs */}
+              <div className="border-b border-gray-200 dark:border-gray-700">
+                <div className="flex">
+                  <button
+                    onClick={() => setActiveTab('editor')}
+                    className={`px-6 py-3 font-medium text-sm ${activeTab === 'editor'
+                      ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                      }`}
+                  >
+                    Soạn thảo
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('preview')}
+                    className={`px-6 py-3 font-medium text-sm ${activeTab === 'preview'
+                      ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                      }`}
+                  >
+                    Xem trước
+                  </button>
+                </div>
+              </div>
+
+              {/* Editor/Preview content */}
+              <div className="p-1">
+                {activeTab === 'editor' ? (
+                  <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden relative">
+                    {isUploading && (
+                      <div className="absolute inset-0 bg-white/70 dark:bg-gray-800/70 z-10 flex items-center justify-center">
+                        <div className="flex flex-col items-center">
+                          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+                          <p className="mt-3 text-indigo-600 dark:text-indigo-400">Đang tải ảnh lên...</p>
+                        </div>
+                      </div>
+                    )}
+                    <ReactQuill
+                      ref={quillRef}
+                      value={content}
+                      onChange={handleContentChange}
+                      theme="snow"
+                      placeholder="Viết nội dung bài viết của bạn ở đây..."
+                      modules={modules}
+                      formats={[
+                        'header',
+                        'font',
+                        'size',
+                        'bold',
+                        'italic',
+                        'underline',
+                        'strike',
+                        'blockquote',
+                        'list',
+                        'bullet',
+                        'indent',
+                        'link',
+                        'image',
+                        'color',
+                        'background',
+                        'align',
+                        'code-block',
+                      ]}
+                    />
+                    {errors.content && (
+                      <div className="bg-red-50 dark:bg-red-900/20 p-3 text-red-600 dark:text-red-400 text-sm">
+                        {errors.content}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="min-h-[60vh] p-6 prose dark:prose-invert max-w-none">
+                    {content ? (
+                      <>
+                        <h1>{data.title || 'Tiêu đề bài viết'}</h1>
+                        <div dangerouslySetInnerHTML={{ __html: content }} />
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-[60vh] text-gray-400">
+                        <svg className="w-16 h-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <p className="text-xl">Chưa có nội dung để xem trước</p>
+                        <p className="mt-2">Hãy thêm nội dung trong tab soạn thảo</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right column - Settings */}
+          <div className="lg:col-span-1">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden"
+            >
+              <div className="p-6">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                  Thiết lập bài viết
+                </h3>
+
+                {/* Show any validation errors */}
+                {Object.keys(errors).length > 0 && (
+                  <Alert
+                    message="Vui lòng sửa các lỗi sau trước khi cập nhật"
+                    type="error"
+                    description={
+                      <ul className="list-disc pl-4 mt-2">
+                        {Object.entries(errors).map(([key, value]) =>
+                          value ? <li key={key} className="mt-1">{value}</li> : null
+                        )}
+                      </ul>
+                    }
+                    className="mb-6"
+                    showIcon
+                  />
+                )}
+
+                {/* Banner upload */}
+                <div className="mb-6">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+                    <FiImage className="mr-2 text-indigo-600 dark:text-indigo-400" />
+                    Ảnh bìa bài viết
+                  </h4>
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+                    <Banner data={data.banner} setData={setData} />
+                    {errors.banner && (
+                      <p className="text-red-500 mt-3 text-sm">{errors.banner}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Post type selection */}
+                <div className="mb-6">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+                    <FiTag className="mr-2 text-indigo-600 dark:text-indigo-400" />
+                    Chọn chủ đề
+                  </h4>
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+                    <OptionType
+                      className="grid grid-cols-2 gap-2"
+                      data={types}
+                      typeChoise={type}
+                      setTypeChoise={setType}
+                    />
+                    {errors.type && (
+                      <p className="text-red-500 mt-3 text-sm">{errors.type}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submit button */}
+                <Button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  type={Object.keys(errors).length > 0 ? "secondary" : "success"}
+                  className="w-full mt-6 py-3 text-base"
+                  icon={<FiCheck />}
+                >
+                  {isSubmitting ? 'Đang cập nhật...' : 'Cập nhật bài viết'}
+                </Button>
+              </div>
+            </motion.div>
           </div>
         </div>
-        <div className="">
-          <input
-            type="text"
-            className="border-y-[0.1rem] w-full focus:outline-none font-bold text-[2rem] py-4 "
-            value={data?.title}
-            onChange={e =>
-              setData({
-                ...data,
-                title: e.target.value,
-              })
-            }
-          />
-          <div
-            className="custom-textview"
-            dangerouslySetInnerHTML={{ __html: mdParser.render(content) }}
-          />
-        </div>
-      </Modal>
+      </div>
     </div>
   );
 };

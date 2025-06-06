@@ -191,17 +191,6 @@ export const CheckIsCourseRegister = async ({
   }
 };
 
-export const CreateUser = async (user: ICreateUser): Promise<any> => {
-  try {
-    const res = await axiosInstance.post('/users/create', user, {
-      withCredentials: true,
-    });
-
-    return res.data;
-  } catch (error: any) {
-    return error?.response?.data;
-  }
-};
 export const getAllUser = async ({ config }: IGetWithParam): Promise<any> => {
   try {
     const res = await axiosInstance.get('/users', {
@@ -212,14 +201,22 @@ export const getAllUser = async ({ config }: IGetWithParam): Promise<any> => {
         sortOrder: config.sortOrder,
         pageNumber: config.pageNumber,
         pageSize: config.pageSize,
+        status: config.status,
+        role: config.role,
       },
     });
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    console.error('Error fetching users:', error);
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || 'Failed to fetch users',
+      data: null
+    };
   }
 };
+
 export const getUserByID = async ({ id }: { id: number }): Promise<any> => {
   try {
     const res = await axiosInstance.get(`/users/${id}`, {
@@ -228,42 +225,81 @@ export const getUserByID = async ({ id }: { id: number }): Promise<any> => {
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    console.error(`Error fetching user with ID ${id}:`, error);
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || `Failed to fetch user with ID ${id}`,
+      data: null
+    };
   }
 };
-export const UpdateUser = async ({ id, token, data }: any): Promise<any> => {
+
+export const CreateUser = async (userData: ICreateUser | FormData): Promise<any> => {
   try {
-    const res = await axiosInstance.patch(`/users/${id}`, data, {
+    const res = await axiosInstance.post('/users/create', userData, {
+      withCredentials: true,
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...(userData instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : {}),
       },
     });
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    console.error('Error creating user:', error);
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || 'Failed to create user',
+      data: null,
+      validationErrors: error?.response?.data?.validationErrors || null
+    };
+  }
+};
+
+export const UpdateUser = async ({ id, data }: { id: number, data: any }): Promise<any> => {
+  try {
+    const res = await axiosInstance.patch(`/users/${id}`, data, {
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    console.error(`Error updating user with ID ${id}:`, error);
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || `Failed to update user with ID ${id}`,
+      data: null,
+      validationErrors: error?.response?.data?.validationErrors || null
+    };
   }
 };
 
 export const UpdateImageUser = async ({
   id,
-  token,
   data,
-}: any): Promise<any> => {
+}: {
+  id: number,
+  data: FormData
+}): Promise<any> => {
   try {
     const res = await axiosInstance.patch(`/users/${id}/avatar`, data, {
+      withCredentials: true,
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
       },
     });
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    console.error(`Error updating avatar for user with ID ${id}:`, error);
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || `Failed to update avatar for user with ID ${id}`,
+      data: null
+    };
   }
 };
-export const DeleteUser = async ({ id }: any): Promise<any> => {
+
+export const DeleteUser = async ({ id }: { id: number }): Promise<any> => {
   try {
     const res = await axiosInstance.delete(`/users/${id}`, {
       withCredentials: true,
@@ -271,9 +307,49 @@ export const DeleteUser = async ({ id }: any): Promise<any> => {
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    console.error(`Error deleting user with ID ${id}:`, error);
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || `Failed to delete user with ID ${id}`,
+      data: null
+    };
   }
 };
+
+export const ToggleUserStatus = async ({ id, isActive }: { id: number, isActive: number }): Promise<any> => {
+  try {
+    const res = await axiosInstance.patch(`/users/${id}/status`, { isActive }, {
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    console.error(`Error toggling status for user with ID ${id}:`, error);
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || `Failed to toggle status for user with ID ${id}`,
+      data: null
+    };
+  }
+};
+
+export const UpdateUserRole = async ({ id, role }: { id: number, role: string }): Promise<any> => {
+  try {
+    const res = await axiosInstance.patch(`/users/${id}/role`, { role }, {
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    console.error(`Error updating role for user with ID ${id}:`, error);
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || `Failed to update role for user with ID ${id}`,
+      data: null
+    };
+  }
+};
+
 export const DeleteCourse = async ({ id }: any): Promise<any> => {
   try {
     const res = await axiosInstance.delete(`/courses/delete`, {
@@ -350,14 +426,14 @@ export const getFirstLesson = async ({ id }: any): Promise<any> => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getAllCourses = async ({
   config,
 }: IGetWithParam): Promise<any> => {
   try {
-    const res = await axiosInstance.get('/courses/all', {
+    const res = await axiosInstance.get('/courses/all-courses', {
       withCredentials: true,
       params: {
         searchTerm: config.searchTerm,
@@ -370,7 +446,7 @@ export const getAllCourses = async ({
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getLesonGroupById = async ({
@@ -397,7 +473,7 @@ export const getLesonGroupById = async ({
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getLesonpByCourseId = async ({
@@ -421,7 +497,7 @@ export const getLesonpByCourseId = async ({
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const CourseCreate = async (formData: any): Promise<any> => {
@@ -435,7 +511,7 @@ export const CourseCreate = async (formData: any): Promise<any> => {
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const CourseEditAsync = async (
@@ -452,7 +528,7 @@ export const CourseEditAsync = async (
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const QuestionLessonCreate = async (
@@ -470,7 +546,7 @@ export const QuestionLessonCreate = async (
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const LessonCreateAsync = async (
@@ -488,7 +564,7 @@ export const LessonCreateAsync = async (
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const NoteCreateAsync = async (
@@ -506,7 +582,7 @@ export const NoteCreateAsync = async (
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const QuessonCodeCreate = async (
@@ -524,7 +600,7 @@ export const QuessonCodeCreate = async (
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const ViewNoteLesson = async (lessonId: number): Promise<any> => {
@@ -535,7 +611,7 @@ export const ViewNoteLesson = async (lessonId: number): Promise<any> => {
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const ViewQuestionLesson = async (lessonId: number): Promise<any> => {
@@ -549,7 +625,7 @@ export const ViewQuestionLesson = async (lessonId: number): Promise<any> => {
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const logoutApi = async () => {
@@ -559,7 +635,7 @@ export const logoutApi = async () => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getInfoUser = async () => {
@@ -569,24 +645,70 @@ export const getInfoUser = async () => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.status;
+    throw error?.response?.status;
   }
 };
 export const uploadImage = async (formData: any) => {
   try {
-    const res = await axiosInstance.post(`/upload`, formData, {
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return res.data;
+    console.log('Starting image upload');
+
+    // Ensure only avatar field is being sent
+    if (formData instanceof FormData) {
+      const fileEntry = formData.get('avatar');
+      if (fileEntry && fileEntry instanceof File) {
+        console.log('Uploading file:', fileEntry.name, 'size:', fileEntry.size, 'type:', fileEntry.type);
+      } else {
+        console.warn('FormData does not contain a valid file in the avatar field');
+      }
+    }
+
+    // First attempt: try the /upload endpoint
+    try {
+      console.log('Trying primary endpoint: /upload');
+      const res = await axiosInstance.post(`/upload`, formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Primary upload successful, response:', res.data);
+      return res.data;
+    } catch (primaryError: any) {
+      console.error('Primary upload endpoint failed:', primaryError?.response?.data || primaryError);
+      console.log('Trying fallback endpoint: /upload/avatar');
+
+      // If the first attempt failed, try the fallback endpoint
+      const fallbackRes = await axiosInstance.post(`/upload/avatar`, formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Fallback upload successful, response:', fallbackRes.data);
+      return fallbackRes.data;
+    }
   } catch (error: any) {
-    return error?.response?.data;
+    console.error('All upload attempts failed:', error?.response?.data || error);
+    // Return a standardized error response
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || 'Lỗi khi tải lên hình ảnh',
+      data: error?.response?.data || null,
+      error: true
+    };
   }
 };
-export const CreatePost = async (formData: any) => {
+export const CreatePost = async (formData: FormData) => {
   try {
+    console.log('Creating post with FormData');
+    // Log FormData contents for debugging
+    if (formData instanceof FormData) {
+      console.log('FormData keys:');
+      for (const pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[0] === 'Content' ? 'Content text...' : pair[1]}`);
+      }
+    }
+
     const res = await axiosInstance.post(`/post/create`, formData, {
       withCredentials: true,
       headers: {
@@ -595,9 +717,57 @@ export const CreatePost = async (formData: any) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    console.error('Error creating post:', error?.response?.data || error);
+    return error?.response?.data || {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi tạo bài viết',
+      data: null
+    };
   }
 };
+
+export const UpdatePost = async (formData: FormData) => {
+  try {
+    console.log('Updating post with FormData');
+    // Log FormData contents for debugging
+    if (formData instanceof FormData) {
+      console.log('FormData keys:');
+      for (const pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[0] === 'Content' ? 'Content text...' : pair[1]}`);
+      }
+    }
+
+    const res = await axiosInstance.put(`/post/update`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error updating post:', error);
+
+    // Log more detailed error information for debugging
+    if (error.response) {
+      console.error('Server response error:', {
+        status: error.response.status,
+        data: error.response.data,
+        headers: error.response.headers
+      });
+    } else if (error.request) {
+      console.error('No response received:', error.request);
+    } else {
+      console.error('Error setting up request:', error.message);
+    }
+
+    return error?.response?.data || {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi cập nhật bài viết',
+      data: ""
+    };
+  }
+};
+
 export const getAllPostType = async (formData: any) => {
   try {
     const res = await axiosInstance.post(`/post/all/type`, formData, {
@@ -605,7 +775,7 @@ export const getAllPostType = async (formData: any) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getAllPost = async ({ config }: IGetWithParam): Promise<any> => {
@@ -622,7 +792,7 @@ export const getAllPost = async ({ config }: IGetWithParam): Promise<any> => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getAllPostByType = async ({ config, id }: any): Promise<any> => {
@@ -639,10 +809,19 @@ export const getAllPostByType = async ({ config, id }: any): Promise<any> => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
-
+export const getDashboardStatisticsByHomePage = async () => {
+  try {
+    const res = await axiosInstance.get('/statistics/dashboard/home-page', {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
 export const getAllCourseByLevel = async (id: number) => {
   try {
     const res = await axiosInstance.get(`/courses/level/${id}`, {
@@ -650,7 +829,7 @@ export const getAllCourseByLevel = async (id: number) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const CheckLessonComplete = async (lessonId: number) => {
@@ -663,7 +842,7 @@ export const CheckLessonComplete = async (lessonId: number) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getNextLesson = async (lessonId: number) => {
@@ -673,7 +852,7 @@ export const getNextLesson = async (lessonId: number) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getPrevLesson = async (lessonId: number) => {
@@ -683,7 +862,7 @@ export const getPrevLesson = async (lessonId: number) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getQuessonCode = async (lessonId: number) => {
@@ -693,7 +872,7 @@ export const getQuessonCode = async (lessonId: number) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const SaveCodeUser = async (lessonId: number, code: string) => {
@@ -707,7 +886,7 @@ export const SaveCodeUser = async (lessonId: number, code: string) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const SubmitCode = async (submitCode: any) => {
@@ -721,7 +900,7 @@ export const SubmitCode = async (submitCode: any) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const CreateComment = async (comment: any) => {
@@ -731,7 +910,7 @@ export const CreateComment = async (comment: any) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getAllCommentByLessonId = async (lessonId: any) => {
@@ -741,7 +920,7 @@ export const getAllCommentByLessonId = async (lessonId: any) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 
@@ -756,7 +935,7 @@ export const ReportComment = async (idComment: any) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const DeleteComment = async (idComment: any) => {
@@ -769,7 +948,7 @@ export const DeleteComment = async (idComment: any) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const updateComment = async ({ idComment, comment }: any) => {
@@ -783,7 +962,7 @@ export const updateComment = async ({ idComment, comment }: any) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const UnlikeComment = async (idComment: any) => {
@@ -796,7 +975,7 @@ export const UnlikeComment = async (idComment: any) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const LikeChangeOrAdd = async (idComment: number, icon: string) => {
@@ -810,7 +989,7 @@ export const LikeChangeOrAdd = async (idComment: number, icon: string) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getProcess = async (courseId: number) => {
@@ -820,7 +999,7 @@ export const getProcess = async (courseId: number) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getLanguageCodes = async () => {
@@ -833,7 +1012,7 @@ export const getLanguageCodes = async () => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getChapterById = async (chapterId: number) => {
@@ -857,7 +1036,7 @@ export const ChapterEditAsync = async ({ chapterId, name }: any) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getChapterAndLesson = async (courseId: number) => {
@@ -870,7 +1049,7 @@ export const getChapterAndLesson = async (courseId: number) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const ToggleChapterActive = async (chapterId: number) => {
@@ -883,7 +1062,7 @@ export const ToggleChapterActive = async (chapterId: number) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const ToggleLessonActiveAsync = async (lessonId: number) => {
@@ -896,7 +1075,7 @@ export const ToggleLessonActiveAsync = async (lessonId: number) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const MoveUpChapterPosition = async ({
@@ -914,7 +1093,7 @@ export const MoveUpChapterPosition = async ({
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const MoveDownChapterPosition = async ({
@@ -932,7 +1111,7 @@ export const MoveDownChapterPosition = async ({
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const MoveUpLessonPositionAsync = async (lessonId: number) => {
@@ -946,7 +1125,7 @@ export const MoveUpLessonPositionAsync = async (lessonId: number) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const MoveDownLessonPositionAsync = async (lessonId: number) => {
@@ -970,7 +1149,7 @@ export const GetPostOutstandingAsync = async () => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const getCourseInfoAsync = async (courseId: number) => {
@@ -980,7 +1159,7 @@ export const getCourseInfoAsync = async (courseId: number) => {
     });
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const googleAuthAsync = async (code: string) => {
@@ -994,7 +1173,7 @@ export const googleAuthAsync = async (code: string) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 export const githubAuthAsync = async (code: string) => {
@@ -1008,10 +1187,10 @@ export const githubAuthAsync = async (code: string) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
-export const getStudySechedule = async () => {
+export const getStudySchedule = async () => {
   try {
     const res = await axiosInstance.get(
       `/study-schedule/get_all_study`,
@@ -1021,18 +1200,144 @@ export const getStudySechedule = async () => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 
-export const getLearningPathDetail = async (id: string) => {
+export const getStudyScheduleDetailById = async (id: number) => {
   try {
-    return mockLearningPathDetail;
-  } catch (error) {
-    console.error('Error fetching learning path detail:', error);
-    throw error;
+    const res = await axiosInstance.get(
+      `/study-schedule/get_by_learning_path_id/${id}`,
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
   }
 };
+
+// Statistics API calls
+export const getDashboardStatistics = async () => {
+  try {
+    const res = await axiosInstance.get('/statistics/dashboard', {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const getUserStatistics = async (startDate?: string, endDate?: string) => {
+  try {
+    const params: Record<string, string> = {};
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+
+    const res = await axiosInstance.get('/statistics/users', {
+      params,
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const getCourseStatistics = async (startDate?: string, endDate?: string, sortBy: string = 'enrollments', sortOrder: string = 'desc') => {
+  try {
+    const params: Record<string, string> = {
+      sortBy,
+      sortOrder,
+    };
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+
+    const res = await axiosInstance.get('/statistics/courses', {
+      params,
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const getCourseStatisticsById = async (courseId: number) => {
+  try {
+    const res = await axiosInstance.get(`/statistics/courses/${courseId}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const getPaymentStatistics = async (startDate?: string, endDate?: string) => {
+  try {
+    const params: Record<string, string> = {};
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+
+    const res = await axiosInstance.get('/statistics/payments', {
+      params,
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const getRevenuePeriods = async () => {
+  try {
+    const res = await axiosInstance.get('/statistics/revenue/periods', {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const getTopCourses = async (count: number = 10, metric: string = 'enrollments', period: string = 'all') => {
+  try {
+    const res = await axiosInstance.get('/statistics/top-courses', {
+      params: { count, metric, period },
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const getTopPerformers = async (count: number = 5) => {
+  try {
+    const res = await axiosInstance.get('/statistics/top-performers', {
+      params: { count },
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const getRevenueSummary = async () => {
+  try {
+    const res = await axiosInstance.get('/statistics/revenue/summary', {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
 export const getSearch = async (q: string) => {
   try {
     const res = await axiosInstance.get(
@@ -1046,9 +1351,10 @@ export const getSearch = async (q: string) => {
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
+
 export const getSearchWithType = async (q: string, type: string, pageNumber: number) => {
   try {
     const res = await axiosInstance.get(
@@ -1065,9 +1371,10 @@ export const getSearchWithType = async (q: string, type: string, pageNumber: num
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
+
 export const getDataFriendRequests = async (pageSize: number, pageNumber: number, q?: string) => {
   try {
     const res = await axiosInstance.get(
@@ -1083,7 +1390,316 @@ export const getDataFriendRequests = async (pageSize: number, pageNumber: number
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
 
+export const checkCourseRegister = async ({ courseId }: { courseId: number }) => {
+  try {
+    const res = await axiosInstance.get(
+      `/courses/user/check-course-is-register/${courseId}`,
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const CreatePayment = async ({ courseId }: { courseId: number }) => {
+  try {
+    const res = await axiosInstance.post(
+      `/vnpay/vnpay-create`,
+      {
+        courseId,
+      },
+      {
+        withCredentials: true,
+      },
+    );
+    return res.data;
+  } catch (error: any) {
+    throw error?.response?.data;
+  }
+};
+
+export const getGrowthComparison = async (period = 'month') => {
+  try {
+    const res = await axiosInstance.get('/statistics/growth-comparison', {
+      params: { period },
+      withCredentials: true,
+    });
+
+    // Log dữ liệu từ API để debug
+    if (res.data?.statusCode === 200 && res.data.data) {
+      console.log('API growth data response:', res.data);
+
+      // Chuyển đổi tất cả giá trị tăng trưởng sang dạng số
+      const processedData = {
+        ...res.data,
+        data: {
+          ...res.data.data,
+          growth: {
+            users: Number(res.data.data.growth.users),
+            courses: Number(res.data.data.growth.courses),
+            revenue: Number(res.data.data.growth.revenue),
+            enrollments: Number(res.data.data.growth.enrollments)
+          }
+        }
+      };
+
+      console.log('Processed growth data:', processedData);
+      return processedData;
+    }
+
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching growth comparison:', error);
+
+    // Dữ liệu mẫu khi API chưa sẵn sàng
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
+
+    // Tính toán tháng trước
+    let previousMonth = currentMonth - 1;
+    let previousYear = currentYear;
+    if (previousMonth === 0) {
+      previousMonth = 12;
+      previousYear -= 1;
+    }
+
+    return {
+      statusCode: 200,
+      message: 'Dữ liệu mẫu - so sánh tăng trưởng',
+      data: {
+        current: {
+          period: `Tháng ${currentMonth}/${currentYear}`,
+          users: 3250,
+          courses: 157,
+          revenue: 357850000,
+          enrollments: 4320
+        },
+        previous: {
+          period: `Tháng ${previousMonth}/${previousYear}`,
+          users: 2890,
+          courses: 149,
+          revenue: 301250000,
+          enrollments: 3970
+        },
+        growth: {
+          users: 12.5,
+          courses: 5.4,
+          revenue: 18.8,
+          enrollments: 8.8
+        }
+      }
+    };
+  }
+};
+
+export const getMonthlyRevenue = async (year?: number) => {
+  try {
+    const url = year
+      ? `/statistics/revenue/monthly?year=${year}`
+      : '/statistics/revenue/monthly';
+
+    const res = await axiosInstance.get(url, {
+      withCredentials: true
+    });
+
+    return res.data;
+  } catch (error) {
+    console.error('Error getting monthly revenue:', error);
+
+    // Dữ liệu mẫu nếu API chưa sẵn sàng
+    const currentYear = new Date().getFullYear();
+
+    return {
+      statusCode: 200,
+      message: 'Dữ liệu mẫu - doanh thu theo tháng',
+      data: {
+        year: currentYear,
+        totalRevenue: 3500000000,
+        monthlyData: [
+          { month: "T1", revenue: 250000000, transactionCount: 85 },
+          { month: "T2", revenue: 280000000, transactionCount: 95 },
+          { month: "T3", revenue: 305000000, transactionCount: 110 },
+          { month: "T4", revenue: 320000000, transactionCount: 115 },
+          { month: "T5", revenue: 350000000, transactionCount: 125 },
+          { month: "T6", revenue: 290000000, transactionCount: 100 },
+          { month: "T7", revenue: 310000000, transactionCount: 105 },
+          { month: "T8", revenue: 330000000, transactionCount: 118 },
+          { month: "T9", revenue: 360000000, transactionCount: 128 },
+          { month: "T10", revenue: 380000000, transactionCount: 140 },
+          { month: "T11", revenue: 420000000, transactionCount: 155 },
+          { month: "T12", revenue: 450000000, transactionCount: 165 }
+        ]
+      }
+    };
+  }
+  // API functions
+};
+
+export const getAdminPendingPosts = async (pageNumber = 1, pageSize = 10, sortField = '', sortOrder = '', searchTerm = '') => {
+  try {
+    const res = await axiosInstance.get('/post/admin/pending', {
+      withCredentials: true,
+      params: {
+        pageNumber,
+        pageSize,
+        sortField,
+        sortOrder,
+        searchTerm
+      }
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error fetching pending posts:', error);
+    return error?.response?.data || {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi tải danh sách bài viết',
+      data: null
+    };
+  }
+};
+
+export const approvePost = async (postId: number, isApproved: boolean, rejectionReason?: string) => {
+  try {
+    const data: any = { postId, isApproved };
+    if (!isApproved && rejectionReason) {
+      data.rejectionReason = rejectionReason;
+    }
+
+    const res = await axiosInstance.post('/post/admin/approve', data, {
+      withCredentials: true
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error approving/rejecting post:', error);
+    return error?.response?.data || {
+      statusCode: 500,
+      message: isApproved
+        ? 'Có lỗi xảy ra khi phê duyệt bài viết'
+        : 'Có lỗi xảy ra khi từ chối bài viết',
+      data: null
+    };
+  }
+};
+
+export const reactToPost = async (blogId: number, action: 'add' | 'remove') => {
+  try {
+    const res = await axiosInstance.post(
+      '/post/reaction',
+      {
+        blogId,
+        action
+      },
+      {
+        withCredentials: true
+      }
+    );
+    return res.data;
+  } catch (error: any) {
+    console.error('Error reacting to post:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi thực hiện thao tác',
+      data: null
+    };
+  }
+};
+
+export const getPostReactions = async (blogId: number) => {
+  try {
+    const res = await axiosInstance.get(`/post/${blogId}/reactions`, {
+      withCredentials: true
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error getting post reactions:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi lấy danh sách người dùng đã thích bài viết',
+      data: null
+    };
+  }
+};
+
+export const savePost = async (postId: number, action: 'save' | 'unsave') => {
+  try {
+    const res = await axiosInstance.post(
+      '/post/save',
+      {
+        postId,
+        action
+      },
+      {
+        withCredentials: true
+      }
+    );
+    return res.data;
+  } catch (error: any) {
+    console.error('Error saving/unsaving post:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi thực hiện thao tác',
+      data: null
+    };
+  }
+};
+
+export const getSavedPosts = async (pageNumber = 1, pageSize = 10, sortField = 'SavedAt', sortOrder = 'desc') => {
+  try {
+    const res = await axiosInstance.get('/post/saved', {
+      withCredentials: true,
+      params: {
+        pageNumber,
+        pageSize,
+        sortField,
+        sortOrder
+      }
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error getting saved posts:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi lấy danh sách bài viết đã lưu',
+      data: null
+    };
+  }
+};
+
+export const isPostSaved = async (postId: number) => {
+  try {
+    const res = await axiosInstance.get(`/post/${postId}/is-saved`, {
+      withCredentials: true
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error checking if post is saved:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi kiểm tra trạng thái lưu bài viết',
+      data: null
+    };
+  }
+};

@@ -19,6 +19,7 @@ import { playSound } from '@/Utils/functions/SoundNumber';
 import ListReaction from './ListReaction';
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js/lib/common';
+
 const ProfileComment = ({
   data,
   feedback,
@@ -34,10 +35,12 @@ const ProfileComment = ({
   const user = useAppSelector(state => state.auth?.user?.user);
   const userHasLiked = data?.likes?.find((p: any) => p.userId === user?.id);
   const [messageApi, contextHolder] = message.useMessage();
+
   const handleRedirectToProfileID = () => {
     ref.current.continuousStart();
     router.push(`/profile/${data?.user?.id}`);
   };
+
   const mdParser: any = new MarkdownIt({
     highlight: (code, lang) => {
       if (lang && hljs.getLanguage(lang)) {
@@ -51,6 +54,7 @@ const ProfileComment = ({
       )}</code></pre>`;
     },
   });
+
   const handleUnLike = async () => {
     const res = await UnlikeComment(data.id);
     if (res?.statusCode === 200 || res?.statusCode === 201) {
@@ -58,6 +62,7 @@ const ProfileComment = ({
       messageApi.error('Lỗi khi bỏ thích bình luận, vui lòng thử lại sau');
     }
   };
+
   const handleReactionChangeOrAdd = async (icon: string) => {
     const res = await LikeChangeOrAdd(data.id, icon);
     if (res?.statusCode === 200 || res?.statusCode === 201) {
@@ -68,6 +73,7 @@ const ProfileComment = ({
       );
     }
   };
+
   return (
     <>
       {contextHolder}

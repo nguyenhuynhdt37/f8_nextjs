@@ -1,32 +1,11 @@
-'use client';
-import { useEffect } from 'react';
-import { googleAuthAsync, login } from '@/api/axios/api';
-import { useRouter } from 'next/navigation';
-import { useAppDispatch } from '@/redux/hook/hook';
-import { getInfoRedux } from '@/redux/reducers/slices/AuthSlice';
+import type { Metadata } from 'next';
+import GoogleCallbackClient from '@/components/client/auth/GoogleCallbackClient';
 
-export default function GoogleCallback() {
-  const router = useRouter();
-  const dispatch: any = useAppDispatch();
-  useEffect(() => {
-    const handleGoogleAuth = async () => {
-      const code = new URLSearchParams(window.location.search).get('code');
-      if (!code) return;
+export const metadata: Metadata = {
+  title: 'Xác thực Google - F8',
+  description: 'Đang xác thực đăng nhập với Google',
+};
 
-      const res = await googleAuthAsync(code);
-      dispatch(getInfoRedux());
-      router.push('/');
-    };
-
-    handleGoogleAuth();
-  }, []);
-
-  return (
-    <div className="flex justify-center items-center h-screen">
-      <img
-        src="https://i.pinimg.com/originals/07/44/76/074476209bb41a39913981195e17e363.gif"
-        alt=""
-      />
-    </div>
-  );
+export default function GoogleCallbackPage() {
+  return <GoogleCallbackClient />;
 }

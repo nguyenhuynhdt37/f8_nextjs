@@ -40,7 +40,7 @@ const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
     range.forEach((page, index) => {
       if (page === '...') {
         pageNumbers.push(
-          <span key={index} className="px-3 py-2.5">
+          <span key={index} className="px-3 py-2.5 text-[1.4rem] text-slate-500">
             ...
           </span>,
         );
@@ -49,9 +49,10 @@ const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
           <button
             key={page}
             onClick={() => handlePageChange(page as number)}
-            className={`w-14 mx-2 h-10 flex items-center justify-center px-3 py-2.5 rounded-xl text-center font-semibold transition-all hover:opacity-75 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ${
-              currentPage === page ? 'bg-[#f05123] text-[#fff]' : ''
-            }`}
+            className={`w-12 mx-1 h-12 flex items-center justify-center px-3 py-2 rounded-xl text-center font-medium text-[1.4rem] transition-all duration-200 hover:shadow-md ${currentPage === page
+              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
+              : 'bg-white border border-indigo-100 text-slate-700 hover:border-indigo-300'
+              }`}
             type="button"
           >
             {page}
@@ -64,28 +65,56 @@ const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
   };
 
   return (
-    <div className="flex items-center justify-center p-3">
-      <div className="flex gap-1">
+    <div className="flex items-center justify-center p-6 mt-4">
+      <div className="flex gap-1 items-center">
+        <button
+          onClick={() => handlePageChange(1)}
+          disabled={pageEdit?.pageNumber === 1}
+          className={`flex justify-center items-center h-12 w-12 rounded-xl mr-1 transition-all duration-200 border ${pageEdit?.pageNumber === 1
+            ? 'opacity-50 cursor-not-allowed border-gray-200'
+            : 'border-indigo-100 hover:border-indigo-300 hover:shadow-md'
+            }`}
+          type="button"
+        >
+          <HiChevronDoubleLeft className="text-[1.8rem] text-slate-700" />
+        </button>
+
         <button
           onClick={() => handlePageChange(pageEdit?.pageNumber - 1 || 1)}
           disabled={pageEdit?.pageNumber === 1}
-          className={`flex mr-3 justify-center items-center text-[#000] ${
-            pageEdit?.pageNumber === 1 ? 'opacity-30' : ''
-          }`}
+          className={`flex justify-center items-center h-12 w-12 rounded-xl mr-3 transition-all duration-200 border ${pageEdit?.pageNumber === 1
+            ? 'opacity-50 cursor-not-allowed border-gray-200'
+            : 'border-indigo-100 hover:border-indigo-300 hover:shadow-md'
+            }`}
           type="button"
         >
-          <HiChevronDoubleLeft />
+          <FiChevronLeft className="text-[1.8rem] text-slate-700" />
         </button>
+
         {renderPageNumbers()}
+
         <button
           onClick={() => handlePageChange(pageEdit?.pageNumber + 1 || 1)}
           disabled={pageEdit?.pageNumber === pageEdit?.totalPage}
-          className={`flex justify-center ms-3 items-center text-[#000] ${
-            pageEdit?.pageNumber === pageEdit?.totalPage ? 'opacity-30' : ''
-          }`}
+          className={`flex justify-center items-center h-12 w-12 rounded-xl ml-3 transition-all duration-200 border ${pageEdit?.pageNumber === pageEdit?.totalPage
+            ? 'opacity-50 cursor-not-allowed border-gray-200'
+            : 'border-indigo-100 hover:border-indigo-300 hover:shadow-md'
+            }`}
           type="button"
         >
-          <HiChevronDoubleRight />
+          <FiChevronRight className="text-[1.8rem] text-slate-700" />
+        </button>
+
+        <button
+          onClick={() => handlePageChange(pageEdit?.totalPage)}
+          disabled={pageEdit?.pageNumber === pageEdit?.totalPage}
+          className={`flex justify-center items-center h-12 w-12 rounded-xl ml-1 transition-all duration-200 border ${pageEdit?.pageNumber === pageEdit?.totalPage
+            ? 'opacity-50 cursor-not-allowed border-gray-200'
+            : 'border-indigo-100 hover:border-indigo-300 hover:shadow-md'
+            }`}
+          type="button"
+        >
+          <HiChevronDoubleRight className="text-[1.8rem] text-slate-700" />
         </button>
       </div>
     </div>
@@ -93,3 +122,4 @@ const Pagination = ({ pageEdit, setLoadData, setPageEdit }: any) => {
 };
 
 export default Pagination;
+

@@ -142,7 +142,7 @@ const VideoIframe: React.FC<any> = ({
   };
 
   return (
-    <div className="h-[65rem] border-r-5 relative">
+    <div className="border-r-5 relative w-full h-full">
       <div id="youtube-player" className="w-full h-full"></div>
       {isFastForwarding && (
         <div className="absolute top-0 left-0 text-[1.4rem] bg-red-500 text-white p-2">

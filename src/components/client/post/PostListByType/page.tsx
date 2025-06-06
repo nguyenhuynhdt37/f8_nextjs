@@ -7,9 +7,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MdOutlineMoreHoriz } from 'react-icons/md';
 import LoadingBar from 'react-top-loading-bar';
 import { FaCircleCheck } from 'react-icons/fa6';
-import { TruncateMarkdown } from '@/Utils/functions';
+import TruncateMarkdown from '@/components/client/TruncateMarkdown';
 import { useRouter } from 'next/navigation';
 import Pagination from '../PostList/Pagination';
+import { generateSlug } from '@/Utils/functions/slugify';
+
 const PostListByType = ({ types, id }: any) => {
   const router = useRouter();
   const ref = useRef<any>(null);
@@ -55,10 +57,13 @@ const PostListByType = ({ types, id }: any) => {
     router.push(`/profile/${id}`);
   };
   const handleRedirectByBlogId = (id: number) => { };
-  const handleRedirectByPostId = (id: number) => {
+
+  const handleRedirectByPostId = (id: number, title: string) => {
     ref.current.continuousStart();
-    router.push(`/post/${id}`);
+    const slug = generateSlug(title, id);
+    router.push(`/post/${slug}`);
   };
+
   return (
     <div className="container text-[1.4rem] px-28 pt-10 pb-32">
       <LoadingBar color="#0066df" ref={ref} />
@@ -97,7 +102,7 @@ const PostListByType = ({ types, id }: any) => {
               <div className=" flex justify-between">
                 <div className="flex-1">
                   <div
-                    onClick={() => handleRedirectByPostId(post?.blog?.id)}
+                    onClick={() => handleRedirectByPostId(post?.blog?.id, post?.blog?.title)}
                     className="cursor-pointer mt-8 mb-5 font-medium text-[1.6rem]"
                   >
                     {post?.blog?.title}

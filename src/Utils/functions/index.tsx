@@ -1,16 +1,31 @@
 import { format } from 'date-fns';
-import remarkGfm from 'remark-gfm';
-import ReactMarkdown from 'react-markdown';
+// Remove the ReactMarkdown and remarkGfm imports as we've moved the component
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
+
+export const formatDate = (dateString: string): string => {
+  if (!dateString) return 'N/A';
+
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return 'Invalid date';
+    }
+    return format(date, 'dd/MM/yyyy HH:mm');
+  } catch (error) {
+    return 'Invalid date';
+  }
+};
+
 export const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND',
   }).format(amount);
 };
+
 export const getVideoIdFromUrl = (url: string) => {
   if (url == null) return null;
   const match = url.match(
@@ -67,6 +82,38 @@ export function convertSecondsToYMDHMS(totalSeconds: number) {
 
   // Trả về kết quả dưới dạng chuỗi
   return parts.length > 0 ? parts.join(', ') : '0 giây';
+}
+
+export function convertSecondsToYMDHM(totalSeconds: number) {
+  const secondsInMinute = 60;
+  const secondsInHour = 3600; // 60 * 60
+  const secondsInDay = 86400; // 24 * 60 * 60
+  const secondsInMonth = 2592000; // 30 * 24 * 60 * 60 (giả định)
+  const secondsInYear = 31536000; // 365 * 24 * 60 * 60 (giả định)
+
+  const years = Math.floor(totalSeconds / secondsInYear);
+  totalSeconds %= secondsInYear;
+
+  const months = Math.floor(totalSeconds / secondsInMonth);
+  totalSeconds %= secondsInMonth;
+
+  const days = Math.floor(totalSeconds / secondsInDay);
+  totalSeconds %= secondsInDay;
+
+  const hours = Math.floor(totalSeconds / secondsInHour);
+  totalSeconds %= secondsInHour;
+
+  const minutes = Math.floor(totalSeconds / secondsInMinute);
+
+  const parts = [];
+
+  if (years > 0) parts.push(`${years} năm`);
+  if (months > 0) parts.push(`${months} tháng`);
+  if (days > 0) parts.push(`${days} ngày`);
+  if (hours > 0) parts.push(`${hours} giờ`);
+  if (minutes > 0) parts.push(`${minutes} phút`);
+
+  return parts.length > 0 ? parts.join(', ') : '0 phút';
 }
 
 export const formatDateConfig = (dateString: string): string => {
@@ -181,19 +228,11 @@ export const getFileFromUrl = async (url: string): Promise<File> => {
 };
 
 export function formatCurrency2(value: any) {
+  if (value === null || value === undefined) {
+    return '0 đ';
+  }
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
 }
-
-export const TruncateMarkdown = ({ content, limit }: any) => {
-  const truncatedContent =
-    content.length > limit ? `${content.substring(0, limit)}...` : content;
-
-  return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-      {truncatedContent}
-    </ReactMarkdown>
-  );
-};
 
 export function timeAgo(input: string | Date | undefined | null): string {
   if (!input) {

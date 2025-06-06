@@ -1,5 +1,4 @@
 'use client'
-import { getLearningPathDetail } from '@/api/axios/api';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
 import Link from 'next/link';

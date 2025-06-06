@@ -1,14 +1,13 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LuSearch } from 'react-icons/lu';
-import { TiDelete } from 'react-icons/ti';
-import { IoSearch } from "react-icons/io5";
+import { IoClose, IoSearch } from "react-icons/io5";
 import { getSearch } from '@/api/axios/api';
-import { FaSpinner } from 'react-icons/fa';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import { useRouter } from 'next/navigation';
+import { generateSlug } from '@/Utils/functions/slugify';
 interface Course {
   id: number;
   title: string;
@@ -36,15 +35,16 @@ const Search = () => {
   const [value, setValue] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [isFocus, setIsFocus] = useState(false);
-  const [isBlur, setIsBlur] = useState(false);
   const ref = useRef<LoadingBarRef>(null);
   const router = useRouter();
   const searchDropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [data, setData] = useState<{
     users: User[];
     courses: Course[];
     posts: Blog[];
   } | null>(null);
+
   function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
     let timer: NodeJS.Timeout;
     return (...args: Parameters<T>) => {
@@ -52,42 +52,44 @@ const Search = () => {
       timer = setTimeout(() => func(...args), delay);
     };
   }
-  const handleFetchSearch = async (value: string) => {
 
+  const handleFetchSearch = async (value: string) => {
     const res = await getSearch(value)
     if (res?.statusCode === 200) {
       setData(res?.data)
     }
     setLoading(false)
   }
+
   const handleSearch = useCallback(
     debounce((value: string) => {
       if (value.trim()) {
         try {
           handleFetchSearch(value.trim())
         } catch (ex) {
-          // throw
           console.log(ex);
         }
       }
     }, 300),
     []
   );
+
   const handleChange = (q: string) => {
     setLoading(true)
     setValue(q)
     handleSearch(q)
   }
+
   const handleFocus = () => {
     setIsFocus(true)
   }
+
   const handleOnblur = (e: React.FocusEvent<HTMLDivElement>) => {
     if (searchDropdownRef.current && searchDropdownRef.current.contains(e.relatedTarget as Node)) return;
     setIsFocus(false)
   }
 
   const handleClick = (type: string) => {
-
     if (!type) return;
     if (ref.current) {
       ref.current.continuousStart();
@@ -98,7 +100,8 @@ const Search = () => {
     }
     setIsFocus(false)
   }
-  const handleRedirect = (type: string, id: number) => {
+
+  const handleRedirect = (type: string, id: number, title: string) => {
     setIsFocus(false)
     if (!type && !id) {
       return;
@@ -106,13 +109,16 @@ const Search = () => {
       ref.current?.continuousStart();
       switch (type) {
         case 'user':
-          router.push('/profile/' + id);
+          const slug = generateSlug(title, id);
+          router.push('/profile/' + slug);
           break;
         case 'post':
-          router.push('/post/' + id);
+          const slugPost = generateSlug(title, id);
+          router.push('/post/' + slugPost);
           break;
         case 'course':
-          router.push('/learning/' + id);
+          const slugCourse = generateSlug(title, id);
+          router.push('/courses/' + slugCourse);
           break;
         default:
           router.push('/404');
@@ -121,92 +127,168 @@ const Search = () => {
       ref.current?.complete();
     }
   }
+
+  const clearSearch = () => {
+    setValue('');
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
   return (
-    <div className='relative'>
-      <LoadingBar color="#0066df" ref={ref} />
-      <div className="flex items-center border-2 px-4 text-[#7c7c7c] focus:border-[#676666] py-3 rounded-full text-[2rem]">
-        <LuSearch />
+    <div className='relative w-full'>
+      <LoadingBar color="#6366f1" ref={ref} height={2} />
+      <div className="relative flex items-center bg-indigo-700/40 backdrop-blur-sm rounded-full px-3 py-2 ring-1 ring-white/20 focus-within:ring-indigo-300 transition-all">
+        <IoSearch className="text-indigo-200 text-base" />
         <input
+          ref={inputRef}
           onFocus={handleFocus}
           onBlur={handleOnblur}
           value={value}
           type="text"
-          placeholder="Tìm kiếm khóa học, bài viết, video, ..."
-          className="text-[1.4rem] px-4 w-[36rem] focus:outline-none"
+          placeholder="Tìm kiếm khóa học, bài viết..."
+          className="text-sm px-3 w-full bg-transparent text-white placeholder-indigo-200 focus:outline-none"
           onChange={e => handleChange(e.target.value)}
         />
-
-        <TiDelete
-          className={`cursor-pointer ${value ? 'text-[#bdbdbd]' : 'text-[#fff]'}`}
-          onClick={() => setValue('')}
-        />
+        {value && (
+          <button
+            onClick={clearSearch}
+            className="text-indigo-200 hover:text-white transition-colors"
+          >
+            <IoClose className="text-lg" />
+          </button>
+        )}
       </div>
-      {isFocus && value && (<div tabIndex={-1} onBlur={handleOnblur} ref={searchDropdownRef} className='absolute text-[1.5rem] max-h-[50rem] overflow-y-scroll shadow-md p-5 top-20 border-[1px] border-[#fbfbfb] bg-white rounded-xl w-full'>
-        {value && !loading && data && (data.users?.length > 0 || data.courses?.length > 0 || data.posts?.length > 0) ? (
-          <div>
-            <div className="flex items-center pb-5">
-              <IoSearch className='text-3xl mr-5 text-[#868686]' />
-              <p className='text-xl text-[#919191]'>Kết quả cho '{value}'</p>
+
+      {isFocus && value && (
+        <div
+          tabIndex={-1}
+          onBlur={handleOnblur}
+          ref={searchDropdownRef}
+          className='absolute text-sm max-h-96 min-w-96 overflow-y-auto shadow-lg top-12 bg-white dark:bg-gray-800 rounded-lg border border-indigo-100 dark:border-indigo-900 z-50'
+        >
+          {value && !loading && data && (data.users?.length > 0 || data.courses?.length > 0 || data.posts?.length > 0) ? (
+            <div className="p-4">
+              <div className="flex items-center pb-3 border-b border-gray-100 dark:border-gray-700">
+                <IoSearch className='text-base mr-2 text-indigo-500' />
+                <p className='text-sm text-gray-600 dark:text-gray-300'>Kết quả cho '<span className="font-medium">{value}</span>'</p>
+              </div>
+
+              <div className="text-gray-700 dark:text-gray-200 pt-2">
+                {data.courses?.length > 0 && (
+                  <div className="mb-4">
+                    <div className="flex items-center py-2 justify-between border-b border-gray-100 dark:border-gray-700">
+                      <h2 className="text-sm font-medium">Khoá học</h2>
+                      <button
+                        onClick={() => handleClick('course')}
+                        className='text-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-400 text-xs font-medium transition-colors'
+                      >
+                        Xem thêm
+                      </button>
+                    </div>
+                    <div className="space-y-1 mt-2">
+                      {data.courses?.map((item: Course) => (
+                        <div
+                          key={item?.id}
+                          onClick={() => handleRedirect('course', item?.id, item?.title)}
+                          className="flex items-center p-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-md cursor-pointer transition-colors"
+                        >
+                          <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0 bg-indigo-100 dark:bg-indigo-900/50">
+                            <img
+                              className='w-full h-full object-cover'
+                              src={item?.banner || 'https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg'}
+                              alt={item?.title}
+                            />
+                          </div>
+                          <p className='pl-3 font-medium text-sm line-clamp-1'>{item?.title}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {data.posts?.length > 0 && (
+                  <div className="mb-4">
+                    <div className="flex items-center py-2 justify-between border-b border-gray-100 dark:border-gray-700">
+                      <h2 className="text-sm font-medium">Bài viết</h2>
+                      <button
+                        onClick={() => handleClick('post')}
+                        className='text-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-400 text-xs font-medium transition-colors'
+                      >
+                        Xem thêm
+                      </button>
+                    </div>
+                    <div className="space-y-1 mt-2">
+                      {data.posts?.map((item: Blog) => (
+                        <div
+                          key={item?.id}
+                          onClick={() => handleRedirect('post', item?.id, item?.title)}
+                          className="flex items-center p-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-md cursor-pointer transition-colors"
+                        >
+                          <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0 bg-indigo-100 dark:bg-indigo-900/50">
+                            <img
+                              className='w-full h-full object-cover'
+                              src={item?.banner}
+                              alt={item?.title}
+                            />
+                          </div>
+                          <p className='pl-3 font-medium text-sm line-clamp-1'>{item?.title}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {data.users?.length > 0 && (
+                  <div className="mb-2">
+                    <div className="flex items-center py-2 justify-between border-b border-gray-100 dark:border-gray-700">
+                      <h2 className="text-sm font-medium">Người dùng</h2>
+                      <button
+                        onClick={() => handleClick('user')}
+                        className='text-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-400 text-xs font-medium transition-colors'
+                      >
+                        Xem thêm
+                      </button>
+                    </div>
+                    <div className="space-y-1 mt-2">
+                      {data.users?.map((item: User) => (
+                        <div
+                          key={item?.id}
+                          onClick={() => handleRedirect('user', item?.id, item?.fullName || item?.userName)}
+                          className="flex items-center p-2 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-md cursor-pointer transition-colors"
+                        >
+                          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-indigo-100 dark:bg-indigo-900/50">
+                            <img
+                              className='w-full h-full object-cover'
+                              src={item?.avatar || 'https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg'}
+                              alt={item?.fullName}
+                            />
+                          </div>
+                          <p className='pl-3 font-medium text-sm'>{item?.fullName}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="text-[#575757]">
-              {data.courses?.length > 0 && <div className="">
-                <div className="flex items-center py-3 justify-between border-b-[1px] border-[#f2f2f2]">
-                  <h2>Khoá học</h2>
-                  <button onClick={() => handleClick('course')} className='text-[#b3b3b3] font-light text-md  hover:text-[#d98686]'>Xem thêm</button>
-                </div>
-                {data.courses?.map((item: Course, index: number) => (
-                  <div key={item?.id} className="" onClick={() => handleRedirect('course', item?.id)} >
-                    <div className="flex items-center hover:text-[#d98686] cursor-pointer py-5">
-                      <img className='w-12 h-12 rounded-full object-cover' src={item?.banner || 'https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg'} alt="" />
-                      <p className='ps-10 font-light'>{item?.title}</p>
-                    </div>
-                  </div>
-                ))}
+          ) : (
+            value && !loading && (
+              <div className='flex items-center p-4'>
+                <IoSearch className='text-base mr-2 text-gray-400' />
+                <p className='text-sm text-gray-500'>Không có kết quả cho '<span className="font-medium">{value}</span>'</p>
               </div>
-              }
-              {data.posts?.length > 0 && <div className="">
-                <div className="flex items-center py-3 justify-between border-b-[1px] border-[#f2f2f2]">
-                  <h2>Bài viết</h2>
-                  <button onClick={() => handleClick('post')} className='text-[#b3b3b3] font-light text-md  hover:text-[#d98686]'>Xem thêm</button>
-                </div>
-                {data.posts?.map((item: Blog, index: number) => (
-                  <div key={item?.id} className="" onClick={() => handleRedirect('post', item?.id)} >
-                    <div className="flex items-center hover:text-[#d98686] cursor-pointer py-5">
-                      <img className='w-12 h-12 rounded-full object-cover' src={item?.banner} alt="" />
-                      <p className='ps-10 font-light'>{item?.title}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              }
-              {data.users?.length > 0 && <div className="">
-                <div className="flex items-center py-3 justify-between border-b-[1px] border-[#f2f2f2]">
-                  <h2>Người dùng</h2>
-                  <button onClick={() => handleClick('user')} className='text-[#b3b3b3] font-light text-md  hover:text-[#d98686]'>Xem thêm</button>
-                </div>
-                {data.users?.map((item: User, index: number) => (
-                  <div onClick={() => handleRedirect('user', item?.id)} key={item?.id} className="">
-                    <div className="flex items-center hover:text-[#d98686] cursor-pointer py-5">
-                      <img className='w-12 h-12 rounded-full object-cover' src={item?.avatar || 'https://st.depositphotos.com/1779253/5140/v/450/depositphotos_51402559-stock-illustration-avatar-internet-social-profile-vector.jpg'} alt="" />
-                      <p className='ps-10 font-light'>{item?.fullName}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              }
+            )
+          )}
+
+          {value && loading && (
+            <div className='flex items-center p-4'>
+              <Spin className='mr-2' indicator={<LoadingOutlined spin />} size="small" />
+              <p className='text-sm text-gray-500'>Đang tìm '<span className="font-medium">{value}</span>'</p>
             </div>
-          </div>
-        ) : (value && !loading && (
-          <div className='flex items-center'>
-            <IoSearch className='text-3xl mr-5' />
-            <p className='text-xl text-[#bebebe]'>Không có kết quả cho '{value}'</p>
-          </div>
-        ))}
-        {value && loading && <div className='flex items-center'>
-          <Spin className='mr-5' indicator={<LoadingOutlined spin />} size="small" />
-          <p className='text-xl text-[#bebebe]'>Tìm '{value}'</p>
-        </div>}
-      </div>)}
+          )}
+        </div>
+      )}
     </div>
   );
 };

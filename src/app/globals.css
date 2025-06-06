@@ -6,182 +6,285 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  outline: none;
 }
 
-html {
-  font-size: 62.5%;
-}
-body {
-  font-family: var(--font-lexend), system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-/* Ghi đè các lớp CSS của Ant Design */
-.custom-modal .ant-modal-content {
-  background: linear-gradient(
-    to right,
-    #fcf3f8,
-    #edf8f9
-  ) !important; /* Màu nền gradient */
+button,
+input,
+select,
+textarea,
+div {
+  outline: none !important;
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.custom-modal .ant-modal-header {
-  background-color: #4caf50; /* Màu nền tiêu đề tùy chỉnh */
-  color: #fff; /* Màu chữ tiêu đề tùy chỉnh */
-}
-
-.custom-modal .ant-modal-footer {
-  background-color: #e0e0e0; /* Màu nền footer tùy chỉnh */
-}
-.notistack-snackbar {
-  font-size: 2rem;
-}
-.progress-circle {
-  background: conic-gradient(#3b82f6 calc(var(--percentage) * 1%), #e5e7eb 0);
-  border-radius: 50%;
-}
-
-.scrollbar-custom::-webkit-scrollbar {
-  width: 6px;
-  height: 0.9rem;
-}
-
-.scrollbar-custom::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-}
-
-.scrollbar-custom::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
-.scrollbar-custom::-webkit-scrollbar-track {
-  background: transparent;
-  border-right: 0.1rem solid #dcdbdb;
-}
-.scrollbar-custom .ql-editor::-webkit-scrollbar-thumb {
-  background-color: #d2d2d7;
-  border-radius: 1.2rem;
-}
-.mdEdit-customize {
-}
-.rc-md-navigation {
-  background: #fff !important;
-}
-section-container::-webkit-scrollbar-thumb {
-  background-color: #d2d2d7;
-  border-radius: 1.2rem;
-}
-.custom-comment {
-  img {
-    width: 50% !important;
-    object-fit: cover;
-    padding: 5px 0;
-  }
-}
-.custom-textview {
-  img {
-    width: 100%;
-    object-fit: cover;
-  }
-  h2 {
-    padding: 0.2rem 0;
-    font-size: 2rem;
-    font-weight: 800;
-  }
-  .ql-syntax {
-    padding: 2rem;
-    background-color: #f2f9ff;
-  }
-  /* font-size: 1.6rem; */
-  color: #0a0a0a;
-  blockquote {
-    padding: 0.8rem 2rem;
-    font-size: 1.7rem;
-    color: #6d6d6d;
-    font-weight: 700;
-    border-left: solid 3px #f05123;
-    a {
-      font-weight: 400;
-      font-size: 1.6rem;
-    }
-  }
-  p {
-    padding: 1rem 0;
-  }
-  a {
-    color: #f05123 !important;
-  }
-  img {
-    border-radius: 1rem;
-  }
-  ul {
-    padding-top: 1rem;
-    padding-left: 2rem;
-    li {
-      list-style: initial;
-      line-height: 3rem;
-      a {
-        color: #f05225 !important;
-      }
-    }
-  }
-}
-
-.custom-quill {
-  border: 1px solid #609fd6;
-  position: relative;
-  scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
-  -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE và Edge */
-  width: 100% !important;
-  padding: 0 !important;
-  .ql-editor {
-    height: 100%;
-    overflow-y: scroll;
-    max-height: 45rem;
-    min-height: 20rem;
-  }
-  .ql-editor::-webkit-scrollbar-thumb {
-    background-color: #d2d2d7;
-    border-radius: 1.2rem;
-  }
-  .ql-tooltip {
-    left: 1rem !important;
-  }
-}
-
-.tippy-custom {
-  background-color: transparent !important;
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+div:focus {
+  outline: none !important;
   box-shadow: none !important;
+}
+
+/* html {
+  font-size: 62.5%;
+} */
+body {
+  font-family:
+    var(--font-lexend),
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  color: rgb(var(--foreground-rgb));
+}
+
+/* Auth modal styles */
+.auth-modal .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 0;
+}
+
+.auth-modal .ant-modal-close {
+  color: rgba(0, 0, 0, 0.45);
+  top: 16px;
+  right: 16px;
+}
+
+.auth-modal .ant-modal-close:hover {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.auth-modal .ant-modal-body {
+  padding: 0;
+}
+
+/* Custom Tippy Styles */
+.tippy-box {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+
+.tippy-content {
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  background-color: transparent !important;
+}
+
+.tippy-arrow {
+  display: none !important;
+}
+
+/* Overriding Tippy default styles */
+[data-tippy-root] {
+  max-width: calc(100vw - 10px);
+  outline: none !important;
   border: none !important;
 }
 
-.custom-post {
-  p {
-    font-size: 1.6rem;
-    line-height: 2.5rem;
-    font-weight: 300;
-    text-align: justify;
-  }
-  img {
-    width: 100% !important;
-    object-fit: cover;
-    border-radius: 1rem;
-  }
-  div {
-    text-align: justify;
-  }
-}
-
-/* Thêm animation cho modal chat */
-@keyframes slide-in-right {
+/* Custom animations */
+@keyframes fadeIn {
   from {
-    transform: translateX(100%);
+    opacity: 0;
+    transform: translateY(20px);
   }
   to {
-    transform: translateX(0);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.animate-slide-in-right {
-  animation: slide-in-right 0.3s ease-out forwards;
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #2d3748;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c7d2fe;
+  border-radius: 10px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #4c1d95;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a5b4fc;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #6d28d9;
+}
+
+/* Dark mode scrollbar */
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.5);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.7);
+}
+
+/* Animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes count {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 10s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.animate-count {
+  animation: count 1.5s ease-out forwards;
+}
+
+/* 3D Transform Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.rotate-x-2 {
+  transform: rotateX(2deg);
+}
+
+.rotate-y-2 {
+  transform: rotateY(2deg);
+}
+
+.rotate-y-3 {
+  transform: rotateY(3deg);
+}
+
+/* Glass Effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-effect {
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Gradient Text Animation */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradient-shift 5s ease infinite;
+}
+
+/* Smooth transitions */
+* {
+  transition-property:
+    background-color, border-color, color, fill, stroke, opacity, box-shadow,
+    transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Custom macOS style scrollbar */
+.macos-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.macos-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.macos-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.macos-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }

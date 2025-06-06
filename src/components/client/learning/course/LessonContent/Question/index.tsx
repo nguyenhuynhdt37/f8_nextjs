@@ -1,117 +1,189 @@
 'use client';
-import { ViewNoteLesson, ViewQuestionLesson } from '@/api/axios/api';
+import { ViewQuestionLesson } from '@/api/axios/api';
 import { getCurrentMonthAndYear } from '@/Utils/functions';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useRef, useState } from 'react';
-import { GoHeartFill } from 'react-icons/go';
+import React, { useEffect, useState } from 'react';
 import CodeBlock from './CodeBlock';
 import confetti from 'canvas-confetti';
-import { motion } from 'framer-motion';
+import { FiHelpCircle, FiCheckCircle, FiXCircle } from 'react-icons/fi';
+
 const Question = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
   const [question, setQuestion] = useState<any>(null);
-  const [isAnswer, setAnswer] = useState<any>();
+  const [selectedAnswer, setSelectedAnswer] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [showResult, setShowResult] = useState<boolean>(false);
   const router = useRouter();
-  const buttonRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     const getData = async () => {
-      const data = await ViewQuestionLesson(id);
-      if (data?.statusCode === 200) {
-        let dataCopy = { ...data?.data };
-        console.log('dataCopy', dataCopy);
-
-        dataCopy.tblquestionslesson.tblquestionslessondetails =
-          dataCopy.tblquestionslesson.tblquestionslessondetails
-            ?.slice()
-            .sort(() => Math.random() - 0.5);
-        setQuestion(dataCopy);
-      } else {
-        // router.push('/404');
+      setLoading(true);
+      try {
+        const data = await ViewQuestionLesson(id);
+        if (data?.statusCode === 200) {
+          // Tạo bản sao và xáo trộn các câu trả lời
+          const dataCopy = { ...data?.data };
+          if (dataCopy.tblquestionslesson?.tblquestionslessondetails) {
+            dataCopy.tblquestionslesson.tblquestionslessondetails =
+              [...dataCopy.tblquestionslesson.tblquestionslessondetails]
+                .sort(() => Math.random() - 0.5);
+          }
+          setQuestion(dataCopy);
+        } else {
+          router.push('/404');
+        }
+      } catch (error) {
+        console.error("Error fetching question:", error);
+      } finally {
+        setLoading(false);
       }
     };
     getData();
-  }, []);
-  const handleClick = (answer: any) => {
-    setAnswer(answer);
-  };
-  const handleSubmit = () => {
-    if (isAnswer?.isTrue) {
-      if (buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        confetti({
-          particleCount: 100,
-          spread: 100,
-          origin: {
-            x: 0.5,
-            y: 1,
-          },
-        });
-        setIsCompletedLesson({
-          ...isCompleteLesson,
-          isCompleted: true,
-        });
-      }
-      setAnswer({ ...isAnswer, error: false });
-    } else {
-      setAnswer({ ...isAnswer, error: true });
+  }, [id, router]);
+
+  const handleSelectAnswer = (answer: any) => {
+    if (!showResult) {
+      setSelectedAnswer(answer);
     }
   };
+
+  const handleSubmit = () => {
+    if (!selectedAnswer) return;
+
+    setShowResult(true);
+
+    if (selectedAnswer.isTrue) {
+      // Đánh dấu hoàn thành và hiệu ứng confetti
+      setIsCompletedLesson({
+        lessonId: id,
+        isCompleted: true,
+        isPostReq: false,
+        isOldCompleted: false,
+      });
+
+      confetti({
+        particleCount: 100,
+        spread: 100,
+        origin: { x: 0.5, y: 0.8 }
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[70vh]">
+        <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mx-auto px-[30rem] pt-[5rem] text-[1.4rem]">
-      <div className="text-[2.5rem] font-medium">{question?.title}</div>
-      <div className="text-[1.3rem] pt-3 text-[#6d6d6d]">
-        Cập nhật {getCurrentMonthAndYear(question?.updatedAt)}
-      </div>
-      <div className="my-10">
-        {question?.tblquestionslesson?.question ? (
-          <CodeBlock code={question?.tblquestionslesson?.question} />
-        ) : (
-          <div className="font-medium text-center">Chưa cập nhật</div>
-        )}
-      </div>
-      <div className="">Chọn câu trả lời đúng</div>
-      <div className="mb-5">
-        {question?.tblquestionslesson?.tblquestionslessondetails.map(
-          (detail: any) => (
-            <motion.button
-              key={detail.id}
-              onClick={() => handleClick(detail)}
-              className={`px-5 my-4 py-6 cursor-pointer ${isAnswer?.error && isAnswer?.id === detail?.id
-                ? 'border-[#d06868] bg-[#ea8787]'
-                : detail?.id !== isAnswer?.id
-                  ? 'border-[#f6f7f9]'
-                  : 'border-[#0093fc]'
-                } ${isAnswer?.error === false &&
-                isAnswer?.id === detail?.id &&
-                'border-[#48bd79] bg-[#b0f4b0]'
-                } border-2 rounded-2xl bg-[#f6f7f9] focus:outline-none w-full`}
-              animate={
-                isAnswer?.error && isAnswer?.id === detail?.id
-                  ? { x: [-10, 10, -10, 10, 0] }
-                  : {}
+    <div className="max-w-3xl mx-auto px-6 md:px-8 py-8">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
+        {/* Header */}
+        <div className="flex items-center mb-6">
+          <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mr-4">
+            <FiHelpCircle className="text-indigo-600 dark:text-indigo-400" size={20} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{question?.title}</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Cập nhật {getCurrentMonthAndYear(question?.updatedAt)}
+            </p>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gray-200 dark:bg-gray-700 mb-6"></div>
+
+        {/* Question content */}
+        <div className="mb-8">
+          {question?.tblquestionslesson?.question ? (
+            <CodeBlock code={question?.tblquestionslesson?.question} />
+          ) : (
+            <div className="text-center py-10 text-gray-500 dark:text-gray-400">
+              Câu hỏi đang được cập nhật...
+            </div>
+          )}
+        </div>
+
+        {/* Answer options */}
+        <div className="mb-6">
+          <h3 className="font-medium text-gray-800 dark:text-gray-200 mb-4">Chọn câu trả lời đúng:</h3>
+
+          <div className="space-y-3">
+            {question?.tblquestionslesson?.tblquestionslessondetails?.map((detail: any) => {
+              const isSelected = selectedAnswer?.id === detail.id;
+              const isCorrect = detail.isTrue;
+
+              let bgClass = "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700";
+              let iconElement = null;
+
+              if (showResult) {
+                if (isCorrect) {
+                  bgClass = "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700";
+                  iconElement = <FiCheckCircle className="text-green-500 dark:text-green-400 ml-2" size={20} />;
+                } else if (isSelected) {
+                  bgClass = "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700";
+                  iconElement = <FiXCircle className="text-red-500 dark:text-red-400 ml-2" size={20} />;
+                }
+              } else if (isSelected) {
+                bgClass = "bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-700";
               }
-              transition={{
-                duration: 0.3,
-                ease: 'easeInOut',
-              }}
+
+              return (
+                <button
+                  key={detail.id}
+                  onClick={() => handleSelectAnswer(detail)}
+                  className={`w-full text-left px-5 py-4 rounded-xl border ${bgClass} 
+                    flex items-center justify-between transition-colors
+                    ${!showResult ? 'hover:bg-gray-100 dark:hover:bg-gray-750' : ''}
+                    ${showResult ? 'cursor-default' : 'cursor-pointer'}`}
+                  disabled={showResult}
+                >
+                  <span className="text-gray-800 dark:text-gray-200">{detail.answer}</span>
+                  {iconElement}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex justify-end">
+          {!showResult ? (
+            <button
+              onClick={handleSubmit}
+              disabled={!selectedAnswer}
+              className={`px-6 py-2 rounded-full text-white font-medium
+                ${selectedAnswer
+                  ? 'bg-indigo-600 hover:bg-indigo-700'
+                  : 'bg-gray-400 cursor-not-allowed'}`}
             >
-              {detail.answer}
-            </motion.button>
-          ),
-        )}
-      </div>
-      <div className="flex justify-end">
-        <button
-          onClick={handleSubmit}
-          ref={buttonRef}
-          className="px-10 text-[#fff] py-2 rounded-full bg-[#0093fc] uppercase"
-        >
-          Trả lời
-        </button>
-      </div>
-      <div className="flex items-center justify-center">
-        Made with
-        <GoHeartFill className="px-2 text-[2.5rem] text-[#d47171]" />· Powered
-        by F8
+              Kiểm tra
+            </button>
+          ) : (
+            <div className="flex items-center text-gray-600 dark:text-gray-400">
+              {selectedAnswer?.isTrue ? (
+                <div className="flex items-center text-green-600 dark:text-green-400">
+                  <FiCheckCircle className="mr-2" />
+                  <span>Chính xác!</span>
+                </div>
+              ) : (
+                <div className="flex items-center text-red-600 dark:text-red-400">
+                  <FiXCircle className="mr-2" />
+                  <span>Chưa chính xác. Hãy thử lại!</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Powered by F8
+          </p>
+        </div>
       </div>
     </div>
   );

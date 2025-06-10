@@ -1,17 +1,17 @@
-import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
-import EmployeeCreate from '@/components/admin/MainContent/EmployeeListingPage/EmployeeCreate';
+import { Button, Card, Form, Input, Select, Switch, message } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/navigation';
+import { CreateUserDto } from '@/types/user';
+import userApi from '@/api/users';
+import { Metadata } from 'next';
+import CreateUserForm from '@/components/admin/Users/CreateUserForm';
 
-const breadcrumbItems = [
-  { title: 'Dashboard', link: '/dashboard' },
-  { title: 'Employee', link: '/dashboard/employee' },
-  { title: 'Create', link: '/dashboard/employee/create' },
-];
 
-export default function EmployeeViewPage() {
-  return (
-    <div className="flex-1 space-y-4 p-8">
-      <Breadcrumbs items={breadcrumbItems} />
-      <EmployeeCreate />
-    </div>
-  );
-}
+export const metadata: Metadata = {
+    title: 'Tạo người dùng mới | F8 Admin',
+    description: 'Tạo tài khoản người dùng mới trên hệ thống F8',
+};
+
+export default function CreateUserPage() {
+    return <CreateUserForm />;
+} 

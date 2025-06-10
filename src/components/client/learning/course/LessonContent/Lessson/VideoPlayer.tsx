@@ -2,6 +2,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { getVideoIdFromUrl } from '@/Utils/functions';
 import { setTimeout } from 'timers';
 import confetti from 'canvas-confetti';
+import { FaPlay, FaPause, FaForward } from 'react-icons/fa';
 
 const VideoIframe: React.FC<any> = ({
   data,
@@ -16,7 +17,21 @@ const VideoIframe: React.FC<any> = ({
   const [previousTime, setPreviousTime] = useState(0);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const duration = data?.lessonVideo?.duration || 0;
+
+  useEffect(() => {
+    // Check system preference for dark mode
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDarkMode(darkModeMediaQuery.matches);
+
+    // Listen for changes in system preference
+    const handleChange = (e: MediaQueryListEvent) => setIsDarkMode(e.matches);
+    darkModeMediaQuery.addEventListener('change', handleChange);
+
+    return () => darkModeMediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
   useEffect(() => {
     if (watchTime / duration >= 0.75 && !isCompleted?.isCompleted) {
       setIsCompleted({
@@ -35,6 +50,7 @@ const VideoIframe: React.FC<any> = ({
       }
     }
   }, [watchTime]);
+
   useEffect(() => {
     const loadYouTubeAPI = () => {
       const script = document.createElement('script');
@@ -49,6 +65,12 @@ const VideoIframe: React.FC<any> = ({
           height: '100%',
           width: '100%',
           videoId: videoId,
+          playerVars: {
+            autoplay: 0,
+            modestbranding: 1,
+            rel: 0,
+            cc_load_policy: 1,
+          },
           events: {
             onReady: handlePlayerReady,
             onStateChange: handlePlayerStateChange,
@@ -67,6 +89,12 @@ const VideoIframe: React.FC<any> = ({
         height: '100%',
         width: '100%',
         videoId: videoId,
+        playerVars: {
+          autoplay: 0,
+          modestbranding: 1,
+          rel: 0,
+          cc_load_policy: 1,
+        },
         events: {
           onReady: handlePlayerReady,
           onStateChange: handlePlayerStateChange,
@@ -141,12 +169,37 @@ const VideoIframe: React.FC<any> = ({
     }
   };
 
+  const formatProgress = () => {
+    if (duration === 0) return '0%';
+    const progress = (watchTime / duration) * 100;
+    return `${Math.min(progress, 100).toFixed(0)}%`;
+  };
+
   return (
-    <div className="border-r-5 relative w-full h-full">
+    <div className={`relative w-full h-[75vh] aspect-video ${isDarkMode ? 'bg-gray-900' : 'bg-black'}`}>
       <div id="youtube-player" className="w-full h-full"></div>
+
       {isFastForwarding && (
-        <div className="absolute top-0 left-0 text-[1.4rem] bg-red-500 text-white p-2">
-          Đang tua video quá nhanh!
+        <div className={`absolute top-4 left-4 px-4 py-2 rounded-lg ${isDarkMode ? 'bg-red-900/80' : 'bg-red-600'
+          } text-white font-medium flex items-center shadow-lg animate-pulse`}>
+          <FaForward className="mr-2" />
+          <span>Đang tua video quá nhanh!</span>
+        </div>
+      )}
+
+      {isReady && (
+        <div className={`absolute bottom-0 left-0 right-0 h-1 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'
+          }`}>
+          <div
+            className="h-full bg-red-600 transition-all duration-1000"
+            style={{ width: formatProgress() }}
+          ></div>
+        </div>
+      )}
+
+      {isCompleted?.isCompleted && (
+        <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+          Đã hoàn thành
         </div>
       )}
     </div>

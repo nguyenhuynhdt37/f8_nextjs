@@ -109,6 +109,7 @@ const DashBoard = () => {
   const [growthData, setGrowthData] = useState<any>(null);
   const [isGrowthLoading, setIsGrowthLoading] = useState(true);
   const [revenueChartData, setRevenueChartData] = useState<any>(null);
+  const [topCourses, setTopCourses] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -199,7 +200,7 @@ const DashBoard = () => {
       setIsGrowthLoading(true);
       try {
         console.log('Fetching growth data with period:', periodType);
-        const response = await getGrowthComparison(periodType);
+        const response = await getGrowthComparison();
         console.log('Growth data response:', response);
 
         if (response?.statusCode === 200 && response.data) {
@@ -344,6 +345,22 @@ const DashBoard = () => {
     fetchMonthlyRevenue();
   }, []);
 
+  // Thêm useEffect để lấy dữ liệu top courses
+  useEffect(() => {
+    const fetchTopCourses = async () => {
+      try {
+        const response = await getTopCourses();
+        if (response?.statusCode === 200) {
+          setTopCourses(response.data || []);
+        }
+      } catch (error) {
+        console.error('Error fetching top courses:', error);
+      }
+    };
+
+    fetchTopCourses();
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -417,14 +434,22 @@ const DashBoard = () => {
               <FiUsers size={24} />
             </div>
             <div className="stat-content">
-              <div className={`stat-value ${isDark ? 'text-white' : 'text-gray-800'}`}>{mockData.totalUsers.toLocaleString()}</div>
+              <div className={`stat-value ${isDark ? 'text-white' : 'text-gray-800'}`}>{data?.totalUsers.toLocaleString() || 0}</div>
               <div className="stat-label">Người dùng</div>
               <div className="flex items-center mt-2 text-xs">
-                <span className="flex items-center text-green-500">
-                  <BsArrowUpShort size={16} />
-                  12.5%
-                </span>
-                <span className="ml-2 text-gray-500">so với tháng trước</span>
+                {growthData && (
+                  <>
+                    <span className={`flex items-center ${Number(growthData?.growth?.users) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {Number(growthData?.growth?.users) >= 0 ? (
+                        <BsArrowUpShort size={16} />
+                      ) : (
+                        <BsArrowDownShort size={16} />
+                      )}
+                      {Math.abs(Number(growthData?.growth?.users)).toFixed(1)}%
+                    </span>
+                    <span className="ml-2 text-gray-500">so với {periodType === 'month' ? 'tháng' : periodType === 'quarter' ? 'quý' : 'năm'} trước</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -436,14 +461,22 @@ const DashBoard = () => {
               <FiBookOpen size={24} />
             </div>
             <div className="stat-content">
-              <div className={`stat-value ${isDark ? 'text-white' : 'text-gray-800'}`}>{mockData.totalCourses.toLocaleString()}</div>
+              <div className={`stat-value ${isDark ? 'text-white' : 'text-gray-800'}`}>{data?.totalCourses.toLocaleString() || 0}</div>
               <div className="stat-label">Khóa học</div>
               <div className="flex items-center mt-2 text-xs">
-                <span className="flex items-center text-green-500">
-                  <BsArrowUpShort size={16} />
-                  8.2%
-                </span>
-                <span className="ml-2 text-gray-500">so với tháng trước</span>
+                {growthData && (
+                  <>
+                    <span className={`flex items-center ${Number(growthData?.growth?.courses) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {Number(growthData?.growth?.courses) >= 0 ? (
+                        <BsArrowUpShort size={16} />
+                      ) : (
+                        <BsArrowDownShort size={16} />
+                      )}
+                      {Math.abs(Number(growthData?.growth?.courses)).toFixed(1)}%
+                    </span>
+                    <span className="ml-2 text-gray-500">so với {periodType === 'month' ? 'tháng' : periodType === 'quarter' ? 'quý' : 'năm'} trước</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -455,14 +488,22 @@ const DashBoard = () => {
               <FiDollarSign size={24} />
             </div>
             <div className="stat-content">
-              <div className={`stat-value ${isDark ? 'text-white' : 'text-gray-800'}`}>{formatCurrency(mockData.totalRevenue).split('₫')[0]}</div>
+              <div className={`stat-value ${isDark ? 'text-white' : 'text-gray-800'}`}>{formatCurrency(data?.totalRevenue || 0).split('₫')[0]}</div>
               <div className="stat-label">Doanh thu</div>
               <div className="flex items-center mt-2 text-xs">
-                <span className="flex items-center text-green-500">
-                  <BsArrowUpShort size={16} />
-                  15.3%
-                </span>
-                <span className="ml-2 text-gray-500">so với tháng trước</span>
+                {growthData && (
+                  <>
+                    <span className={`flex items-center ${Number(growthData?.growth?.revenue) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {Number(growthData?.growth?.revenue) >= 0 ? (
+                        <BsArrowUpShort size={16} />
+                      ) : (
+                        <BsArrowDownShort size={16} />
+                      )}
+                      {Math.abs(Number(growthData?.growth?.revenue)).toFixed(1)}%
+                    </span>
+                    <span className="ml-2 text-gray-500">so với {periodType === 'month' ? 'tháng' : periodType === 'quarter' ? 'quý' : 'năm'} trước</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -474,14 +515,22 @@ const DashBoard = () => {
               <MdOutlineSchool size={24} />
             </div>
             <div className="stat-content">
-              <div className={`stat-value ${isDark ? 'text-white' : 'text-gray-800'}`}>{mockData.totalEnrollments.toLocaleString()}</div>
+              <div className={`stat-value ${isDark ? 'text-white' : 'text-gray-800'}`}>{data?.totalEnrollments.toLocaleString() || 0}</div>
               <div className="stat-label">Lượt đăng ký</div>
               <div className="flex items-center mt-2 text-xs">
-                <span className="flex items-center text-green-500">
-                  <BsArrowUpShort size={16} />
-                  9.7%
-                </span>
-                <span className="ml-2 text-gray-500">so với tháng trước</span>
+                {growthData && (
+                  <>
+                    <span className={`flex items-center ${Number(growthData?.growth?.enrollments) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {Number(growthData?.growth?.enrollments) >= 0 ? (
+                        <BsArrowUpShort size={16} />
+                      ) : (
+                        <BsArrowDownShort size={16} />
+                      )}
+                      {Math.abs(Number(growthData?.growth?.enrollments)).toFixed(1)}%
+                    </span>
+                    <span className="ml-2 text-gray-500">so với {periodType === 'month' ? 'tháng' : periodType === 'quarter' ? 'quý' : 'năm'} trước</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -497,7 +546,10 @@ const DashBoard = () => {
         >
           <div className="flex items-center justify-between mb-6">
             <h2 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>Khóa học phổ biến</h2>
-            <button className={`text-sm font-medium ${isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}>
+            <button
+              onClick={() => window.location.href = '/admin/statistics/courses'}
+              className={`text-sm font-medium ${isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}
+            >
               Xem tất cả
             </button>
           </div>
@@ -508,45 +560,51 @@ const DashBoard = () => {
                 <tr className={`${isDark ? 'bg-slate-700/50 text-gray-300' : 'bg-gray-50 text-gray-600'}`}>
                   <th className="px-4 py-3 text-left">Tên khóa học</th>
                   <th className="px-4 py-3 text-center">Học viên</th>
-                  <th className="px-4 py-3 text-center">Tỷ lệ hoàn thành</th>
+                  <th className="px-4 py-3 text-center">Đánh giá</th>
                   <th className="px-4 py-3 text-right">Doanh thu</th>
                 </tr>
               </thead>
               <tbody>
-                {mockData.popularCourses.map((course, index) => (
-                  <tr
-                    key={course.id}
-                    className={`${isDark ? 'border-t border-slate-700/50' : 'border-t border-gray-100'} ${isDark ? 'hover:bg-slate-700/30' : 'hover:bg-gray-50'
-                      }`}
-                  >
-                    <td className={`px-4 py-3 ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                      <div className="flex items-center">
-                        <div className={`w-8 h-8 rounded-md flex items-center justify-center ${['bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-amber-100 text-amber-600'][index % 4]
-                          }`}>
-                          <HiOutlineAcademicCap size={16} />
+                {topCourses.length > 0 ? (
+                  topCourses.map((course, index) => (
+                    <tr
+                      key={course.courseId}
+                      className={`${isDark ? 'border-t border-slate-700/50' : 'border-t border-gray-100'} ${isDark ? 'hover:bg-slate-700/30' : 'hover:bg-gray-50'}`}
+                    >
+                      <td className={`px-4 py-3 ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                        <div className="flex items-center">
+                          <div className={`w-8 h-8 rounded-md flex items-center justify-center ${['bg-blue-100 text-blue-600', 'bg-green-100 text-green-600', 'bg-purple-100 text-purple-600', 'bg-amber-100 text-amber-600'][index % 4]
+                            }`}>
+                            <HiOutlineAcademicCap size={16} />
+                          </div>
+                          <span className="ml-3 font-medium">{course.courseTitle}</span>
                         </div>
-                        <span className="ml-3 font-medium">{course.name}</span>
-                      </div>
-                    </td>
-                    <td className={`px-4 py-3 text-center ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                      {course.students.toLocaleString()}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-center">
-                        <div className="w-full max-w-[120px] bg-gray-200 rounded-full h-2.5">
-                          <div
-                            className="h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-blue-600"
-                            style={{ width: `${course.completion}%` }}
-                          ></div>
-                        </div>
-                        <span className={`ml-2 text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{course.completion}%</span>
-                      </div>
-                    </td>
-                    <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                      {formatCurrency(course.revenue).split('₫')[0]}
+                      </td>
+                      <td className={`px-4 py-3 text-center ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                        {course.enrollmentCount?.toLocaleString() || 0}
+                      </td>
+                      <td className={`px-4 py-3 text-center ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                        {course.avgRating ? (
+                          <div className="flex items-center justify-center">
+                            <span>{course.avgRating.toFixed(1)}</span>
+                            <span className="ml-1 text-yellow-400">★</span>
+                          </div>
+                        ) : (
+                          <span className="text-gray-400">Chưa có</span>
+                        )}
+                      </td>
+                      <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                        {formatCurrency(course.revenue || 0).split('₫')[0]}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className={`px-4 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                      Không có dữ liệu khóa học
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -558,34 +616,47 @@ const DashBoard = () => {
           className={`${isDark ? 'bg-slate-800' : 'bg-white'} rounded-xl shadow-lg p-6`}
         >
           <div className="flex items-center justify-between mb-6">
-            <h2 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>Hoạt động gần đây</h2>
-            <button className={`text-sm font-medium ${isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}>
-              Xem tất cả
-            </button>
+            <h2 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>Giao dịch gần đây</h2>
           </div>
 
           <div className="space-y-4">
-            {mockData.recentActivity.map((activity) => (
-              <div
-                key={activity.id}
-                className={`p-3 rounded-lg ${isDark ? 'hover:bg-slate-700/50' : 'hover:bg-gray-50'} transition-colors`}
-              >
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium">
-                      {activity.user.charAt(0)}
+            {data?.recentTransactions && data.recentTransactions.length > 0 ? (
+              data.recentTransactions.slice(0, 5).map((transaction: any) => (
+                <div
+                  key={transaction.id}
+                  className={`p-3 rounded-lg ${isDark ? 'hover:bg-slate-700/50' : 'hover:bg-gray-50'} transition-colors`}
+                >
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium">
+                        {transaction.user.charAt(0)}
+                      </div>
+                    </div>
+                    <div className="ml-3 flex-1">
+                      <p className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                        <span className="font-medium">{transaction.user}</span> đã mua{' '}
+                        <span className={`font-medium ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>{transaction.course}</span>
+                      </p>
+                      <div className="flex justify-between items-center mt-1">
+                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                          {formatDate(transaction.date)}
+                        </p>
+                        <span className={`px-2 py-1 text-xs rounded-full ${transaction.status === 'completed'
+                          ? isDark ? 'bg-green-900/30 text-green-300' : 'bg-green-100 text-green-800'
+                          : isDark ? 'bg-yellow-900/30 text-yellow-300' : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                          {transaction.status === 'completed' ? 'Hoàn thành' : 'Đang xử lý'}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <div className="ml-3 flex-1">
-                    <p className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                      <span className="font-medium">{activity.user}</span> {activity.action}{' '}
-                      <span className={`font-medium ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>{activity.target}</span>
-                    </p>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'} mt-0.5`}>{activity.time}</p>
-                  </div>
                 </div>
+              ))
+            ) : (
+              <div className={`text-center py-8 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                Không có giao dịch gần đây
               </div>
-            ))}
+            )}
           </div>
         </motion.div>
       </div>
@@ -596,14 +667,14 @@ const DashBoard = () => {
           variants={itemVariants}
           className={`gradient-border`}
         >
-          <div className={`gradient-border-content p-6`}>
+          <div className={`gradient-border-content p-6 ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
             <div className="flex items-center">
               <div className={`w-12 h-12 rounded-lg ${isDark ? 'bg-slate-700' : 'bg-blue-50'} flex items-center justify-center ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
                 <HiOutlineDocumentText size={24} />
               </div>
               <div className="ml-4">
-                <h3 className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Tổng số bài viết</h3>
-                <p className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-gray-800'}`}>{mockData.totalPosts.toLocaleString()}</p>
+                <h3 className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Tổng số bài học</h3>
+                <p className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-gray-800'}`}>{data?.totalLessons?.toLocaleString() || 0}</p>
               </div>
             </div>
           </div>
@@ -613,14 +684,14 @@ const DashBoard = () => {
           variants={itemVariants}
           className={`gradient-border`}
         >
-          <div className={`gradient-border-content p-6`}>
+          <div className={`gradient-border-content p-6 ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
             <div className="flex items-center">
               <div className={`w-12 h-12 rounded-lg ${isDark ? 'bg-slate-700' : 'bg-green-50'} flex items-center justify-center ${isDark ? 'text-green-400' : 'text-green-600'}`}>
                 <FiActivity size={24} />
               </div>
               <div className="ml-4">
-                <h3 className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Tỷ lệ hoàn thành</h3>
-                <p className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-gray-800'}`}>{mockData.completionRate}%</p>
+                <h3 className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Người dùng mới hôm nay</h3>
+                <p className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-gray-800'}`}>{data?.todaySignups || 0}</p>
               </div>
             </div>
           </div>
@@ -630,14 +701,14 @@ const DashBoard = () => {
           variants={itemVariants}
           className={`gradient-border`}
         >
-          <div className={`gradient-border-content p-6`}>
+          <div className={`gradient-border-content p-6 ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
             <div className="flex items-center">
               <div className={`w-12 h-12 rounded-lg ${isDark ? 'bg-slate-700' : 'bg-purple-50'} flex items-center justify-center ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>
                 <FiUsers size={24} />
               </div>
               <div className="ml-4">
                 <h3 className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Người dùng đang hoạt động</h3>
-                <p className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-gray-800'}`}>{mockData.activeUsers.toLocaleString()}</p>
+                <p className={`text-2xl font-bold mt-1 ${isDark ? 'text-white' : 'text-gray-800'}`}>{data?.activeUsers?.toLocaleString() || 0}</p>
               </div>
             </div>
           </div>

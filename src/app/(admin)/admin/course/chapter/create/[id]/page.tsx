@@ -1,5 +1,5 @@
-import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
-import ChapterCreate from '@/components/admin/MainContent/Course/chapter/create';
+
+import ChapterCreate from '@/components/admin/Course/chapter/create';
 import React from 'react';
 const breadcrumbItems = [
   { title: 'Trang chủ', link: '/admin' },
@@ -14,7 +14,7 @@ const ChapterCreatePage = ({ params }: Iprops) => {
   return (
     <>
       <div className="ps-10 pt-10">
-        <Breadcrumbs items={breadcrumbItems} />
+
         <ChapterCreate id={+id} />
       </div>
     </>

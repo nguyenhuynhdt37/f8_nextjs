@@ -11,7 +11,7 @@ import { RiRoadMapLine, RiAdminLine } from 'react-icons/ri';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const Header = () => {
-  const user = useAppSelector(state => state.auth.user);
+  const user = useAppSelector(state => state?.auth?.user);
   const router = useRouter();
   const pathname = usePathname();
   const ref = React.createRef<any>();

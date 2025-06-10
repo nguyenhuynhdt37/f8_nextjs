@@ -1,5 +1,5 @@
-import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
-import CreateCourse from '@/components/admin/MainContent/Course/create';
+
+import CreateCourse from '@/components/admin/Course/create';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -31,7 +31,7 @@ const CourseCreatePagge = async () => {
   return (
     <>
       <div className="ps-10 pt-10">
-        <Breadcrumbs items={breadcrumbItems} />
+
       </div>
       <CreateCourse levels={data} />
     </>

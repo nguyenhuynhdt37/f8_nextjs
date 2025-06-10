@@ -2,6 +2,7 @@
 import { logoutApi } from '@/api/axios/api';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { getInfoRedux } from '@/redux/reducers/slices/AuthSlice';
+import { fetchNotifications, fetchUnreadCount } from '@/redux/reducers/slices/NotificationSlice';
 import { message } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -22,10 +23,16 @@ const CheckIsLogin = ({ cookie }: CheckIsLoginProps) => {
       // @ts-ignore
       dispatch(getInfoRedux())
         .unwrap()
-        .then((data: any) => { })
+        .then((data: any) => {
+          // Nếu đăng nhập thành công, lấy thông báo
+          if (data && data.statusCode === 200) {
+            dispatch(fetchNotifications({ page: 1, pageSize: 10 }));
+            dispatch(fetchUnreadCount());
+          }
+        })
         .catch(() => { });
     }
-  }, [cookie]);
+  }, [cookie, dispatch]);
 
   const [messageApi, contextHolder] = message.useMessage();
   return <>{contextHolder}</>;

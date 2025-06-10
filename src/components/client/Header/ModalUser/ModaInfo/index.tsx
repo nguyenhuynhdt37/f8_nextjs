@@ -1,10 +1,14 @@
-import { logoutApi } from '@/api/axios/api';
+'use client';
+import Link from 'next/link';
+import Image from 'next/image';
+import { MdOutlineLogout } from 'react-icons/md';
+import { useRef, useEffect, useState } from 'react';
+import { logoutApi, getUserProfileStatistics } from '@/api/axios/api';
 import { useTheme } from '@/context/ThemeContext';
 import { useAppDispatch } from '@/redux/hook/hook';
 import { logout } from '@/redux/reducers/slices/AuthSlice';
 import { message, Spin } from 'antd';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useRef } from 'react';
 import {
   FiUser,
   FiEdit,
@@ -30,6 +34,11 @@ const ModalInfo = ({ data, refInfo }: any) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const modalRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
+  const [userStats, setUserStats] = useState({
+    enrolledCoursesCount: 0,
+    postsCount: 0,
+  });
+
   // Check for system dark mode preference on mount
 
   // Track mouse position for hover effects
@@ -71,6 +80,20 @@ const ModalInfo = ({ data, refInfo }: any) => {
     refInfo.current.complete();
   };
 
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      try {
+        const response = await getUserProfileStatistics();
+        if (response.statusCode === 200) {
+          setUserStats(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user statistics:', error);
+      }
+    };
+
+    fetchUserStats();
+  }, []);
 
   const menuItems = [
     {
@@ -137,7 +160,7 @@ const ModalInfo = ({ data, refInfo }: any) => {
     {
       icon: <FiSettings size={18} />,
       label: 'Cài đặt',
-      onClick: () => { },
+      onClick: () => handleNavigation('/profile/edit'),
       color: 'text-gray-500 dark:text-gray-400',
       bgColor: 'bg-gray-100 dark:bg-gray-800/50',
       description: 'Tùy chỉnh tài khoản và giao diện'
@@ -198,9 +221,11 @@ const ModalInfo = ({ data, refInfo }: any) => {
               </div>
               <div className="text-xs text-white/80 font-medium flex items-center">
                 @{data?.user?.userName}
-                <span className="ml-2 px-1.5 py-0.5 bg-white/20 rounded-md text-xs font-medium">
-                  Pro
-                </span>
+                {data?.user?.roleId === 2 && (
+                  <span className="ml-2 px-1.5 py-0.5 bg-white/20 rounded-md text-xs font-medium">
+                    Admin
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -208,16 +233,16 @@ const ModalInfo = ({ data, refInfo }: any) => {
           {/* Stats bar */}
           <div className="relative grid grid-cols-3 divide-x divide-white/10 bg-black/20 text-white">
             <div className="px-2 py-1.5 text-center hover:bg-white/10 transition-all duration-200 cursor-pointer">
-              <div className="text-base font-bold">12</div>
+              <div className="text-base font-bold">{userStats.enrolledCoursesCount}</div>
               <div className="text-[10px] opacity-80">Khóa học</div>
             </div>
             <div className="px-2 py-1.5 text-center hover:bg-white/10 transition-all duration-200 cursor-pointer">
-              <div className="text-base font-bold">24</div>
+              <div className="text-base font-bold">{userStats.postsCount}</div>
               <div className="text-[10px] opacity-80">Bài viết</div>
             </div>
             <div className="px-2 py-1.5 text-center hover:bg-white/10 transition-all duration-200 cursor-pointer">
-              <div className="text-base font-bold">843</div>
-              <div className="text-[10px] opacity-80">Điểm</div>
+              <div className="text-base font-bold">0</div>
+              <div className="text-[10px] opacity-80">Bạn bè</div>
             </div>
           </div>
         </div>

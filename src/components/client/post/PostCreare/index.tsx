@@ -1,6 +1,6 @@
 'use client';
-import Banner from '@/components/admin/MainContent/Course/create/Banner';
-import OptionType from '@/components/admin/MainContent/Course/lesson/create/OptionType';
+import Banner from '@/components/admin/Course/create/Banner';
+import OptionType from '@/components/admin/Course/lesson/create/OptionType';
 import { message, Modal, Form, Input, Alert, Tooltip } from 'antd';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { CreatePost, uploadImage as apiUploadImage } from '@/api/axios/api';

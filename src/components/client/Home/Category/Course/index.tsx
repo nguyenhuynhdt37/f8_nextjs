@@ -103,7 +103,7 @@ const Course = ({ data }: any) => {
 
         {/* Course Content */}
         <div className="p-4">
-          <h3 className="font-medium text-sm mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <h3 className="font-medium dark:text-white text-sm mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {data?.course?.title}
           </h3>
 

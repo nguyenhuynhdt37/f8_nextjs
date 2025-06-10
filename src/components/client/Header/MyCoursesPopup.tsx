@@ -3,69 +3,44 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from '@/lib/motion';
+import { getMyCoursesAsync } from '@/api/axios/api';
 
 // Define course type
-interface Course {
-    id: string;
-    title: string;
-    progress: number;
-    color: string;
-    banner?: string;
-    lastAccessed: string | null;
+interface EnrolledCourse {
+    enrollment: {
+        id: number;
+        enrolledAt: string;
+        completionStatus: number | null;
+    };
+    course: {
+        id: number;
+        title: string;
+        banner: string | null;
+        introduce: string;
+        level: string | null;
+        levelId: number;
+        price: number | null;
+        isFree: boolean | null;
+        isActive: boolean;
+    };
 }
 
-// Mock data for demonstration - would be replaced with actual API calls
-const MOCK_COURSES: Course[] = [
-    {
-        id: '123',
-        title: 'HTML CSS Pro',
-        progress: 70,
-        color: 'blue',
-        banner: 'https://fullstack.edu.vn/landing/htmlcss/assets/img/meta-img.png',
-        lastAccessed: '2023-05-15T10:30:00',
-    },
-    {
-        id: '456',
-        title: 'JavaScript Cơ Bản',
-        progress: 45,
-        color: 'green',
-        banner: 'https://fullstack.edu.vn/landing/htmlcss/assets/img/js-course-bg.png',
-        lastAccessed: '2023-05-10T14:20:00',
-    },
-    {
-        id: '789',
-        title: 'ReactJS Nâng Cao',
-        progress: 25,
-        color: 'red',
-        banner: 'https://fullstack.edu.vn/landing/htmlcss/assets/img/responsive.png',
-        lastAccessed: '2023-04-28T09:15:00',
-    },
-    {
-        id: '101',
-        title: 'Node.js & Express',
-        progress: 10,
-        color: 'purple',
-        banner: 'https://fullstack.edu.vn/landing/htmlcss/assets/img/html-css-share.jpg',
-        lastAccessed: '2023-03-12T16:45:00',
-    },
-];
-
 const MyCoursesPopup = ({ onClose }: { onClose: () => void }) => {
-    const [courses, setCourses] = useState<Course[]>([]);
+    const [courses, setCourses] = useState<EnrolledCourse[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
-        // Simulate API fetch
         const fetchCourses = async () => {
             try {
-                // Here you would make an actual API call to get the user's courses
-                setTimeout(() => {
-                    setCourses(MOCK_COURSES);
-                    setLoading(false);
-                }, 800);
+                // Call API to get user's enrolled courses (limit to 5)
+                const response = await getMyCoursesAsync(1, 5, 'EnrolledAt', 'desc');
+                if (response.statusCode === 200 && response.data) {
+                    setCourses(response.data.courses);
+                }
             } catch (error) {
                 console.error('Error fetching courses:', error);
+            } finally {
                 setLoading(false);
             }
         };
@@ -78,7 +53,7 @@ const MyCoursesPopup = ({ onClose }: { onClose: () => void }) => {
         onClose();
     };
 
-    const handleCourseContinue = (courseId: string) => {
+    const handleCourseContinue = (courseId: number) => {
         router.push(`/courses/${courseId}`);
         onClose();
     };
@@ -89,7 +64,7 @@ const MyCoursesPopup = ({ onClose }: { onClose: () => void }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="bg-white rounded-lg shadow-xl w-[300px] sm:w-[350px] md:w-[400px] max-h-[450px] sm:max-h-[500px] overflow-hidden flex flex-col"
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-[300px] sm:w-[350px] md:w-[400px] max-h-[450px] sm:max-h-[500px] overflow-hidden flex flex-col"
         >
             <div className="flex justify-between items-center border-b border-gray-200 p-3 sm:p-4">
                 <h3 className="text-base sm:text-lg font-semibold">Khóa học của tôi</h3>
@@ -108,29 +83,36 @@ const MyCoursesPopup = ({ onClose }: { onClose: () => void }) => {
                     </div>
                 ) : courses.length > 0 ? (
                     <div>
-                        {courses.map((course) => (
+                        {courses.map((item) => (
                             <motion.div
-                                key={course.id}
-                                whileHover={{ backgroundColor: '#f7f9fa' }}
-                                onClick={() => handleCourseContinue(course.id)}
-                                className="p-3 sm:p-4 border-b border-gray-100 cursor-pointer"
+                                key={item.enrollment.id}
+                                whileHover={{ backgroundColor: '#f7f9fa dark:bg-gray-700/50' }}
+                                onClick={() => handleCourseContinue(item.course.id)}
+                                className="p-3 sm:p-4 border-b border-gray-100 dark:border-gray-700 dark:hover:bg-gray-700/50 cursor-pointer"
                             >
                                 <div className="flex items-center">
                                     <img
-                                        src={course.banner || '/images/course-default.png'}
-                                        alt={course.title}
+                                        src={item.course.banner || '/images/course-default.png'}
+                                        alt={item.course.title}
                                         className="h-12 w-20 sm:h-16 sm:w-28 object-cover rounded-md mr-2 sm:mr-3"
                                     />
-                                    <div className="flex-1">
-                                        <h4 className="font-medium text-xs sm:text-sm mb-1 line-clamp-2">{course.title}</h4>
-                                        <div className="flex items-center">
-                                            <div className="bg-gray-200 h-1.5 rounded-full w-full flex-1 mr-2 sm:mr-3">
-                                                <div
-                                                    className="bg-blue-500 h-1.5 rounded-full"
-                                                    style={{ width: `${course.progress}%` }}
-                                                ></div>
-                                            </div>
-                                            <span className="text-[10px] sm:text-xs text-gray-600">{course.progress}%</span>
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">{item.course.title}</h4>
+
+                                        <div className="mt-1 w-full bg-gray-200 rounded-full h-1.5">
+                                            <div
+                                                className="bg-blue-600 h-1.5 rounded-full"
+                                                style={{ width: `${item.enrollment.completionStatus || 0}%` }}
+                                            ></div>
+                                        </div>
+
+                                        <div className="flex justify-between items-center mt-1">
+                                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                {item.enrollment.completionStatus || 0}% hoàn thành
+                                            </span>
+                                            <span className="text-xs text-blue-600 font-medium">
+                                                Tiếp tục
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -138,14 +120,11 @@ const MyCoursesPopup = ({ onClose }: { onClose: () => void }) => {
                         ))}
                     </div>
                 ) : (
-                    <div className="p-6 sm:p-8 text-center text-gray-500">
-                        <p className="text-sm">Bạn chưa tham gia khóa học nào</p>
+                    <div className="p-6 text-center">
+                        <p className="text-sm text-gray-500">Bạn chưa đăng ký khóa học nào</p>
                         <button
-                            onClick={() => {
-                                router.push('/');
-                                onClose();
-                            }}
-                            className="mt-3 text-xs sm:text-sm bg-blue-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-md hover:bg-blue-600 transition"
+                            onClick={() => router.push('/courses')}
+                            className="mt-2 px-3 py-1.5 bg-blue-500 text-white text-xs rounded-md hover:bg-blue-600"
                         >
                             Khám phá khóa học
                         </button>

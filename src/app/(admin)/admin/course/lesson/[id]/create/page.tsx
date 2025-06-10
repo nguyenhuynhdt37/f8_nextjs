@@ -1,6 +1,6 @@
-import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
-import CreateCourse from '@/components/admin/MainContent/Course/create';
-import LessonCreate from '@/components/admin/MainContent/Course/lesson/create';
+
+import CreateCourse from '@/components/admin/Course/create';
+import LessonCreate from '@/components/admin/Course/lesson/create';
 import { useCookie } from '@/hook/useCookie';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -45,7 +45,7 @@ const LessonCreatePage = async (context: CoursePageProps) => {
   return (
     <>
       <div className="ps-10 pt-10">
-        <Breadcrumbs items={breadcrumbItems} />
+
       </div>
       <LessonCreate
         courseId={id}

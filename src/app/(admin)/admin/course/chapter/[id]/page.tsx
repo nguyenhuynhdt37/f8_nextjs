@@ -1,8 +1,8 @@
-import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
+
 import React from 'react';
 import ChapterCreate from '../create/[id]/page';
 import Table from '@/components/admin/MainContent/EmployeeListingPage/TableEmployer/Table';
-import Chapter from '@/components/admin/MainContent/Course/chapter';
+import Chapter from '@/components/admin/Course/chapter';
 interface Iprops {
   params: { id: string };
 }
@@ -16,7 +16,7 @@ const ChapterPage = ({ params }: Iprops) => {
   return (
     <>
       <div className="ps-10 pt-10">
-        <Breadcrumbs items={breadcrumbItems} />
+
         <Chapter id={id} />
       </div>
     </>

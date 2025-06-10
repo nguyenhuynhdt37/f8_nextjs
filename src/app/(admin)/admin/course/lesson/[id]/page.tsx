@@ -1,7 +1,7 @@
-import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
+
 import React from 'react';
-import Chapter from '@/components/admin/MainContent/Course/chapter';
-import Lesson from '@/components/admin/MainContent/Course/lesson';
+import Chapter from '@/components/admin/Course/chapter';
+import Lesson from '@/components/admin/Course/lesson';
 interface Iprops {
   params: { id: string };
 }
@@ -15,7 +15,7 @@ const LessonPage = ({ params }: Iprops) => {
   return (
     <>
       <div className="ps-10 pt-10">
-        <Breadcrumbs items={breadcrumbItems} />
+
         <Lesson id={id} />
       </div>
     </>

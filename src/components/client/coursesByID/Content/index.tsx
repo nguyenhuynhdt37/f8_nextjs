@@ -5,7 +5,6 @@ import ContentMain from './ContentMain';
 import { CheckIsCourseRegister } from '@/api/axios/api';
 import { id } from 'date-fns/locale';
 import { motion } from '@/lib/motion';
-import GlowEffect from '@/components/ui/GlowEffect';
 import AnimateInView from '@/components/ui/AnimateInView';
 import { FiAward, FiBook, FiBookmark, FiCheck, FiClock, FiCode, FiDownload, FiGlobe, FiLayers, FiUsers } from 'react-icons/fi';
 
@@ -129,9 +128,7 @@ const Content = ({ data, courseId, totalLesson, timeCourse }: any) => {
               </div>
             </div>
 
-            <GlowEffect className="rounded-xl overflow-hidden mb-8">
-              <ResultCourse introduce={data?.introduce} />
-            </GlowEffect>
+            <ResultCourse introduce={data?.introduce} />
 
             {/* Target audience */}
             <div className="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-2xl shadow-lg overflow-hidden border border-indigo-50 mb-8">

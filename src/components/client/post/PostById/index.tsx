@@ -13,7 +13,7 @@ import 'react-quill/dist/quill.snow.css';
 import 'github-markdown-css';
 import { UpdatePost, reactToPost, getPostReactions, savePost, isPostSaved } from '@/api/axios/api';
 import uploadImage, { generateUniqueFileName } from '@/Utils/functions/uploadImage';
-import Banner from '@/components/admin/MainContent/Course/create/Banner';
+import Banner from '@/components/admin/Course/create/Banner';
 import { FaFacebook, FaTwitter, FaVolumeUp, FaVolumeMute, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import axios from 'axios';

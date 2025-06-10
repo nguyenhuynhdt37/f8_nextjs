@@ -77,184 +77,239 @@ const ProfileComment = ({
   return (
     <>
       {contextHolder}
-      <LoadingBar color="#0066df" ref={ref} />
-      <div className="flex items-center pb-4">
-        <img
-          className="w-16 h-16 border-2 border-[#b39836] object-cover mr-5 rounded-full"
-          src={data?.user?.avatar || '/images/avatar-empty.png'}
-          alt=""
-        />
+      <LoadingBar color="#4f46e5" ref={ref} />
+      <div className="flex flex-col space-y-3 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm dark:shadow-gray-900 transition-colors duration-300">
         <div className="flex items-center">
-          <div
-            onClick={handleRedirectToProfileID}
-            className="font-medium cursor-pointer flex items-center text-[#44a5c5] mr-5"
-          >
-            {data?.user?.fullName}
-            {data?.user?.roleId === 2 && (
-              <FaCircleCheck className="text-[#0c5ee4] ml-5" />
-            )}
-          </div>
-          {timeAgo(data?.createAt)}
-        </div>
-      </div>
-      {data?.content && !data?.isDelete && !data?.prohibited && (
-        <div
-          className="custom-textview custom-comment w-full"
-          dangerouslySetInnerHTML={{
-            __html: mdParser.render(data?.content || ''),
-          }}
-        />
-      )}
-      {data?.content && data?.isDelete && !data?.prohibited && (
-        <div className="font-medium italic text-[#888]">
-          Bình luận này đã bị gỡ bỏ do chủ sở hữu
-        </div>
-      )}
-      {data?.content && data?.isDelete && data?.prohibited && (
-        <div className="font-medium italic text-[#888]">
-          Bình luận này đã bị gỡ bỏ do chủ sở hữu và quản trị viên so vi phạm
-          chính sách cộng đồng
-        </div>
-      )}
-      {data?.content && !data?.isDelete && data?.prohibited && (
-        <div className="font-medium italic text-[#888]">
-          Bình luận này đã bị gỡ bỏ bởi quản trị viên so vi phạm chính sách cộng
-          đồng
-        </div>
-      )}
-      <div className="pt-4 flex items-center justify-between font-medium text-[#217bb3]">
-        {data?.isDelete || data?.prohibited ? (
-          <div className="flex text-[#888] items-start">
-            <button disabled className="mr-5">
-              Thích
-            </button>
-            <button disabled className="mr-5">
-              Phản hồi
-            </button>
-          </div>
-        ) : (
-          <div className="flex mr-5 items-center">
-            <Tippy
-              className="tippy-custom left-[5rem]"
-              arrow={false}
-              delay={[500, 0]}
-              content={
-                <ReactionBarSelector
-                  iconSize={22}
-                  onSelect={handleReactionChangeOrAdd}
-                />
-              }
-              interactive={true}
-              placement="top"
-              trigger="mouseenter"
+          <img
+            className="w-10 h-10 md:w-12 md:h-12 object-cover rounded-full border-2 border-indigo-200 dark:border-indigo-700 mr-3"
+            src={data?.user?.avatar || '/images/avatar-empty.png'}
+            alt="User avatar"
+          />
+          <div className="flex flex-col md:flex-row md:items-center">
+            <div
+              onClick={handleRedirectToProfileID}
+              className="font-medium cursor-pointer flex items-center text-indigo-600 dark:text-indigo-400 hover:underline mr-2"
             >
-              {userHasLiked ? (
-                <button onClick={handleUnLike} className="mr-5 ">
-                  {userHasLiked?.icon === 'satisfaction' && (
-                    <div className="font-medium px-3 py-1 rounded-full bg-[#d6e3f8] text-[#0566ff] flex items-center">
-                      <span className="text-[1.8rem] mr-1">👍</span>Like
-                    </div>
-                  )}
-                  {userHasLiked?.icon === 'love' && (
-                    <div className="font-medium px-3 py-1 rounded-full bg-[#f8d6d6] text-[#e93d56] flex items-center">
-                      <span className="text-[1.8rem] mr-1">❤️</span>Love
-                    </div>
-                  )}
-                  {userHasLiked?.icon === 'happy' && (
-                    <div className="font-medium px-3 py-1 rounded-full bg-[#f8f6d6] text-[#f7b125] flex items-center">
-                      <span className="text-[1.8rem] mr-1">😆</span>Haha
-                    </div>
-                  )}
-                  {userHasLiked?.icon === 'surprise' && (
-                    <div className="font-medium px-3 py-1 rounded-full bg-[#f8f6d6] text-[#f7b125] flex items-center">
-                      <span className="text-[1.8rem] mr-1">😮</span>Wow
-                    </div>
-                  )}
-                  {userHasLiked?.icon === 'sad' && (
-                    <div className="font-medium px-3 py-1 rounded-full bg-[#f8f6d6] text-[#f7b125] flex items-center">
-                      <span className="text-[1.8rem] mr-1">😥</span>Sad
-                    </div>
-                  )}
-                  {userHasLiked?.icon === 'angry' && (
-                    <div className="font-medium px-3 py-1 rounded-full bg-[#f8e0d6] text-[#e9710f] flex items-center">
-                      <span className="text-[1.8rem] mr-1">😡</span>Angry
-                    </div>
-                  )}
-                </button>
-              ) : (
-                <button
-                  onClick={() => handleReactionChangeOrAdd('satisfaction')}
-                  className="mr-5"
-                >
-                  Thích
-                </button>
+              {data?.user?.fullName}
+              {data?.user?.roleId === 2 && (
+                <FaCircleCheck className="text-blue-600 dark:text-blue-400 ml-1.5 text-sm" />
               )}
-            </Tippy>
-            <button
-              onClick={() => {
-                setFeedback({
-                  id: data?.id,
-                  type: 'add',
-                });
-                setComment('');
-              }}
-              className="mr-5"
-            >
-              Phản hồi
-            </button>
-            <ListReaction data={data?.likes} />
+            </div>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {timeAgo(data?.createAt)}
+            </span>
           </div>
-        )}
+        </div>
 
-        <div className="flex items-center">
-          {data?.createAt !== data?.updateAt && (
-            <div className="italic mr-5 font-normal text-[1.3rem] text-[#555]">
-              Bình luận đã được chỉnh sửa
+        {/* Comment content */}
+        <div className="ml-0 md:ml-12">
+          {data?.content && !data?.isDelete && !data?.prohibited && (
+            <div
+              className="custom-textview custom-comment prose prose-sm dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: mdParser.render(data?.content || ''),
+              }}
+            />
+          )}
+          {data?.content && data?.isDelete && !data?.prohibited && (
+            <div className="italic text-gray-500 dark:text-gray-400 text-sm">
+              Bình luận này đã bị gỡ bỏ do chủ sở hữu
             </div>
           )}
-          {!data?.isDelete && !data?.prohibited && (
-            <Tippy
-              trigger="click"
-              className="tippy-custom"
-              arrow={false}
-              content={
-                <More
-                  data={data}
-                  comment={comment}
-                  setComment={setComment}
-                  setFeedback={setFeedback}
-                />
-              }
-              interactive={true}
-              placement="bottom"
-            >
-              <div className="">
-                <IoIosMore className="text-[2rem] cursor-pointer" />
-              </div>
-            </Tippy>
+          {data?.content && data?.isDelete && data?.prohibited && (
+            <div className="italic text-gray-500 dark:text-gray-400 text-sm">
+              Bình luận này đã bị gỡ bỏ do chủ sở hữu và quản trị viên so vi phạm
+              chính sách cộng đồng
+            </div>
           )}
+          {data?.content && !data?.isDelete && data?.prohibited && (
+            <div className="italic text-gray-500 dark:text-gray-400 text-sm">
+              Bình luận này đã bị gỡ bỏ bởi quản trị viên so vi phạm chính sách cộng
+              đồng
+            </div>
+          )}
+
+          {/* Comment actions */}
+          <div className="flex items-center justify-between mt-2 text-sm">
+            {data?.isDelete || data?.prohibited ? (
+              <div className="flex text-gray-400 dark:text-gray-500 items-center">
+                <button disabled className="mr-3 opacity-50 cursor-not-allowed">
+                  Thích
+                </button>
+                <button disabled className="mr-3 opacity-50 cursor-not-allowed">
+                  Phản hồi
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <Tippy
+                  className="tippy-custom"
+                  arrow={false}
+                  delay={[500, 0]}
+                  content={
+                    <ReactionBarSelector
+                      iconSize={22}
+                      onSelect={handleReactionChangeOrAdd}
+                    />
+                  }
+                  interactive={true}
+                  placement="top"
+                  trigger="mouseenter"
+                >
+                  {userHasLiked ? (
+                    <button onClick={handleUnLike} className="mr-3">
+                      {userHasLiked?.icon === 'satisfaction' && (
+                        <div className="font-medium px-2 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 flex items-center text-xs">
+                          <span className="mr-1">👍</span>Like
+                        </div>
+                      )}
+                      {userHasLiked?.icon === 'love' && (
+                        <div className="font-medium px-2 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-300 flex items-center text-xs">
+                          <span className="mr-1">❤️</span>Love
+                        </div>
+                      )}
+                      {userHasLiked?.icon === 'happy' && (
+                        <div className="font-medium px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-300 flex items-center text-xs">
+                          <span className="mr-1">😆</span>Haha
+                        </div>
+                      )}
+                      {userHasLiked?.icon === 'surprise' && (
+                        <div className="font-medium px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-300 flex items-center text-xs">
+                          <span className="mr-1">😮</span>Wow
+                        </div>
+                      )}
+                      {userHasLiked?.icon === 'sad' && (
+                        <div className="font-medium px-2 py-1 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-300 flex items-center text-xs">
+                          <span className="mr-1">😥</span>Sad
+                        </div>
+                      )}
+                      {userHasLiked?.icon === 'angry' && (
+                        <div className="font-medium px-2 py-1 rounded-full bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-300 flex items-center text-xs">
+                          <span className="mr-1">😡</span>Angry
+                        </div>
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleReactionChangeOrAdd('satisfaction')}
+                      className="mr-3 text-indigo-600 dark:text-indigo-400 hover:underline"
+                    >
+                      Thích
+                    </button>
+                  )}
+                </Tippy>
+                <button
+                  onClick={() => {
+                    setFeedback({
+                      id: data?.id,
+                      type: 'add',
+                    });
+                    setComment('');
+                  }}
+                  className="mr-3 text-indigo-600 dark:text-indigo-400 hover:underline"
+                >
+                  Phản hồi
+                </button>
+                <ListReaction data={data?.likes} />
+              </div>
+            )}
+
+            <div className="flex items-center">
+              {data?.createAt !== data?.updateAt && (
+                <div className="italic mr-3 text-xs text-gray-500 dark:text-gray-400">
+                  Đã chỉnh sửa
+                </div>
+              )}
+              {!data?.isDelete && !data?.prohibited && (
+                <Tippy
+                  trigger="click"
+                  className="tippy-custom"
+                  arrow={false}
+                  content={
+                    <More
+                      data={data}
+                      comment={comment}
+                      setComment={setComment}
+                      setFeedback={setFeedback}
+                    />
+                  }
+                  interactive={true}
+                  placement="bottom"
+                >
+                  <div className="cursor-pointer text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                    <IoIosMore className="text-xl" />
+                  </div>
+                </Tippy>
+              )}
+            </div>
+          </div>
         </div>
       </div>
+
       {feedback?.id === data?.id && (
-        <div className="ml-2 p-3 flex pt-10 items-start">
-          <img
-            className="w-16 h-16 object-cover mr-5 rounded-full"
-            src={user?.avatar ? user?.avatar : '/images/avatar-empty.png'}
-            alt=""
-          />
-          <BoxComment
-            onShowMoreComment={onShowMoreComment}
-            rootParentId={rootParentId}
-            data={data}
-            parentId={parentId}
-            lessonId={lessonId}
-            comment={comment}
-            feedback={feedback}
-            setComment={setComment}
-            setFeedback={setFeedback}
-          />
+        <div className="ml-0 md:ml-12 mt-3 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+          <div className="flex items-start">
+            <img
+              className="w-8 h-8 md:w-10 md:h-10 object-cover mr-3 rounded-full border border-gray-200 dark:border-gray-600"
+              src={user?.avatar ? user?.avatar : '/images/avatar-empty.png'}
+              alt="User avatar"
+            />
+            <BoxComment
+              onShowMoreComment={onShowMoreComment}
+              rootParentId={rootParentId}
+              data={data}
+              parentId={parentId}
+              lessonId={lessonId}
+              comment={comment}
+              feedback={feedback}
+              setComment={setComment}
+              setFeedback={setFeedback}
+            />
+          </div>
         </div>
       )}
+
+      <style jsx global>{`
+        .custom-textview.custom-comment {
+          color: #374151;
+        }
+        
+        .dark .custom-textview.custom-comment {
+          color: #e5e7eb;
+        }
+        
+        .custom-textview.custom-comment pre {
+          background-color: #f3f4f6;
+          border: 1px solid #e5e7eb;
+        }
+        
+        .dark .custom-textview.custom-comment pre {
+          background-color: #1f2937;
+          border: 1px solid #374151;
+        }
+        
+        .custom-textview.custom-comment code {
+          color: #111827;
+        }
+        
+        .dark .custom-textview.custom-comment code {
+          color: #e5e7eb;
+        }
+        
+        .tippy-custom {
+          background-color: #ffffff;
+          border: 1px solid #e5e7eb;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+          .tippy-custom {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+          }
+        }
+      `}</style>
     </>
   );
 };

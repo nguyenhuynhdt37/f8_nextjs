@@ -135,7 +135,7 @@ export default function Sidebar({ onToggle }: SidebarProps) {
               </motion.h1>
             )}
           </div>
-          <button
+          {/* <button
             className={`p-1.5 rounded-lg ${isDark ? 'bg-slate-800 text-gray-300 hover:bg-slate-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} transition-all`}
             onClick={handleToggleCollapse}
           >
@@ -144,7 +144,7 @@ export default function Sidebar({ onToggle }: SidebarProps) {
             ) : (
               <MdClose className="text-lg" />
             )}
-          </button>
+          </button> */}
         </div>
 
         <div className="flex-1 overflow-y-auto py-4 modern-scrollbar">
@@ -158,22 +158,22 @@ export default function Sidebar({ onToggle }: SidebarProps) {
                 <button
                   onClick={() => handleNavigate(item.url)}
                   className={`w-full flex items-center py-2.5 px-3 rounded-xl relative group ${item.isActive
-                      ? isDark
-                        ? 'bg-slate-800/70 text-white'
-                        : 'bg-blue-50 text-blue-700'
-                      : isDark
-                        ? 'text-gray-300 hover:bg-slate-800/50'
-                        : 'text-gray-700 hover:bg-gray-100'
+                    ? isDark
+                      ? 'bg-slate-800/70 text-white'
+                      : 'bg-blue-50 text-blue-700'
+                    : isDark
+                      ? 'text-gray-300 hover:bg-slate-800/50'
+                      : 'text-gray-700 hover:bg-gray-100'
                     } transition-all duration-200`}
                   title={collapsed ? item.name : ''}
                 >
                   <span className={`flex items-center justify-center ${collapsed ? 'w-7 h-7' : 'w-6 h-6'} ${item.isActive
-                      ? isDark
-                        ? 'text-blue-400'
-                        : 'text-blue-600'
-                      : isDark
-                        ? 'text-gray-400'
-                        : 'text-gray-500'
+                    ? isDark
+                      ? 'text-blue-400'
+                      : 'text-blue-600'
+                    : isDark
+                      ? 'text-gray-400'
+                      : 'text-gray-500'
                     }`}>
                     {item.icon}
                   </span>
@@ -186,12 +186,12 @@ export default function Sidebar({ onToggle }: SidebarProps) {
                       className="ml-3 text-left"
                     >
                       <span className={`text-sm font-medium block ${item.isActive
-                          ? isDark
-                            ? 'text-white'
-                            : 'text-blue-700'
-                          : isDark
-                            ? 'text-gray-300'
-                            : 'text-gray-700'
+                        ? isDark
+                          ? 'text-white'
+                          : 'text-blue-700'
+                        : isDark
+                          ? 'text-gray-300'
+                          : 'text-gray-700'
                         }`}>
                         {item.name}
                       </span>
@@ -229,8 +229,8 @@ export default function Sidebar({ onToggle }: SidebarProps) {
             <button
               onClick={toggleTheme}
               className={`p-2 rounded-lg w-full flex items-center justify-center ${isDark
-                  ? 'bg-slate-800 text-gray-300 hover:bg-slate-700'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-slate-800 text-gray-300 hover:bg-slate-700'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 } transition-all`}
             >
               {isDark ? (
@@ -249,8 +249,8 @@ export default function Sidebar({ onToggle }: SidebarProps) {
 
           <div
             className={`flex items-center ${collapsed ? 'justify-center' : ''} cursor-pointer ${isDark
-                ? 'hover:bg-slate-800 text-gray-300'
-                : 'hover:bg-gray-100 text-gray-700'
+              ? 'hover:bg-slate-800 text-gray-300'
+              : 'hover:bg-gray-100 text-gray-700'
               } p-2 rounded-lg transition-all duration-200`}
             onClick={() => router.push('/')}
           >

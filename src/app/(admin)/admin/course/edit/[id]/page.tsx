@@ -1,6 +1,6 @@
-import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
-import CreateCourse from '@/components/admin/MainContent/Course/create';
-import CourseEdit from '@/components/admin/MainContent/Course/EditCourse';
+
+import CreateCourse from '@/components/admin/Course/create';
+import CourseEdit from '@/components/admin/Course/EditCourse';
 import { useCookie } from '@/hook/useCookie';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -52,7 +52,7 @@ const CourseEditPage = async ({ params }: Iprops) => {
   return (
     <>
       <div className="ps-10 pt-10">
-        <Breadcrumbs items={breadcrumbItems} />
+
       </div>
       <CourseEdit course={course} levels={levels} />
     </>

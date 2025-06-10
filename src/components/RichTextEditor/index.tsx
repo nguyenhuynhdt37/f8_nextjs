@@ -5,7 +5,9 @@ import hljs from 'highlight.js/lib/common';
 import 'highlight.js/styles/monokai-sublime.css';
 import { uploadImage } from '@/api/axios/api';
 import { v4 as uuidv4 } from 'uuid';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import './editor.css';
+import { FiImage, FiCode, FiLink, FiType, FiList, FiAlignLeft } from 'react-icons/fi';
 
 const RichTextEditor = ({
   value,
@@ -15,6 +17,25 @@ const RichTextEditor = ({
   onChange: any;
 }) => {
   const quillRef = useRef<any>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Check for dark mode preference
+  useEffect(() => {
+    // Check initial preference
+    const checkDarkMode = () => {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDarkMode(isDark);
+    };
+
+    checkDarkMode();
+
+    // Listen for changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const listener = (e: MediaQueryListEvent) => setIsDarkMode(e.matches);
+    mediaQuery.addEventListener('change', listener);
+
+    return () => mediaQuery.removeEventListener('change', listener);
+  }, []);
 
   const generateRandomFileName = (): string => {
     // Tạo UUID v4
@@ -130,35 +151,72 @@ const RichTextEditor = ({
   };
 
   return (
-    <ReactQuill
-      ref={quillRef}
-      value={value}
-      onChange={onChange}
-      className="custom-quill text-[3rem] border-[#ffffff] overflow-hidden border-2 rounded-lg min-h-[20rem] max-h-[45rem] scrollbar-custom"
-      theme="snow"
-      style={{ padding: '0px' }}
-      placeholder="Viết văn bản ở đây..."
-      modules={modules}
-      formats={[
-        'header',
-        'font',
-        'size',
-        'bold',
-        'italic',
-        'underline',
-        'strike',
-        'blockquote',
-        'list',
-        'bullet',
-        'indent',
-        'link',
-        'image',
-        'color',
-        'background',
-        'align',
-        'code-block',
-      ]}
-    />
+    <div className={`f8-editor-wrapper ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+      <div className="f8-editor-container">
+        <div className="f8-editor-toolbar-hints">
+          <div className="toolbar-hint">
+            <FiType className="hint-icon" />
+            <span>Định dạng</span>
+          </div>
+          <div className="toolbar-hint">
+            <FiList className="hint-icon" />
+            <span>Danh sách</span>
+          </div>
+          <div className="toolbar-hint">
+            <FiAlignLeft className="hint-icon" />
+            <span>Căn chỉnh</span>
+          </div>
+          <div className="toolbar-hint">
+            <FiImage className="hint-icon" />
+            <span>Hình ảnh</span>
+          </div>
+          <div className="toolbar-hint">
+            <FiLink className="hint-icon" />
+            <span>Liên kết</span>
+          </div>
+          <div className="toolbar-hint">
+            <FiCode className="hint-icon" />
+            <span>Mã nguồn</span>
+          </div>
+        </div>
+        <ReactQuill
+          ref={quillRef}
+          value={value}
+          onChange={onChange}
+          theme="snow"
+          placeholder="Viết văn bản ở đây..."
+          modules={modules}
+          formats={[
+            'header',
+            'font',
+            'size',
+            'bold',
+            'italic',
+            'underline',
+            'strike',
+            'blockquote',
+            'list',
+            'bullet',
+            'indent',
+            'link',
+            'image',
+            'color',
+            'background',
+            'align',
+            'code-block',
+          ]}
+        />
+      </div>
+      <div className="f8-editor-footer">
+        <div className="editor-status">
+          <span className="status-indicator"></span>
+          {isDarkMode ? 'Chế độ tối' : 'Chế độ sáng'}
+        </div>
+        <div className="editor-tips">
+          Nhấn <kbd>/</kbd> để mở menu lệnh nhanh
+        </div>
+      </div>
+    </div>
   );
 };
 

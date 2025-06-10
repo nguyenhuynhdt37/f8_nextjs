@@ -1,19 +1,20 @@
 'use client';
 import { ViewNoteLesson } from '@/api/axios/api';
 import confetti from 'canvas-confetti';
-import { getCurrentMonthAndYear } from '@/Utils/functions';
+
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { FiBookOpen, FiCheckCircle } from 'react-icons/fi';
+import { GoHeartFill } from 'react-icons/go';
 
 const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
   const [note, setNote] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const refTimeOut = React.useRef<any>(null);
   const router = useRouter();
 
   useEffect(() => {
     const getData = async () => {
-      setLoading(true);
+      setIsLoading(true);
       try {
         const data = await ViewNoteLesson(id);
         if (data?.statusCode === 200) {
@@ -22,89 +23,82 @@ const Note = ({ id, isCompleteLesson, setIsCompletedLesson }: any) => {
           router.push('/404');
         }
       } catch (error) {
-        console.error("Error fetching note:", error);
+        console.error("Error fetching note data:", error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
     getData();
-  }, [id, router]);
+  }, [id]);
 
   useEffect(() => {
-    // Đánh dấu hoàn thành sau 10 giây
     const timeout = setTimeout(() => {
-      if (!isCompleteLesson?.isCompleted && !isCompleteLesson?.isOldCompleted) {
-        setIsCompletedLesson({
-          lessonId: id,
-          isCompleted: true,
-          isPostReq: false,
-          isOldCompleted: false,
-        });
-
-        // Hiệu ứng confetti khi hoàn thành
+      setIsCompletedLesson({
+        ...isCompleteLesson,
+        isCompleted: true,
+      });
+      if (!isCompleteLesson?.isOldCompleted) {
         confetti({
           particleCount: 100,
           spread: 100,
-          origin: { x: 0.7, y: 0.8 }
+          origin: {
+            x: 0.5,
+            y: 1,
+          },
         });
       }
     }, 10000);
 
-    return () => clearTimeout(timeout);
-  }, [id, isCompleteLesson, setIsCompletedLesson]);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-[70vh]">
-        <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+      <div className="flex justify-center items-center min-h-[50vh] text-gray-800 dark:text-gray-200">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mb-4"></div>
+          <div className="text-xl">Đang tải ghi chú...</div>
+        </div>
       </div>
     );
   }
 
+
   return (
-    <div className="max-w-4xl mx-auto px-6 md:px-8 py-8">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
-        {/* Header */}
-        <div className="flex items-center mb-6">
-          <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mr-4">
-            <FiBookOpen className="text-indigo-600 dark:text-indigo-400" size={20} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{note?.title}</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Cập nhật {getCurrentMonthAndYear(note?.updatedAt)}
-            </p>
-          </div>
+    <div className="container mb-12 mx-auto bg-white dark:bg-gray-900 px-4 md:px-8 lg:px-16 xl:px-[10rem] pt-8 md:pt-12 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+      <div className="text-2xl md:text-3xl font-medium mb-2 text-gray-900 dark:text-white">
+        {note?.title}
+      </div>
+
+      <div className="text-sm md:text-base text-gray-500 dark:text-gray-400 mb-8">
+        Cập nhật tháng 11 năm 2023
+      </div>
+
+      <div className="rounded-lg shadow-sm overflow-hidden bg-white dark:bg-gray-800 mb-12">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="font-medium text-blue-600 dark:text-blue-400">Ghi chú bài học</h3>
         </div>
 
-        {/* Divider */}
-        <div className="h-px bg-gray-200 dark:bg-gray-700 mb-6"></div>
-
-        {/* Content */}
-        {note?.tblnote?.description ? (
-          <div
-            className="prose dark:prose-invert max-w-none custom-textview"
-            dangerouslySetInnerHTML={{ __html: note?.tblnote?.description }}
-          />
-        ) : (
-          <div className="text-center py-10 text-gray-500 dark:text-gray-400">
-            Nội dung đang được cập nhật...
-          </div>
-        )}
-
-        {/* Status */}
-        <div className="mt-8 flex items-center justify-between">
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            Powered by F8
-          </div>
-
-          {(isCompleteLesson?.isCompleted || isCompleteLesson?.isOldCompleted) && (
-            <div className="flex items-center text-green-600 dark:text-green-400">
-              <FiCheckCircle className="mr-2" />
-              <span className="text-sm font-medium">Đã hoàn thành</span>
+        <div className="p-6 bg-gray-50/50 dark:bg-gray-800/50">
+          {note?.tblnote?.description ? (
+            <div
+              className="custom-textview prose md:prose-lg max-w-none dark:prose-invert"
+              dangerouslySetInnerHTML={{ __html: note?.tblnote?.description }}
+            />
+          ) : (
+            <div className="font-medium text-center py-12 text-gray-500 dark:text-gray-400">
+              Chưa cập nhật nội dung ghi chú
             </div>
           )}
         </div>
+      </div>
+
+      <div className="flex items-center justify-center py-6 text-center border-t border-gray-200 dark:border-gray-700">
+        <span className="text-sm md:text-base">Made with</span>
+        <GoHeartFill className="mx-2 text-xl md:text-2xl text-red-500" />
+        <span className="text-sm md:text-base">Powered by F8</span>
       </div>
     </div>
   );

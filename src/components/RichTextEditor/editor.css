@@ -1,0 +1,242 @@
+/* Modern RichTextEditor styling */
+.f8-editor-wrapper {
+  margin-bottom: 1.5rem;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Light/Dark theme support */
+.f8-editor-wrapper.light-theme {
+  --editor-bg: #ffffff;
+  --editor-border: #e5e7eb;
+  --editor-text: #1f2937;
+  --editor-placeholder: #9ca3af;
+  --editor-toolbar-bg: #f9fafb;
+  --editor-toolbar-icon: #6b7280;
+  --editor-toolbar-icon-hover: #4b5563;
+  --editor-code-bg: #f3f4f6;
+  --editor-code-text: #111827;
+  --editor-blockquote: #6366f1;
+  --editor-blockquote-text: #4b5563;
+  --editor-hint-bg: #f3f4f6;
+  --editor-hint-text: #6b7280;
+  --editor-footer-bg: #f9fafb;
+  --editor-footer-text: #6b7280;
+  --editor-shadow: rgba(0, 0, 0, 0.05);
+  --editor-kbd-bg: #e5e7eb;
+  --editor-kbd-text: #374151;
+  --editor-status-dot: #10b981;
+}
+
+.f8-editor-wrapper.dark-theme {
+  --editor-bg: #1f2937;
+  --editor-border: #374151;
+  --editor-text: #f3f4f6;
+  --editor-placeholder: #9ca3af;
+  --editor-toolbar-bg: #111827;
+  --editor-toolbar-icon: #9ca3af;
+  --editor-toolbar-icon-hover: #e5e7eb;
+  --editor-code-bg: #374151;
+  --editor-code-text: #e5e7eb;
+  --editor-blockquote: #818cf8;
+  --editor-blockquote-text: #d1d5db;
+  --editor-hint-bg: #111827;
+  --editor-hint-text: #9ca3af;
+  --editor-footer-bg: #111827;
+  --editor-footer-text: #9ca3af;
+  --editor-shadow: rgba(0, 0, 0, 0.3);
+  --editor-kbd-bg: #374151;
+  --editor-kbd-text: #e5e7eb;
+  --editor-status-dot: #34d399;
+}
+
+/* Basic container styling */
+.f8-editor-container {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow:
+    0 4px 6px -1px var(--editor-shadow),
+    0 2px 4px -1px var(--editor-shadow);
+  border: 1px solid var(--editor-border);
+}
+
+/* Toolbar hints */
+.f8-editor-toolbar-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background-color: var(--editor-hint-bg);
+  border-bottom: 1px solid var(--editor-border);
+}
+
+.toolbar-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--editor-hint-text);
+  background-color: var(--editor-bg);
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--editor-border);
+}
+
+.hint-icon {
+  font-size: 0.875rem;
+}
+
+/* Toolbar styling */
+.f8-editor-container .ql-toolbar.ql-snow {
+  border-color: var(--editor-border);
+  background: var(--editor-toolbar-bg);
+  padding: 0.75rem;
+  border-bottom-width: 1px;
+}
+
+.f8-editor-container .ql-toolbar.ql-snow .ql-formats {
+  margin-right: 1rem;
+}
+
+.f8-editor-container .ql-toolbar.ql-snow button {
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.f8-editor-container .ql-toolbar.ql-snow button:hover {
+  background-color: var(--editor-border);
+}
+
+.f8-editor-container .ql-toolbar.ql-snow .ql-stroke {
+  stroke: var(--editor-toolbar-icon);
+}
+
+.f8-editor-container .ql-toolbar.ql-snow .ql-fill {
+  fill: var(--editor-toolbar-icon);
+}
+
+.f8-editor-container .ql-toolbar.ql-snow button:hover .ql-stroke,
+.f8-editor-container .ql-toolbar.ql-snow button.ql-active .ql-stroke {
+  stroke: var(--editor-toolbar-icon-hover);
+}
+
+.f8-editor-container .ql-toolbar.ql-snow button:hover .ql-fill,
+.f8-editor-container .ql-toolbar.ql-snow button.ql-active .ql-fill {
+  fill: var(--editor-toolbar-icon-hover);
+}
+
+.f8-editor-container .ql-toolbar.ql-snow .ql-picker {
+  color: var(--editor-toolbar-icon);
+}
+
+.f8-editor-container .ql-toolbar.ql-snow .ql-picker-options {
+  background-color: var(--editor-bg);
+  border-color: var(--editor-border);
+  border-radius: 0.5rem;
+  box-shadow:
+    0 4px 6px -1px var(--editor-shadow),
+    0 2px 4px -1px var(--editor-shadow);
+}
+
+/* Editor container */
+.f8-editor-container .ql-container.ql-snow {
+  border-color: var(--editor-border);
+  font-family: inherit;
+  background-color: var(--editor-bg);
+}
+
+/* Editor content area */
+.f8-editor-container .ql-editor {
+  min-height: 180px;
+  max-height: 350px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--editor-text);
+  padding: 1rem;
+}
+
+.f8-editor-container .ql-editor::placeholder {
+  color: var(--editor-placeholder);
+}
+
+/* Code block styling */
+.f8-editor-container .ql-editor pre.ql-syntax {
+  background: var(--editor-code-bg);
+  color: var(--editor-code-text);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* Image styling */
+.f8-editor-container .ql-editor img {
+  max-width: 100%;
+  margin: 1rem auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px var(--editor-shadow);
+}
+
+/* Blockquote styling */
+.f8-editor-container .ql-editor blockquote {
+  border-left: 3px solid var(--editor-blockquote);
+  padding-left: 1rem;
+  color: var(--editor-blockquote-text);
+  margin: 1rem 0;
+}
+
+/* List styling */
+.f8-editor-container .ql-editor ul li,
+.f8-editor-container .ql-editor ol li {
+  margin-bottom: 0.375rem;
+}
+
+/* Footer styling */
+.f8-editor-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--editor-footer-bg);
+  color: var(--editor-footer-text);
+  font-size: 0.75rem;
+  border-top: 1px solid var(--editor-border);
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
+.editor-status {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--editor-status-dot);
+}
+
+.editor-tips kbd {
+  background-color: var(--editor-kbd-bg);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.75rem;
+  color: var(--editor-kbd-text);
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .f8-editor-toolbar-hints {
+    display: none;
+  }
+
+  .f8-editor-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}

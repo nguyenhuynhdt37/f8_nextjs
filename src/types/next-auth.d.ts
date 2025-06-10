@@ -86,11 +86,11 @@ interface IUpdateUser {
 interface IpageEdit {
   pageSize: number;
   pageNumber: number;
-  totalPage: number;
-  totalCount: number;
-  searchTerm: string;
-  sortField: string;
-  sortOrder: string;
+  totalPage?: number;
+  totalCount?: number;
+  searchTerm?: string;
+  sortField?: string;
+  sortOrder?: string;
   status?: string;
   role?: string;
 }

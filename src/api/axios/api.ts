@@ -1,10 +1,15 @@
 import axiosInstance from './axiosInstance';
 import { ICreateUser, IGetWithParam, IpageEdit } from '@/types/next-auth';
-import mockLearningPathDetail from '@/data/mock-learning-path-detail.json';
+import { CreateUserDto, NotificationMessage, UpdateUserDto } from '@/types/user';
 
 interface LoginParams {
   email: string;
   password: string;
+}
+
+interface ICheckCode {
+  email: string;
+  codeID: string;
 }
 
 export const login = async ({ email, password }: LoginParams): Promise<any> => {
@@ -22,6 +27,7 @@ export const login = async ({ email, password }: LoginParams): Promise<any> => {
     return error?.response?.data;
   }
 };
+
 export const AddCourseComplete = async (
   idLesson: number,
   idCourse: number,
@@ -40,9 +46,10 @@ export const AddCourseComplete = async (
     );
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
+
 export const sendEmailAsync = async (email: string): Promise<any> => {
   try {
     const res = await axiosInstance.post('/auth/send-email', email);
@@ -52,6 +59,7 @@ export const sendEmailAsync = async (email: string): Promise<any> => {
     return error?.response?.data;
   }
 };
+
 export const activeShowLesson = async ({
   courseId,
   lessonId,
@@ -73,9 +81,10 @@ export const activeShowLesson = async ({
 
     return res.data;
   } catch (error: any) {
-    return error?.response?.data;
+    throw error?.response?.data;
   }
 };
+
 export const CheckCodeActive = async ({
   email,
   codeID,
@@ -90,6 +99,7 @@ export const CheckCodeActive = async ({
     return error?.response?.data;
   }
 };
+
 export const GetUserInfoByToken = async (token: string): Promise<any> => {
   try {
     const res = await axiosInstance.get('/auth/getinfo', {
@@ -113,6 +123,7 @@ export const getCourseInfo = async ({ id }: { id: number }): Promise<any> => {
     return error?.response?.data;
   }
 };
+
 export const getdataLesson = async ({
   courseId,
   lessonId,
@@ -131,6 +142,7 @@ export const getdataLesson = async ({
     return error?.response?.data;
   }
 };
+
 export const getCourseLearningById = async ({
   courseId,
   token,
@@ -172,6 +184,7 @@ export const RegiterCourseFree = async ({
     return error?.response?.data;
   }
 };
+
 export const CheckIsCourseRegister = async ({
   idCourse,
 }: {
@@ -191,74 +204,114 @@ export const CheckIsCourseRegister = async ({
   }
 };
 
-export const getAllUser = async ({ config }: IGetWithParam): Promise<any> => {
+export const getAllUser = async ({ config }: any) => {
   try {
-    const res = await axiosInstance.get('/users', {
-      withCredentials: true,
-      params: {
-        searchTerm: config.searchTerm,
-        sortField: config.sortField,
-        sortOrder: config.sortOrder,
-        pageNumber: config.pageNumber,
-        pageSize: config.pageSize,
-        status: config.status,
-        role: config.role,
-      },
-    });
+    const queryParams = new URLSearchParams();
 
-    return res.data;
-  } catch (error: any) {
-    console.error('Error fetching users:', error);
-    return {
-      statusCode: error?.response?.status || 500,
-      message: error?.response?.data?.message || 'Failed to fetch users',
-      data: null
-    };
+    if (config.searchTerm) queryParams.append('searchTerm', config.searchTerm);
+    if (config.role) queryParams.append('role', config.role);
+    if (config.status) queryParams.append('status', config.status);
+    if (config.pageNumber) queryParams.append('pageNumber', config.pageNumber.toString());
+    if (config.pageSize) queryParams.append('pageSize', config.pageSize.toString());
+    if (config.sortField) queryParams.append('sortField', config.sortField);
+    if (config.sortOrder) queryParams.append('sortOrder', config.sortOrder);
+
+    const response = await axiosInstance.get(`/users?${queryParams.toString()}`);
+    return response;
+  } catch (error) {
+    throw error;
   }
 };
 
-export const getUserByID = async ({ id }: { id: number }): Promise<any> => {
+export const getUserById = async (id: number) => {
   try {
-    const res = await axiosInstance.get(`/users/${id}`, {
-      withCredentials: true,
-    });
-
-    return res.data;
-  } catch (error: any) {
-    console.error(`Error fetching user with ID ${id}:`, error);
-    return {
-      statusCode: error?.response?.status || 500,
-      message: error?.response?.data?.message || `Failed to fetch user with ID ${id}`,
-      data: null
-    };
+    const response = await axiosInstance.get(`/users/${id}`);
+    return response;
+  } catch (error) {
+    throw error;
   }
 };
 
-export const CreateUser = async (userData: ICreateUser | FormData): Promise<any> => {
+export const createUser = async (userData: any) => {
   try {
-    const res = await axiosInstance.post('/users/create', userData, {
+    const response = await axiosInstance.post('/users', userData);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateUser = async (id: number, userData: any) => {
+  try {
+    const response = await axiosInstance.put(`/users/${id}`, userData);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteUser = async (id: number) => {
+  try {
+    const response = await axiosInstance.delete(`/users/${id}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const toggleUserStatus = async (id: number, isActive: number) => {
+  try {
+    const endpoint = isActive === 1 ? `/users/${id}/enable` : `/users/${id}/disable`;
+    const response = await axiosInstance.patch(endpoint);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const resetUserPassword = async (id: number) => {
+  try {
+    const response = await axiosInstance.post(`/users/reset-password/${id}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getRoles = async () => {
+  try {
+    const response = await axiosInstance.get('/users/roles');
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const sendNotification = async (notificationData: NotificationMessage): Promise<any> => {
+  try {
+    const res = await axiosInstance.post('/users/send-notification', notificationData, {
       withCredentials: true,
-      headers: {
-        ...(userData instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : {}),
-      },
     });
 
     return res.data;
   } catch (error: any) {
-    console.error('Error creating user:', error);
+    console.error('Error sending notification:', error);
     return {
       statusCode: error?.response?.status || 500,
-      message: error?.response?.data?.message || 'Failed to create user',
-      data: null,
-      validationErrors: error?.response?.data?.validationErrors || null
+      message: error?.response?.data?.message || 'Failed to send notification',
+      data: null
     };
   }
 };
 
 export const UpdateUser = async ({ id, data }: { id: number, data: any }): Promise<any> => {
   try {
-    const res = await axiosInstance.patch(`/users/${id}`, data, {
+    // Check if data is FormData
+    const isFormData = data instanceof FormData;
+
+    const res = await axiosInstance.put(`/users/${id}`, data, {
       withCredentials: true,
+      headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : undefined
     });
 
     return res.data;
@@ -316,23 +369,6 @@ export const DeleteUser = async ({ id }: { id: number }): Promise<any> => {
   }
 };
 
-export const ToggleUserStatus = async ({ id, isActive }: { id: number, isActive: number }): Promise<any> => {
-  try {
-    const res = await axiosInstance.patch(`/users/${id}/status`, { isActive }, {
-      withCredentials: true,
-    });
-
-    return res.data;
-  } catch (error: any) {
-    console.error(`Error toggling status for user with ID ${id}:`, error);
-    return {
-      statusCode: error?.response?.status || 500,
-      message: error?.response?.data?.message || `Failed to toggle status for user with ID ${id}`,
-      data: null
-    };
-  }
-};
-
 export const UpdateUserRole = async ({ id, role }: { id: number, role: string }): Promise<any> => {
   try {
     const res = await axiosInstance.patch(`/users/${id}/role`, { role }, {
@@ -350,6 +386,10 @@ export const UpdateUserRole = async ({ id, role }: { id: number, role: string })
   }
 };
 
+export const updateUserRole = async (id: number, role: string): Promise<any> => {
+  return UpdateUserRole({ id, role });
+};
+
 export const DeleteCourse = async ({ id }: any): Promise<any> => {
   try {
     const res = await axiosInstance.delete(`/courses/delete`, {
@@ -364,6 +404,7 @@ export const DeleteCourse = async ({ id }: any): Promise<any> => {
     return error?.response?.data;
   }
 };
+
 export const CreateLessonGroup = async ({ id, name }: any): Promise<any> => {
   try {
     const res = await axiosInstance.post(
@@ -379,6 +420,7 @@ export const CreateLessonGroup = async ({ id, name }: any): Promise<any> => {
     return error?.response?.data;
   }
 };
+
 export const DeleteLessonGroup = async ({ id }: any): Promise<any> => {
   try {
     const res = await axiosInstance.delete(`/courses/lesson-group/delete`, {
@@ -429,6 +471,7 @@ export const getFirstLesson = async ({ id }: any): Promise<any> => {
     throw error?.response?.data;
   }
 };
+
 export const getAllCourses = async ({
   config,
 }: IGetWithParam): Promise<any> => {
@@ -449,6 +492,7 @@ export const getAllCourses = async ({
     throw error?.response?.data;
   }
 };
+
 export const getLesonGroupById = async ({
   id,
   config,
@@ -476,6 +520,7 @@ export const getLesonGroupById = async ({
     throw error?.response?.data;
   }
 };
+
 export const getLesonpByCourseId = async ({
   id,
   config,
@@ -500,6 +545,7 @@ export const getLesonpByCourseId = async ({
     throw error?.response?.data;
   }
 };
+
 export const CourseCreate = async (formData: any): Promise<any> => {
   try {
     const res = await axiosInstance.post('/courses/create', formData, {
@@ -514,6 +560,7 @@ export const CourseCreate = async (formData: any): Promise<any> => {
     throw error?.response?.data;
   }
 };
+
 export const CourseEditAsync = async (
   formData: any,
   courseId: number,
@@ -531,6 +578,7 @@ export const CourseEditAsync = async (
     throw error?.response?.data;
   }
 };
+
 export const QuestionLessonCreate = async (
   courseId: number,
   data: any,
@@ -549,6 +597,7 @@ export const QuestionLessonCreate = async (
     throw error?.response?.data;
   }
 };
+
 export const LessonCreateAsync = async (
   courseId: number,
   data: any,
@@ -567,6 +616,7 @@ export const LessonCreateAsync = async (
     throw error?.response?.data;
   }
 };
+
 export const NoteCreateAsync = async (
   courseId: number,
   data: any,
@@ -585,6 +635,7 @@ export const NoteCreateAsync = async (
     throw error?.response?.data;
   }
 };
+
 export const QuessonCodeCreate = async (
   courseId: number,
   data: any,
@@ -603,6 +654,7 @@ export const QuessonCodeCreate = async (
     throw error?.response?.data;
   }
 };
+
 export const ViewNoteLesson = async (lessonId: number): Promise<any> => {
   try {
     const res = await axiosInstance.get(`/courses/lesson/note/${lessonId}`, {
@@ -614,6 +666,7 @@ export const ViewNoteLesson = async (lessonId: number): Promise<any> => {
     throw error?.response?.data;
   }
 };
+
 export const ViewQuestionLesson = async (lessonId: number): Promise<any> => {
   try {
     const res = await axiosInstance.get(
@@ -628,6 +681,7 @@ export const ViewQuestionLesson = async (lessonId: number): Promise<any> => {
     throw error?.response?.data;
   }
 };
+
 export const logoutApi = async () => {
   try {
     const res = await axiosInstance.post(`/auth/logout`, {
@@ -638,6 +692,7 @@ export const logoutApi = async () => {
     throw error?.response?.data;
   }
 };
+
 export const getInfoUser = async () => {
   try {
     const res = await axiosInstance.get(`/auth/getinfo`, {
@@ -648,6 +703,7 @@ export const getInfoUser = async () => {
     throw error?.response?.status;
   }
 };
+
 export const uploadImage = async (formData: any) => {
   try {
     console.log('Starting image upload');
@@ -698,6 +754,7 @@ export const uploadImage = async (formData: any) => {
     };
   }
 };
+
 export const CreatePost = async (formData: FormData) => {
   try {
     console.log('Creating post with FormData');
@@ -778,6 +835,7 @@ export const getAllPostType = async (formData: any) => {
     throw error?.response?.data;
   }
 };
+
 export const getAllPost = async ({ config }: IGetWithParam): Promise<any> => {
   try {
     const res = await axiosInstance.get('/post', {
@@ -795,6 +853,7 @@ export const getAllPost = async ({ config }: IGetWithParam): Promise<any> => {
     throw error?.response?.data;
   }
 };
+
 export const getAllPostByType = async ({ config, id }: any): Promise<any> => {
   try {
     const res = await axiosInstance.get(`/post/type/${id}`, {
@@ -812,6 +871,7 @@ export const getAllPostByType = async ({ config, id }: any): Promise<any> => {
     throw error?.response?.data;
   }
 };
+
 export const getDashboardStatisticsByHomePage = async () => {
   try {
     const res = await axiosInstance.get('/statistics/dashboard/home-page', {
@@ -822,6 +882,7 @@ export const getDashboardStatisticsByHomePage = async () => {
     throw error?.response?.data;
   }
 };
+
 export const getAllCourseByLevel = async (id: number) => {
   try {
     const res = await axiosInstance.get(`/courses/level/${id}`, {
@@ -832,6 +893,7 @@ export const getAllCourseByLevel = async (id: number) => {
     throw error?.response?.data;
   }
 };
+
 export const CheckLessonComplete = async (lessonId: number) => {
   try {
     const res = await axiosInstance.get(
@@ -845,6 +907,7 @@ export const CheckLessonComplete = async (lessonId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const getNextLesson = async (lessonId: number) => {
   try {
     const res = await axiosInstance.get(`/courses/lesson/next/${lessonId}`, {
@@ -855,6 +918,7 @@ export const getNextLesson = async (lessonId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const getPrevLesson = async (lessonId: number) => {
   try {
     const res = await axiosInstance.get(`/courses/lesson/prev/${lessonId}`, {
@@ -865,9 +929,10 @@ export const getPrevLesson = async (lessonId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const getQuessonCode = async (lessonId: number) => {
   try {
-    const res = await axiosInstance.get(`/courses/quesson_code/${lessonId}`, {
+    const res = await axiosInstance.get(`/lesson/code/${lessonId}`, {
       withCredentials: true,
     });
     return res.data;
@@ -875,10 +940,11 @@ export const getQuessonCode = async (lessonId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const SaveCodeUser = async (lessonId: number, code: string) => {
   try {
     const res = await axiosInstance.post(
-      `/courses/quesson_code/save_code/${lessonId}`,
+      `/lesson/code/save_code/${lessonId}`,
       code,
       {
         withCredentials: true,
@@ -889,6 +955,7 @@ export const SaveCodeUser = async (lessonId: number, code: string) => {
     throw error?.response?.data;
   }
 };
+
 export const SubmitCode = async (submitCode: any) => {
   try {
     const res = await axiosInstance.post(
@@ -903,6 +970,7 @@ export const SubmitCode = async (submitCode: any) => {
     throw error?.response?.data;
   }
 };
+
 export const CreateComment = async (comment: any) => {
   try {
     const res = await axiosInstance.post(`/lesson/comment/create`, comment, {
@@ -913,6 +981,7 @@ export const CreateComment = async (comment: any) => {
     throw error?.response?.data;
   }
 };
+
 export const getAllCommentByLessonId = async (lessonId: any) => {
   try {
     const res = await axiosInstance.get(`/lesson/comment/all/${lessonId}`, {
@@ -938,6 +1007,7 @@ export const ReportComment = async (idComment: any) => {
     throw error?.response?.data;
   }
 };
+
 export const DeleteComment = async (idComment: any) => {
   try {
     const res = await axiosInstance.delete(
@@ -951,6 +1021,7 @@ export const DeleteComment = async (idComment: any) => {
     throw error?.response?.data;
   }
 };
+
 export const updateComment = async ({ idComment, comment }: any) => {
   try {
     const res = await axiosInstance.put(
@@ -965,6 +1036,7 @@ export const updateComment = async ({ idComment, comment }: any) => {
     throw error?.response?.data;
   }
 };
+
 export const UnlikeComment = async (idComment: any) => {
   try {
     const res = await axiosInstance.delete(
@@ -978,6 +1050,7 @@ export const UnlikeComment = async (idComment: any) => {
     throw error?.response?.data;
   }
 };
+
 export const LikeChangeOrAdd = async (idComment: number, icon: string) => {
   try {
     const res = await axiosInstance.post(
@@ -992,6 +1065,7 @@ export const LikeChangeOrAdd = async (idComment: number, icon: string) => {
     throw error?.response?.data;
   }
 };
+
 export const getProcess = async (courseId: number) => {
   try {
     const res = await axiosInstance.get(`/courses/progress/${courseId}`, {
@@ -1002,6 +1076,7 @@ export const getProcess = async (courseId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const getLanguageCodes = async () => {
   try {
     const res = await axiosInstance.get(
@@ -1015,6 +1090,7 @@ export const getLanguageCodes = async () => {
     throw error?.response?.data;
   }
 };
+
 export const getChapterById = async (chapterId: number) => {
   try {
     const res = await axiosInstance.get(`/courses/chapter/${chapterId}`, {
@@ -1025,6 +1101,7 @@ export const getChapterById = async (chapterId: number) => {
     return error?.response?.data;
   }
 };
+
 export const ChapterEditAsync = async ({ chapterId, name }: any) => {
   try {
     const res = await axiosInstance.put(
@@ -1039,6 +1116,7 @@ export const ChapterEditAsync = async ({ chapterId, name }: any) => {
     throw error?.response?.data;
   }
 };
+
 export const getChapterAndLesson = async (courseId: number) => {
   try {
     const res = await axiosInstance.get(
@@ -1052,6 +1130,7 @@ export const getChapterAndLesson = async (courseId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const ToggleChapterActive = async (chapterId: number) => {
   try {
     const res = await axiosInstance.get(
@@ -1065,6 +1144,7 @@ export const ToggleChapterActive = async (chapterId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const ToggleLessonActiveAsync = async (lessonId: number) => {
   try {
     const res = await axiosInstance.get(
@@ -1078,6 +1158,7 @@ export const ToggleLessonActiveAsync = async (lessonId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const MoveUpChapterPosition = async ({
   courseid,
   chapterId,
@@ -1096,6 +1177,7 @@ export const MoveUpChapterPosition = async ({
     throw error?.response?.data;
   }
 };
+
 export const MoveDownChapterPosition = async ({
   courseid,
   chapterId,
@@ -1114,6 +1196,7 @@ export const MoveDownChapterPosition = async ({
     throw error?.response?.data;
   }
 };
+
 export const MoveUpLessonPositionAsync = async (lessonId: number) => {
   try {
     const res = await axiosInstance.post(
@@ -1128,6 +1211,7 @@ export const MoveUpLessonPositionAsync = async (lessonId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const MoveDownLessonPositionAsync = async (lessonId: number) => {
   try {
     const res = await axiosInstance.post(
@@ -1142,6 +1226,7 @@ export const MoveDownLessonPositionAsync = async (lessonId: number) => {
     return error?.response?.data;
   }
 };
+
 export const GetPostOutstandingAsync = async () => {
   try {
     const res = await axiosInstance.get(`/post/outstanding`, {
@@ -1152,6 +1237,7 @@ export const GetPostOutstandingAsync = async () => {
     throw error?.response?.data;
   }
 };
+
 export const getCourseInfoAsync = async (courseId: number) => {
   try {
     const res = await axiosInstance.get(`/courses/${courseId}/info`, {
@@ -1162,6 +1248,7 @@ export const getCourseInfoAsync = async (courseId: number) => {
     throw error?.response?.data;
   }
 };
+
 export const googleAuthAsync = async (code: string) => {
   try {
     const res = await axiosInstance.post(
@@ -1176,6 +1263,7 @@ export const googleAuthAsync = async (code: string) => {
     throw error?.response?.data;
   }
 };
+
 export const githubAuthAsync = async (code: string) => {
   try {
     const res = await axiosInstance.post(
@@ -1190,6 +1278,7 @@ export const githubAuthAsync = async (code: string) => {
     throw error?.response?.data;
   }
 };
+
 export const getStudySchedule = async () => {
   try {
     const res = await axiosInstance.get(
@@ -1221,47 +1310,50 @@ export const getStudyScheduleDetailById = async (id: number) => {
 // Statistics API calls
 export const getDashboardStatistics = async () => {
   try {
-    const res = await axiosInstance.get('/statistics/dashboard', {
-      withCredentials: true,
-    });
+    const res = await axiosInstance.get('/statistics/dashboard');
     return res.data;
-  } catch (error: any) {
-    throw error?.response?.data;
+  } catch (error) {
+    console.error('Error fetching dashboard statistics:', error);
+    return null;
   }
 };
 
-export const getUserStatistics = async (startDate?: string, endDate?: string) => {
+export const getUserStatistics = async () => {
   try {
-    const params: Record<string, string> = {};
-    if (startDate) params.startDate = startDate;
-    if (endDate) params.endDate = endDate;
-
-    const res = await axiosInstance.get('/statistics/users', {
-      params,
-      withCredentials: true,
-    });
+    const res = await axiosInstance.get('/statistics/users');
     return res.data;
-  } catch (error: any) {
-    throw error?.response?.data;
+  } catch (error) {
+    console.error('Error fetching user statistics:', error);
+    return null;
   }
 };
 
-export const getCourseStatistics = async (startDate?: string, endDate?: string, sortBy: string = 'enrollments', sortOrder: string = 'desc') => {
+export const getUserProfileStatistics = async () => {
   try {
-    const params: Record<string, string> = {
-      sortBy,
-      sortOrder,
+    const res = await axiosInstance.get('/auth/profile/statistics', {
+      withCredentials: true
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error fetching user profile statistics:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi lấy thông tin thống kê người dùng',
+      data: null
     };
-    if (startDate) params.startDate = startDate;
-    if (endDate) params.endDate = endDate;
+  }
+};
 
-    const res = await axiosInstance.get('/statistics/courses', {
-      params,
-      withCredentials: true,
-    });
+export const getCourseStatistics = async () => {
+  try {
+    const res = await axiosInstance.get('/statistics/courses');
     return res.data;
-  } catch (error: any) {
-    throw error?.response?.data;
+  } catch (error) {
+    console.error('Error fetching course statistics:', error);
+    return null;
   }
 };
 
@@ -1303,15 +1395,15 @@ export const getRevenuePeriods = async () => {
   }
 };
 
-export const getTopCourses = async (count: number = 10, metric: string = 'enrollments', period: string = 'all') => {
+export const getTopCourses = async (limit = 5) => {
   try {
-    const res = await axiosInstance.get('/statistics/top-courses', {
-      params: { count, metric, period },
-      withCredentials: true,
+    const res = await axiosInstance.get('/statistics/courses/top', {
+      params: { limit }
     });
     return res.data;
-  } catch (error: any) {
-    throw error?.response?.data;
+  } catch (error) {
+    console.error('Error fetching top courses:', error);
+    return null;
   }
 };
 
@@ -1329,12 +1421,11 @@ export const getTopPerformers = async (count: number = 5) => {
 
 export const getRevenueSummary = async () => {
   try {
-    const res = await axiosInstance.get('/statistics/revenue/summary', {
-      withCredentials: true,
-    });
+    const res = await axiosInstance.get('/statistics/revenue/summary');
     return res.data;
-  } catch (error: any) {
-    throw error?.response?.data;
+  } catch (error) {
+    console.error('Error fetching revenue summary:', error);
+    return null;
   }
 };
 
@@ -1425,122 +1516,26 @@ export const CreatePayment = async ({ courseId }: { courseId: number }) => {
   }
 };
 
-export const getGrowthComparison = async (period = 'month') => {
+export const getGrowthComparison = async () => {
   try {
-    const res = await axiosInstance.get('/statistics/growth-comparison', {
-      params: { period },
-      withCredentials: true,
-    });
-
-    // Log dữ liệu từ API để debug
-    if (res.data?.statusCode === 200 && res.data.data) {
-      console.log('API growth data response:', res.data);
-
-      // Chuyển đổi tất cả giá trị tăng trưởng sang dạng số
-      const processedData = {
-        ...res.data,
-        data: {
-          ...res.data.data,
-          growth: {
-            users: Number(res.data.data.growth.users),
-            courses: Number(res.data.data.growth.courses),
-            revenue: Number(res.data.data.growth.revenue),
-            enrollments: Number(res.data.data.growth.enrollments)
-          }
-        }
-      };
-
-      console.log('Processed growth data:', processedData);
-      return processedData;
-    }
-
+    const res = await axiosInstance.get('/statistics/growth');
     return res.data;
   } catch (error) {
     console.error('Error fetching growth comparison:', error);
-
-    // Dữ liệu mẫu khi API chưa sẵn sàng
-    const now = new Date();
-    const currentMonth = now.getMonth() + 1;
-    const currentYear = now.getFullYear();
-
-    // Tính toán tháng trước
-    let previousMonth = currentMonth - 1;
-    let previousYear = currentYear;
-    if (previousMonth === 0) {
-      previousMonth = 12;
-      previousYear -= 1;
-    }
-
-    return {
-      statusCode: 200,
-      message: 'Dữ liệu mẫu - so sánh tăng trưởng',
-      data: {
-        current: {
-          period: `Tháng ${currentMonth}/${currentYear}`,
-          users: 3250,
-          courses: 157,
-          revenue: 357850000,
-          enrollments: 4320
-        },
-        previous: {
-          period: `Tháng ${previousMonth}/${previousYear}`,
-          users: 2890,
-          courses: 149,
-          revenue: 301250000,
-          enrollments: 3970
-        },
-        growth: {
-          users: 12.5,
-          courses: 5.4,
-          revenue: 18.8,
-          enrollments: 8.8
-        }
-      }
-    };
+    return null;
   }
 };
 
 export const getMonthlyRevenue = async (year?: number) => {
   try {
-    const url = year
-      ? `/statistics/revenue/monthly?year=${year}`
-      : '/statistics/revenue/monthly';
-
-    const res = await axiosInstance.get(url, {
-      withCredentials: true
+    const res = await axiosInstance.get('/statistics/revenue/monthly', {
+      params: { year }
     });
-
     return res.data;
   } catch (error) {
-    console.error('Error getting monthly revenue:', error);
-
-    // Dữ liệu mẫu nếu API chưa sẵn sàng
-    const currentYear = new Date().getFullYear();
-
-    return {
-      statusCode: 200,
-      message: 'Dữ liệu mẫu - doanh thu theo tháng',
-      data: {
-        year: currentYear,
-        totalRevenue: 3500000000,
-        monthlyData: [
-          { month: "T1", revenue: 250000000, transactionCount: 85 },
-          { month: "T2", revenue: 280000000, transactionCount: 95 },
-          { month: "T3", revenue: 305000000, transactionCount: 110 },
-          { month: "T4", revenue: 320000000, transactionCount: 115 },
-          { month: "T5", revenue: 350000000, transactionCount: 125 },
-          { month: "T6", revenue: 290000000, transactionCount: 100 },
-          { month: "T7", revenue: 310000000, transactionCount: 105 },
-          { month: "T8", revenue: 330000000, transactionCount: 118 },
-          { month: "T9", revenue: 360000000, transactionCount: 128 },
-          { month: "T10", revenue: 380000000, transactionCount: 140 },
-          { month: "T11", revenue: 420000000, transactionCount: 155 },
-          { month: "T12", revenue: 450000000, transactionCount: 165 }
-        ]
-      }
-    };
+    console.error('Error fetching monthly revenue:', error);
+    return null;
   }
-  // API functions
 };
 
 export const getAdminPendingPosts = async (pageNumber = 1, pageSize = 10, sortField = '', sortOrder = '', searchTerm = '') => {
@@ -1703,3 +1698,218 @@ export const isPostSaved = async (postId: number) => {
     };
   }
 };
+
+export const editProfile = async (fullName: string, userName: string, bio: string) => {
+  try {
+    const res = await axiosInstance.put(`/auth/profile/update`, {
+      fullName,
+      userName,
+      bio
+    }, {
+      withCredentials: true
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error checking if post is saved:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi kiểm tra trạng thái lưu bài viết',
+      data: null
+    };
+  }
+};
+
+export const changePassword = async (currentPassword: string, newPassword: string) => {
+  try {
+    const res = await axiosInstance.put(`/auth/change-password`, {
+      currentPassword,
+      newPassword
+    }, {
+      withCredentials: true
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error checking if post is saved:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi kiểm tra trạng thái lưu bài viết',
+      data: null
+    };
+  }
+};
+
+export const updateSocialLinks = async (facebookLink: string, youtubeLink: string, githubLink: string, linkedinLink: string, personalWebsite: string) => {
+  try {
+    const res = await axiosInstance.put(`/auth/profile/social-links`, {
+      facebookLink,
+      youtubeLink,
+      githubLink,
+      linkedinLink,
+      personalWebsite
+    }, {
+      withCredentials: true
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error checking if post is saved:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi kiểm tra trạng thái lưu bài viết',
+      data: null
+    };
+  }
+};
+
+export const updateAvatar = async (data: FormData) => {
+  try {
+    const res = await axiosInstance.put(`/auth/profile/avatar`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      withCredentials: true
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error checking if post is saved:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi kiểm tra trạng thái lưu bài viết',
+      data: null
+    };
+  }
+};
+
+export const getMyCoursesAsync = async (pageNumber = 1, pageSize = 10, sortField = 'EnrolledAt', sortOrder = 'desc') => {
+  try {
+    const res = await axiosInstance.get('/auth/my-courses', {
+      withCredentials: true,
+      params: {
+        pageNumber,
+        pageSize,
+        sortField,
+        sortOrder
+      }
+    });
+    return res.data;
+  } catch (error: any) {
+    console.error('Error fetching enrolled courses:', error);
+    if (error.response?.data) {
+      throw error.response.data;
+    }
+    throw {
+      statusCode: 500,
+      message: 'Có lỗi xảy ra khi lấy danh sách khóa học đã đăng ký',
+      data: null
+    };
+  }
+};
+
+// Notification endpoints
+export const getNotifications = async (page = 1, pageSize = 10) => {
+  try {
+    const response = await axiosInstance.get(`/auth/notifications?page=${page}&pageSize=${pageSize}`, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    return null;
+  }
+};
+
+export const getUnreadNotificationCount = async () => {
+  try {
+    const response = await axiosInstance.get('/auth/notifications/unread-count', {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching unread notification count:', error);
+    return null;
+  }
+};
+
+export const markNotificationAsRead = async (notificationId: number) => {
+  try {
+    const response = await axiosInstance.put(`/auth/notifications/${notificationId}/read`, {}, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+    return null;
+  }
+};
+
+export const markAllNotificationsAsRead = async () => {
+  try {
+    const response = await axiosInstance.put('/auth/notifications/mark-all-read', {}, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error marking all notifications as read:', error);
+    return null;
+  }
+};
+
+export const deleteNotificationById = async (notificationId: number) => {
+  try {
+    const response = await axiosInstance.delete(`/auth/notifications/${notificationId}`, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting notification:', error);
+    return null;
+  }
+};
+
+export const getUsers = async (
+  pageNumber = 1,
+  pageSize = 10,
+  searchTerm = '',
+  sortField = 'createdAt',
+  sortOrder = 'desc',
+  status = '',
+  role = ''
+): Promise<any> => {
+  try {
+    const res = await axiosInstance.get('/users', {
+      withCredentials: true,
+      params: {
+        searchTerm,
+        sortField,
+        sortOrder,
+        pageNumber,
+        pageSize,
+        status,
+        role,
+      },
+    });
+
+    return res.data;
+  } catch (error: any) {
+    console.error('Error fetching users:', error);
+    return {
+      statusCode: error?.response?.status || 500,
+      message: error?.response?.data?.message || 'Failed to fetch users',
+      data: null
+    };
+  }
+};
+
+
+

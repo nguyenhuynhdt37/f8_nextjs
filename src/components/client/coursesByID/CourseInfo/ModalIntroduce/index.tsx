@@ -112,7 +112,7 @@ const ModalIntroduce: React.FC<IModalIntroduceProps> = ({ isModalOpen, setIsModa
         {/* Modal content */}
         <motion.div
           ref={modalRef}
-          className={`relative bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-2xl ${isFullscreen ? 'fixed inset-0 rounded-none' : 'w-[95%] max-w-5xl max-h-[90vh]'
+          className={`relative bg-white z-50 dark:bg-gray-900 rounded-xl overflow-hidden shadow-2xl ${isFullscreen ? 'fixed inset-0 rounded-none' : 'w-[95%] max-w-5xl max-h-[90vh]'
             }`}
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -159,7 +159,7 @@ const ModalIntroduce: React.FC<IModalIntroduceProps> = ({ isModalOpen, setIsModa
             ) : (
               <>
                 {/* Video section */}
-                <div className="relative w-full" style={{ height: isFullscreen ? '85%' : '60%' }}>
+                <div className="relative w-full z-50" style={{ height: isFullscreen ? '85%' : '60%' }}>
                   <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent z-10 pointer-events-none"></div>
 
                   <iframe

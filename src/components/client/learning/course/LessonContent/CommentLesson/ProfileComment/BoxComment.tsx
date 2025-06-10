@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import { CreateComment, updateComment } from '@/api/axios/api';
 import { message } from 'antd';
 import { playSound } from '@/Utils/functions/SoundNumber';
-import ReactQuillEditorComment from '../ReactQuillEditorComment';
+import MarkdownIt from 'markdown-it';
+import hljs from 'highlight.js';
+import 'github-markdown-css';
+import 'highlight.js/styles/github.css';
+import MarkdownEditor from '@/components/Edittor/MarkdownEditor';
+import RichTextEditor from '@/components/RichTextEditor';
+import { FiSend, FiX } from 'react-icons/fi';
+import { motion } from 'framer-motion';
 
 const BoxComment = ({
   lessonId,
@@ -16,14 +23,18 @@ const BoxComment = ({
   setFeedback,
 }: any) => {
   const [messageApi, contextHolder] = message.useMessage();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const key = 'updatable';
-  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
 
   const handlesubmit = () => {
     if (!comment) {
-      alert('Bạn chưa nhập bình luận');
+      message.warning({
+        content: 'Bạn chưa nhập bình luận',
+        icon: <span className="text-amber-500">⚠️</span>,
+      });
       return;
     } else {
+      setIsSubmitting(true);
       if (feedback?.type === 'add') {
         const handlePostData = async () => {
           var dataSubmit = {
@@ -36,8 +47,8 @@ const BoxComment = ({
             type: 'loading',
             content: 'Đang gửi bình luận...',
           });
-          var res = await CreateComment(dataSubmit);
-          if (res?.statusCode === 200 || res?.statusCode === 201) {
+          try {
+            await CreateComment(dataSubmit);
             messageApi.open({
               key,
               type: 'success',
@@ -54,11 +65,12 @@ const BoxComment = ({
               console.log('parentId', rootParentId);
               onShowMoreComment(rootParentId);
             }
-          } else {
-            alert('Có lỗi xảy ra vui lòng thử lại sau');
+          } catch (error) {
+            messageApi.error('Có lỗi xảy ra vui lòng thử lại sau');
+          } finally {
+            setIsSubmitting(false);
           }
           setComment('');
-          setImageUploadError(null);
         };
         handlePostData();
       } else if (feedback?.type === 'edit') {
@@ -70,6 +82,7 @@ const BoxComment = ({
               type: 'warning',
               content: 'Bình luận chưa được chỉnh sửa...',
             });
+            setIsSubmitting(false);
             return;
           }
           messageApi.open({
@@ -77,12 +90,13 @@ const BoxComment = ({
             type: 'loading',
             content: 'Đang sửa bình luận...',
           });
-          var res = await updateComment({ idComment: feedback?.id, comment });
-          if (res?.statusCode === 200 || res?.statusCode === 201) {
+          try {
+            await updateComment({ idComment: feedback?.id, comment });
+
             messageApi.open({
               key,
               type: 'success',
-              content: 'sửa bình luận thành công!',
+              content: 'Sửa bình luận thành công!',
               duration: 2,
             });
             playSound('/sounds/commentSound.mp3');
@@ -91,64 +105,88 @@ const BoxComment = ({
               id: -1,
               type: 'add',
             });
-          } else {
-            alert('Có lỗi xảy ra vui lòng thử lại sau');
+          } catch (error) {
+            messageApi.error('Có lỗi xảy ra vui lòng thử lại sau');
+          } finally {
+            setIsSubmitting(false);
           }
           setComment('');
-          setImageUploadError(null);
         };
         handleEdit();
       }
     }
   };
 
-  const handleEditorChange = (htmlContent: string) => {
-    setComment(htmlContent);
-  };
-
-  const handleImageUploadError = (error: string) => {
-    setImageUploadError(error);
-    messageApi.open({
-      key: 'imageError',
-      type: 'error',
-      content: `Lỗi tải ảnh: ${error}`,
-      duration: 3,
-    });
+  const handleEditorChange = (editorState: any) => {
+    setComment(editorState);
   };
 
   return (
     <div className="flex-1">
       {contextHolder}
-      {imageUploadError && (
-        <div className="text-red-500 mb-2 text-sm">
-          Lỗi tải ảnh: {imageUploadError}
-        </div>
-      )}
-      <ReactQuillEditorComment
-        comment={comment || ''}
-        setComment={handleEditorChange}
-        height="200px"
-        onImageUploadError={handleImageUploadError}
-      />
-      <div className="mt-10 flex justify-end">
-        <button
+      <div className="comment-editor-wrapper bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 transition-colors duration-300">
+        <RichTextEditor
+          value={comment}
+          onChange={handleEditorChange}
+        />
+      </div>
+      <div className="mt-4 flex justify-end space-x-3">
+        <motion.button
           onClick={() =>
             setFeedback({
               id: -1,
               type: 'add',
             })
           }
-          className="font-medium px-20 py-2.5 mr-5 rounded-3xl text-[#3590f1] border-[#3590f1] border-[0.1rem]"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors text-sm font-medium"
         >
-          Hủy
-        </button>
-        <button
+          <FiX className="text-lg" />
+          <span>Hủy</span>
+        </motion.button>
+        <motion.button
           onClick={handlesubmit}
-          className="font-medium px-20 py-2.5 rounded-3xl bg-[#3590f1] text-[#fff] border-[0.1rem]"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          disabled={isSubmitting}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-lg ${isSubmitting ? 'bg-indigo-400 dark:bg-indigo-700 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'} text-white transition-colors text-sm font-medium`}
         >
-          Bình luận
-        </button>
+          {isSubmitting ? (
+            <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          ) : (
+            <FiSend className="text-lg" />
+          )}
+          <span>{feedback?.type === 'edit' ? 'Cập nhật' : 'Bình luận'}</span>
+        </motion.button>
       </div>
+
+      <style jsx global>{`
+        .comment-editor-wrapper .f8-editor-toolbar-hints,
+        .comment-editor-wrapper .f8-editor-footer {
+          display: none;
+        }
+        
+        .comment-editor-wrapper .f8-editor-container {
+          border-radius: 0.5rem;
+          box-shadow: none;
+        }
+        
+        .comment-editor-wrapper .f8-editor-container .ql-editor {
+          min-height: 120px;
+          max-height: 200px;
+        }
+        
+        .comment-editor-wrapper .ql-toolbar.ql-snow {
+          border-top-left-radius: 0.5rem;
+          border-top-right-radius: 0.5rem;
+        }
+        
+        .comment-editor-wrapper .ql-container.ql-snow {
+          border-bottom-left-radius: 0.5rem;
+          border-bottom-right-radius: 0.5rem;
+        }
+      `}</style>
     </div>
   );
 };

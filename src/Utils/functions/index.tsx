@@ -1,11 +1,16 @@
 import { format } from 'date-fns';
+// Export the new date formatting functions
+export * from './formatDate';
+export * from './timeAgo';
+
 // Remove the ReactMarkdown and remarkGfm imports as we've moved the component
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-export const formatDate = (dateString: string): string => {
+// Keep the existing formatDate function for backward compatibility
+export const formatDateLegacy = (dateString: string): string => {
   if (!dateString) return 'N/A';
 
   try {

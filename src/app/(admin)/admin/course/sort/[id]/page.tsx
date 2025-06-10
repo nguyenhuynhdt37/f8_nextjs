@@ -1,5 +1,5 @@
-import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
-import SortLesson from '@/components/admin/MainContent/Course/SortLesson';
+
+import SortLesson from '@/components/admin/Course/SortLesson';
 import React from 'react';
 
 const breadcrumbItems = [
@@ -15,7 +15,7 @@ const CoursePage = async ({ params }: Iprops) => {
   return (
     <>
       <div className="ps-10 pt-10">
-        <Breadcrumbs items={breadcrumbItems} />
+
       </div>
       <SortLesson courseId={+id} />
     </>

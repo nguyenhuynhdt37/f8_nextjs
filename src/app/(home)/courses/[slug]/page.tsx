@@ -139,13 +139,13 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Link
                                 href="/"
-                                className="flex-1 px-8 py-4 text-center text-lg font-medium bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1 focus:ring-4 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:outline-none"
+                                className="flex-1 px-4 py-4 text-center text-lg font-medium bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1 focus:ring-4 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:outline-none"
                             >
                                 Trở về trang chủ
                             </Link>
                             <Link
                                 href="/courses"
-                                className="flex-1 px-8 py-4 text-center text-lg font-medium bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-300 border-2 border-indigo-600 dark:border-indigo-500 rounded-xl hover:bg-indigo-50 dark:hover:bg-gray-600 transition-all transform hover:-translate-y-1 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-indigo-900 focus:outline-none"
+                                className="flex-1 px-4 py-4 text-center text-lg font-medium bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-300 border-2 border-indigo-600 dark:border-indigo-500 rounded-xl hover:bg-indigo-50 dark:hover:bg-gray-600 transition-all transform hover:-translate-y-1 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-indigo-900 focus:outline-none"
                             >
                                 Xem khóa học khác
                             </Link>

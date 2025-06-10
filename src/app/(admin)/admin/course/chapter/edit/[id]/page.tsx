@@ -1,6 +1,6 @@
-import { Breadcrumbs } from '@/components/admin/MainContent/Breadcrumbs';
-import ChapterCreate from '@/components/admin/MainContent/Course/chapter/create';
-import ChapterEdit from '@/components/admin/MainContent/Course/chapter/edit';
+
+import ChapterCreate from '@/components/admin/Course/chapter/create';
+import ChapterEdit from '@/components/admin/Course/chapter/edit';
 import { useCookie } from '@/hook/useCookie';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -30,7 +30,7 @@ const ChapterCreatePage = async ({ params }: Iprops) => {
   return (
     <>
       <div className="ps-10 pt-10">
-        <Breadcrumbs items={breadcrumbItems} />
+
         <ChapterEdit dataChapter={data} />
       </div>
     </>

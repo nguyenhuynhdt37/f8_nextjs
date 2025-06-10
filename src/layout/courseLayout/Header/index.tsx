@@ -125,11 +125,11 @@ const Header = ({ data, courseId }: { data: any; courseId: number }) => {
               whileHover={{ scale: 1.15, x: -5 }}
               whileTap={{ scale: 0.9, rotate: -10 }}
               onClick={handleGoBack}
-              className="dark:bg-[#111827] p-2 mr-3 rounded-full bg-white  text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-md hover:shadow-lg transition-all duration-300"
+              className=" p-2 mr-3 rounded-full bg-white  text-gray-700 dark:bg-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 shadow-md hover:shadow-lg transition-all duration-300"
               aria-label="Quay lại"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(240,240,255,0.9) 100%)',
-              }}
+            // style={{
+            //   background: 'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(240,240,255,0.9) 100%)',
+            // }}
             >
               <FaChevronLeft className="text-xl" />
             </motion.button>

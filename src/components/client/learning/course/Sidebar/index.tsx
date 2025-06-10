@@ -68,7 +68,7 @@ const SideBar = ({
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
       className={`${isShowSideBar ? 'col-span-1' : 'hidden'} 
-        h-[95vh] w-[27rem] fixed right-0 top-18 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
+        h-[86vh] w-[27rem] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 
         overflow-hidden flex flex-col`}
     >
       <LoadingBar color="#6366f1" ref={ref} height={3} />
@@ -170,7 +170,7 @@ const SideBar = ({
                           className={`flex items-center px-6 py-3 cursor-pointer relative
                             ${isActive
                               ? 'bg-indigo-50 dark:bg-indigo-900/30 border-l-4 border-indigo-500 dark:border-indigo-400'
-                              : 'hover:bg-gray-50 dark:hover:bg-gray-750 border-l-4 border-transparent'
+                              : 'hover:bg-gray-100 dark:hover:bg-gray-700 border-l-4 border-transparent'
                             }
                             transition-all duration-200`}
                           initial={{ opacity: 0, x: -10 }}

@@ -2,7 +2,7 @@
 
 import { createOrGetConnection } from "@/lib/signalr";
 import { useAppDispatch } from "@/redux/hook/hook";
-import { addNotification } from "@/redux/reducers/slices/NotificationSlice";
+import { addNotification, fetchUnreadCount, fetchNotifications } from "@/redux/reducers/slices/NotificationSlice";
 import { useEffect, useState } from "react";
 import { toast, Toaster } from 'sonner';
 import { Lexend } from 'next/font/google';
@@ -17,7 +17,12 @@ const lexend = Lexend({
 export default function NotificationListener() {
     const dispatch = useAppDispatch();
     const [connection, setConnection] = useState<any>(null);
+
     useEffect(() => {
+        // Fetch initial notification data
+        dispatch(fetchUnreadCount());
+        dispatch(fetchNotifications({ page: 1, pageSize: 10 }));
+
         const initializeConnection = async () => {
             const connection = await createOrGetConnection('notificationHub');
             console.log('SignalR connection noti', connection);
@@ -31,6 +36,9 @@ export default function NotificationListener() {
                 console.log("Received notification:", data);
                 if (data) {
                     dispatch(addNotification(data));
+                    // Refresh unread count when we receive a new notification
+                    dispatch(fetchUnreadCount());
+
                     switch (data?.entityType) {
                         case "FriendRequest":
                             toast.custom(() => (
@@ -50,7 +58,40 @@ export default function NotificationListener() {
                             ));
                             break;
 
+                        case "Comment":
+                            toast.custom(() => (
+                                <div className={lexend.className}>
+                                    <div className="flex py-4 px-5 shadow-xl rounded-xl bg-white items-center gap-3">
+                                        <img
+                                            src={data?.extraData?.avatar || "/images/logo.png"}
+                                            alt="avatar"
+                                            className="w-16 h-16 object-cover rounded-full"
+                                        />
+                                        <div>
+                                            <strong className="font-bold text-lg">{data?.title}</strong>
+                                            <p className="text-base py-2">{data?.message}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ));
+                            break;
+
                         default:
+                            toast.custom(() => (
+                                <div className={lexend.className}>
+                                    <div className="flex py-4 px-5 shadow-xl rounded-xl bg-white items-center gap-3">
+                                        <img
+                                            src={data?.extraData?.avatar || "/images/logo.png"}
+                                            alt="F8"
+                                            className="w-16 h-16 object-cover rounded-full"
+                                        />
+                                        <div>
+                                            <strong className="font-bold text-lg">{data?.title}</strong>
+                                            <p className="text-base py-2">{data?.message}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ));
                             break;
                     }
                 }
@@ -77,7 +118,7 @@ export default function NotificationListener() {
                 connection.stop();
             }
         };
-    }, []);
+    }, [dispatch]);
 
 
     return <Toaster position="bottom-right" richColors />;

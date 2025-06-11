@@ -29,17 +29,11 @@ const Home = () => {
       setIsLoading(true);
       try {
         const res = await getDashboardStatisticsByHomePage();
-        if (res?.statusCode === 200) {
-          setStatistics(res?.data);
-        }
+        setStatistics(res?.data);
         const resOne = await getAllCourseByLevel(1);
         const resTwo = await getAllCourseByLevel(2);
-        if (resOne?.statusCode === 200) {
-          setCourseOne(resOne?.data);
-        }
-        if (resTwo?.statusCode === 200) {
-          setCourseTwo(resTwo?.data);
-        }
+        setCourseOne(resOne?.data);
+        setCourseTwo(resTwo?.data);
       } catch (error) {
         console.error("Error fetching courses:", error);
       } finally {

@@ -9,7 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { extractIdFromSlug } from '@/Utils/functions/slugify';
 import { generateSlug } from '@/Utils/functions/slugify';
-
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 interface CoursePageProps {
     params: { slug: string };
 }

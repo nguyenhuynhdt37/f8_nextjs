@@ -8,7 +8,7 @@ import { TbProgress } from 'react-icons/tb';
 import { MdOutlineAccessTime, MdOutlineOndemandVideo } from 'react-icons/md';
 import { IoRocketOutline, IoStatsChartOutline, IoBookOutline } from 'react-icons/io5';
 import { useTheme } from '@/context/ThemeContext';
-import Image from 'next/image';
+
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface EnrolledCourse {

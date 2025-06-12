@@ -66,7 +66,7 @@ const MyCoursesPopup = ({ onClose }: { onClose: () => void }) => {
             transition={{ duration: 0.2 }}
             className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-[300px] sm:w-[350px] md:w-[400px] max-h-[450px] sm:max-h-[500px] overflow-hidden flex flex-col"
         >
-            <div className="flex justify-between items-center border-b border-gray-200 p-3 sm:p-4">
+            <div className="flex justify-between dark:text-white items-center border-b border-gray-200 p-3 sm:p-4">
                 <h3 className="text-base sm:text-lg font-semibold">Khóa học của tôi</h3>
                 <button
                     onClick={handleViewAll}

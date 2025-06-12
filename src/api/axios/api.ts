@@ -204,7 +204,7 @@ export const CheckIsCourseRegister = async ({
   }
 };
 
-export const getAllUser = async ({ config }: any) => {
+export const getAllUser = async (config: any) => {
   try {
     const queryParams = new URLSearchParams();
 
@@ -217,7 +217,7 @@ export const getAllUser = async ({ config }: any) => {
     if (config.sortOrder) queryParams.append('sortOrder', config.sortOrder);
 
     const response = await axiosInstance.get(`/users?${queryParams.toString()}`);
-    return response;
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -226,7 +226,8 @@ export const getAllUser = async ({ config }: any) => {
 export const getUserById = async (id: number) => {
   try {
     const response = await axiosInstance.get(`/users/${id}`);
-    return response;
+
+    return response?.data;
   } catch (error) {
     throw error;
   }
@@ -234,8 +235,13 @@ export const getUserById = async (id: number) => {
 
 export const createUser = async (userData: any) => {
   try {
-    const response = await axiosInstance.post('/users', userData);
-    return response;
+    const response = await axiosInstance.post('/users', userData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      withCredentials: true,
+    });
+    return response?.data;
   } catch (error) {
     throw error;
   }
@@ -243,8 +249,13 @@ export const createUser = async (userData: any) => {
 
 export const updateUser = async (id: number, userData: any) => {
   try {
-    const response = await axiosInstance.put(`/users/${id}`, userData);
-    return response;
+    const response = await axiosInstance.put(`/users/${id}`, userData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      withCredentials: true,
+    });
+    return response?.data;
   } catch (error) {
     throw error;
   }
@@ -252,8 +263,10 @@ export const updateUser = async (id: number, userData: any) => {
 
 export const deleteUser = async (id: number) => {
   try {
-    const response = await axiosInstance.delete(`/users/${id}`);
-    return response;
+    const response = await axiosInstance.delete(`/users/${id}`, {
+      withCredentials: true,
+    });
+    return response?.data;
   } catch (error) {
     throw error;
   }
@@ -262,8 +275,10 @@ export const deleteUser = async (id: number) => {
 export const toggleUserStatus = async (id: number, isActive: number) => {
   try {
     const endpoint = isActive === 1 ? `/users/${id}/enable` : `/users/${id}/disable`;
-    const response = await axiosInstance.patch(endpoint);
-    return response;
+    const response = await axiosInstance.patch(endpoint, {
+      withCredentials: true,
+    });
+    return response?.data;
   } catch (error) {
     throw error;
   }
@@ -271,8 +286,10 @@ export const toggleUserStatus = async (id: number, isActive: number) => {
 
 export const resetUserPassword = async (id: number) => {
   try {
-    const response = await axiosInstance.post(`/users/reset-password/${id}`);
-    return response;
+    const response = await axiosInstance.post(`/users/reset-password/${id}`, {}, {
+      withCredentials: true,
+    });
+    return response?.data;
   } catch (error) {
     throw error;
   }
@@ -280,8 +297,10 @@ export const resetUserPassword = async (id: number) => {
 
 export const getRoles = async () => {
   try {
-    const response = await axiosInstance.get('/users/roles');
-    return response;
+    const response = await axiosInstance.get('/users/roles', {
+      withCredentials: true,
+    });
+    return response?.data;
   } catch (error) {
     throw error;
   }
@@ -1911,5 +1930,27 @@ export const getUsers = async (
   }
 };
 
+export const getLearningPaths = async (): Promise<any> => {
+  try {
+    const res = await axiosInstance.get('/learning-paths', {
+      withCredentials: true,
+    });
 
+    return res.data;
+  } catch (error: any) {
+    throw error.response.data;
+  }
+};
+
+export const getLearningPathById = async (id: number): Promise<any> => {
+  try {
+    const res = await axiosInstance.get(`/learning-paths/${id}`, {
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (error: any) {
+    throw error.response.data;
+  }
+};
 

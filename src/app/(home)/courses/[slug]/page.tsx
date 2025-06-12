@@ -4,8 +4,7 @@ import CourseInfo from '@/components/client/coursesByID/CourseInfo';
 import LoadingPage from '@/components/client/LoadingPage';
 import { useCookie } from '@/hook/useCookie';
 import { convertSecondsToYMDHMS } from '@/Utils/functions';
-import { redirect } from 'next/navigation';
-import Image from 'next/image';
+import { redirect } from 'next/navigation';;
 import Link from 'next/link';
 import { extractIdFromSlug } from '@/Utils/functions/slugify';
 import { generateSlug } from '@/Utils/functions/slugify';
@@ -64,7 +63,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
     const content = await fetchCourseData(id);
     if (!content || content.lessonGroups?.length === 0) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-50 to-blue-100 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950 overflow-hidden relative">
+            <div className="min-h-screen flex-1 flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-50 to-blue-100 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950 overflow-hidden relative">
                 <div className="absolute inset-0 bg-pattern opacity-10 dark:opacity-5" style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
                 }}></div>
@@ -73,7 +72,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                     {/* Left Image Side */}
                     <div className="md:w-2/5 relative overflow-hidden bg-indigo-600 dark:bg-indigo-800">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 dark:from-blue-800 dark:via-indigo-900 dark:to-purple-950 opacity-90"></div>
-                        <Image
+                        <img
                             src="/images/walking-investigator-animation-in-404-error.png"
                             alt="Course in development"
                             width={600}
@@ -139,13 +138,13 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Link
                                 href="/"
-                                className="flex-1 px-4 py-4 text-center text-lg font-medium bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1 focus:ring-4 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:outline-none"
+                                className="flex-1 px-8 py-4 text-center text-lg font-medium bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1 focus:ring-4 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:outline-none"
                             >
                                 Trở về trang chủ
                             </Link>
                             <Link
                                 href="/courses"
-                                className="flex-1 px-4 py-4 text-center text-lg font-medium bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-300 border-2 border-indigo-600 dark:border-indigo-500 rounded-xl hover:bg-indigo-50 dark:hover:bg-gray-600 transition-all transform hover:-translate-y-1 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-indigo-900 focus:outline-none"
+                                className="flex-1 px-8 py-4 text-center text-lg font-medium bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-300 border-2 border-indigo-600 dark:border-indigo-500 rounded-xl hover:bg-indigo-50 dark:hover:bg-gray-600 transition-all transform hover:-translate-y-1 focus:ring-4 focus:ring-indigo-100 dark:focus:ring-indigo-900 focus:outline-none"
                             >
                                 Xem khóa học khác
                             </Link>

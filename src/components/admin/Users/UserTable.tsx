@@ -7,9 +7,8 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { getAllUser, getRoles, deleteUser, toggleUserStatus, resetUserPassword } from '@/api/axios/api';
-import Image from 'next/image';
+
 import { toast } from 'sonner';
-import { Dropdown, Menu, Pagination, Tooltip, Modal, Button, Badge, Tag, Space, Input, Select } from 'antd';
 import { debounce } from 'lodash';
 
 // Type definitions
@@ -40,6 +39,19 @@ interface FilterParams {
     sortOrder: string;
 }
 
+interface ApiResponse<T> {
+    statusCode: number;
+    message: string;
+    data: T;
+}
+
+interface UserListResponse {
+    items: User[];
+    totalCount: number;
+    pageNumber: number;
+    pageSize: number;
+}
+
 const UserTable: React.FC = () => {
     const router = useRouter();
     const [users, setUsers] = useState<User[]>([]);
@@ -50,6 +62,7 @@ const UserTable: React.FC = () => {
     const [userToDelete, setUserToDelete] = useState<number | null>(null);
     const [resetPasswordModalVisible, setResetPasswordModalVisible] = useState(false);
     const [userToResetPassword, setUserToResetPassword] = useState<number | null>(null);
+    const [dropdownOpenId, setDropdownOpenId] = useState<number | null>(null);
 
     // Pagination and filtering
     const [filters, setFilters] = useState<FilterParams>({
@@ -65,20 +78,74 @@ const UserTable: React.FC = () => {
     const [totalUsers, setTotalUsers] = useState(0);
     const [tempSearchTerm, setTempSearchTerm] = useState('');
 
+    // Calculate pagination values properly
+    const totalPages = useMemo(() => {
+        // Ensure we don't divide by zero and always have at least 1 page
+        return Math.max(1, Math.ceil(totalUsers / Math.max(1, filters.pageSize)));
+    }, [totalUsers, filters.pageSize]);
+
+    // Generate simple page numbers with direct numbering
+    const pageNumbers = useMemo(() => {
+        if (totalUsers === 0) return [];
+        if (totalPages <= 5) {
+            // If 5 pages or less, show all pages
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
+        } else {
+            // Show current page and 2 pages before and after when possible
+            const numbers = [];
+
+            // Always add page 1
+            numbers.push(1);
+
+            // Add pages around current
+            for (let i = Math.max(2, filters.pageNumber - 1); i <= Math.min(totalPages - 1, filters.pageNumber + 1); i++) {
+                numbers.push(i);
+            }
+
+            // Always add last page
+            if (totalPages > 1) {
+                numbers.push(totalPages);
+            }
+
+            return numbers;
+        }
+    }, [filters.pageNumber, totalPages, totalUsers]);
+
     // Fetch users with dynamic filtering
     const fetchUsers = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await getAllUser({
-                config: filters
-            });
+            // Make a copy of the filters with validated pagination values
+            const validatedFilters = {
+                ...filters,
+                pageNumber: Math.max(1, filters.pageNumber || 1),
+                pageSize: Math.max(1, filters.pageSize || 10)
+            };
 
-            if (response.statusCode === 200) {
-                setUsers(response.data.items);
-                setTotalUsers(response.data.totalCount);
+            console.log("Fetching users with filters:", validatedFilters);
+            const response = await getAllUser(validatedFilters);
+
+            if (response && response.statusCode === 200 && response.data) {
+                console.log("API response data:", response.data);
+                setUsers(response.data.items || []);
+                setTotalUsers(response.data.totalCount || 0);
+
+                // If current page has no results and we're not on page 1, go back to page 1
+                const calculatedTotalPages = Math.ceil((response.data.totalCount || 0) / validatedFilters.pageSize);
+                if (validatedFilters.pageNumber > calculatedTotalPages && calculatedTotalPages > 0) {
+                    console.log("Adjusting to page 1 as current page exceeds total pages");
+                    setFilters(prev => ({ ...prev, pageNumber: 1 }));
+                }
+            } else {
+                console.warn("Invalid API response:", response);
+                setUsers([]);
+                setTotalUsers(0);
             }
         } catch (error) {
+            console.error("Error fetching users:", error);
             toast.error('Không thể tải danh sách người dùng');
+            setUsers([]);
+            setTotalUsers(0);
         } finally {
             setLoading(false);
         }
@@ -88,7 +155,8 @@ const UserTable: React.FC = () => {
     const fetchRoles = useCallback(async () => {
         try {
             const response = await getRoles();
-            if (response.statusCode === 200) {
+            console.log(response);
+            if (response && response.data) {
                 setRoles(response.data);
             }
         } catch (error) {
@@ -125,7 +193,13 @@ const UserTable: React.FC = () => {
 
     // Handle filter changes
     const handleFilterChange = (key: keyof FilterParams, value: string | number) => {
-        setFilters(prev => ({ ...prev, [key]: value, pageNumber: 1 }));
+        if (key === 'pageNumber') {
+            // Khi thay đổi trang, chỉ cập nhật số trang
+            setFilters(prev => ({ ...prev, [key]: Number(value) }));
+        } else {
+            // Khi thay đổi bộ lọc khác, reset về trang 1
+            setFilters(prev => ({ ...prev, [key]: value, pageNumber: 1 }));
+        }
     };
 
     // Handle user deletion
@@ -140,16 +214,14 @@ const UserTable: React.FC = () => {
         try {
             setLoading(true);
             const response = await deleteUser(userToDelete);
+            const data = response?.data || response;
 
-            if (response.statusCode === 200) {
-                toast.success('Xóa người dùng thành công');
-                fetchUsers();
-                setSelectedUsers(prev => prev.filter(id => id !== userToDelete));
-            } else {
-                toast.error(response.message || 'Xóa người dùng thất bại');
-            }
-        } catch (error) {
-            toast.error('Có lỗi xảy ra khi xóa người dùng');
+            // Process response and update UI
+            toast.success('Xóa người dùng thành công');
+            fetchUsers();
+            setSelectedUsers(prev => prev.filter(id => id !== userToDelete));
+        } catch (error: any) {
+            toast.error("Người dùng đã sử dụng tài khoản");
         } finally {
             setLoading(false);
             setDeleteModalVisible(false);
@@ -161,20 +233,16 @@ const UserTable: React.FC = () => {
     const handleToggleStatus = async (userId: number, currentStatus: number) => {
         try {
             setLoading(true);
-            const response = await toggleUserStatus(userId, currentStatus === 1 ? 0 : 1);
+            await toggleUserStatus(userId, currentStatus === 1 ? 0 : 1);
 
-            if (response.statusCode === 200) {
-                toast.success(
-                    currentStatus === 1
-                        ? 'Đã vô hiệu hóa người dùng'
-                        : 'Đã kích hoạt người dùng'
-                );
-                fetchUsers();
-            } else {
-                toast.error(response.message || 'Thay đổi trạng thái thất bại');
-            }
-        } catch (error) {
-            toast.error('Có lỗi xảy ra khi thay đổi trạng thái');
+            toast.success(
+                currentStatus === 1
+                    ? 'Đã vô hiệu hóa người dùng'
+                    : 'Đã kích hoạt người dùng'
+            );
+            fetchUsers();
+        } catch (error: any) {
+            toast.error(error.response.data.message);
         } finally {
             setLoading(false);
         }
@@ -191,13 +259,9 @@ const UserTable: React.FC = () => {
 
         try {
             setLoading(true);
-            const response = await resetUserPassword(userToResetPassword);
+            await resetUserPassword(userToResetPassword);
 
-            if (response.statusCode === 200) {
-                toast.success('Đặt lại mật khẩu thành công. Email đã được gửi đến người dùng.');
-            } else {
-                toast.error(response.message || 'Đặt lại mật khẩu thất bại');
-            }
+            toast.success('Đặt lại mật khẩu thành công. Email đã được gửi đến người dùng.');
         } catch (error) {
             toast.error('Có lỗi xảy ra khi đặt lại mật khẩu');
         } finally {
@@ -225,52 +289,36 @@ const UserTable: React.FC = () => {
     };
 
     // Get role badge style
-    const getRoleBadge = (roleName: string = '') => {
+    const getRoleBadgeStyles = (roleName: string = '') => {
         switch (roleName.toLowerCase()) {
             case 'admin':
-                return { color: 'red', icon: <ShieldCheck size={14} /> };
+                return 'bg-red-100 text-red-800 border-red-200';
             case 'moderator':
-                return { color: 'purple', icon: <ShieldCheck size={14} /> };
+                return 'bg-purple-100 text-purple-800 border-purple-200';
             case 'user':
-                return { color: 'blue', icon: <Users size={14} /> };
+                return 'bg-blue-100 text-blue-800 border-blue-200';
             default:
-                return { color: 'default', icon: <Users size={14} /> };
+                return 'bg-gray-100 text-gray-800 border-gray-200';
         }
     };
 
-    // Action menu for each user
-    const getActionMenu = (user: User) => (
-        <Menu items={[
-            {
-                key: 'edit',
-                label: 'Chỉnh sửa',
-                icon: <Edit size={14} />,
-                onClick: () => router.push(`/admin/users/edit/${user.id}`)
-            },
-            {
-                key: 'status',
-                label: user.isActive ? 'Vô hiệu hóa' : 'Kích hoạt',
-                icon: user.isActive ? <Lock size={14} /> : <Unlock size={14} />,
-                onClick: () => handleToggleStatus(user.id, user.isActive)
-            },
-            {
-                key: 'reset',
-                label: 'Đặt lại mật khẩu',
-                icon: <RefreshCw size={14} />,
-                onClick: () => showResetPasswordConfirm(user.id)
-            },
-            {
-                type: 'divider'
-            },
-            {
-                key: 'delete',
-                label: 'Xóa người dùng',
-                icon: <Trash2 size={14} className="text-red-500" />,
-                danger: true,
-                onClick: () => showDeleteConfirm(user.id)
-            }
-        ]} />
-    );
+    // Toggle dropdown
+    const toggleDropdown = (userId: number) => {
+        if (dropdownOpenId === userId) {
+            setDropdownOpenId(null);
+        } else {
+            setDropdownOpenId(userId);
+        }
+    };
+
+    // Format date
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleDateString('vi-VN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-6">
@@ -300,56 +348,56 @@ const UserTable: React.FC = () => {
                 <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-5 mb-6">
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                         <div className="md:col-span-6 relative">
-                            <Input
-                                prefix={<Search className="text-slate-400" size={18} />}
-                                placeholder="Tìm kiếm theo tên, email..."
-                                value={tempSearchTerm}
-                                onChange={handleSearchChange}
-                                className="w-full"
-                                allowClear
-                            />
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <Search className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    className="bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                                    placeholder="Tìm kiếm theo tên, email..."
+                                    value={tempSearchTerm}
+                                    onChange={handleSearchChange}
+                                />
+                                {tempSearchTerm && (
+                                    <button
+                                        className="absolute inset-y-0 right-0 flex items-center pr-3"
+                                        onClick={() => {
+                                            setTempSearchTerm('');
+                                            debouncedSearch('');
+                                        }}
+                                    >
+                                        <svg className="h-4 w-4 text-gray-400 hover:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         <div className="md:col-span-3">
-                            <Select
-                                placeholder="Lọc theo vai trò"
-                                value={filters.role || undefined}
-                                onChange={(value) => handleFilterChange('role', value || '')}
-                                className="w-full"
-                                allowClear
+                            <select
+                                className="bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                value={filters.role || ''}
+                                onChange={(e) => handleFilterChange('role', e.target.value)}
                             >
-                                {roles.map(role => (
-                                    <Select.Option key={role.id} value={role.code}>
-                                        <div className="flex items-center gap-2">
-                                            {getRoleBadge(role.name).icon}
-                                            <span>{role.name}</span>
-                                        </div>
-                                    </Select.Option>
+                                <option value="">Lọc theo vai trò</option>
+                                {roles?.map(role => (
+                                    <option key={role.id} value={role.code}>{role.name}</option>
                                 ))}
-                            </Select>
+                            </select>
                         </div>
 
                         <div className="md:col-span-3">
-                            <Select
-                                placeholder="Lọc theo trạng thái"
-                                value={filters.status || undefined}
-                                onChange={(value) => handleFilterChange('status', value || '')}
-                                className="w-full"
-                                allowClear
+                            <select
+                                className="bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                value={filters.status || ''}
+                                onChange={(e) => handleFilterChange('status', e.target.value)}
                             >
-                                <Select.Option value="1">
-                                    <div className="flex items-center gap-2">
-                                        <Badge status="success" />
-                                        <span>Hoạt động</span>
-                                    </div>
-                                </Select.Option>
-                                <Select.Option value="0">
-                                    <div className="flex items-center gap-2">
-                                        <Badge status="error" />
-                                        <span>Vô hiệu</span>
-                                    </div>
-                                </Select.Option>
-                            </Select>
+                                <option value="">Lọc theo trạng thái</option>
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Vô hiệu</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -416,171 +464,326 @@ const UserTable: React.FC = () => {
                                         </td>
                                     </tr>
                                 ) : (
-                                    users.map(user => {
-                                        const roleBadge = getRoleBadge(user.roleName || '');
-                                        return (
-                                            <tr
-                                                key={user.id}
-                                                className="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors"
-                                            >
-                                                <td className="p-4">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedUsers.includes(user.id)}
-                                                        onChange={() => toggleUserSelection(user.id)}
-                                                        className="rounded border-slate-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500"
-                                                    />
-                                                </td>
-                                                <td className="p-4">
-                                                    <div className="flex items-center space-x-3">
-                                                        <div className="flex-shrink-0">
-                                                            {user.avatar ? (
-                                                                <Image
-                                                                    src={user.avatar}
-                                                                    alt={user.fullName}
-                                                                    width={40}
-                                                                    height={40}
-                                                                    className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
-                                                                />
-                                                            ) : (
-                                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-medium">
-                                                                    {user.fullName.charAt(0)}
-                                                                </div>
-                                                            )}
+                                    users.map(user => (
+                                        <tr
+                                            key={user.id}
+                                            className="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors"
+                                        >
+                                            <td className="p-4">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedUsers.includes(user.id)}
+                                                    onChange={() => toggleUserSelection(user.id)}
+                                                    className="rounded border-slate-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500"
+                                                />
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="flex items-center space-x-3">
+                                                    <div className="flex-shrink-0">
+                                                        {user.avatar ? (
+                                                            <img
+                                                                src={user.avatar}
+                                                                alt={user.fullName}
+                                                                width={40}
+                                                                height={40}
+                                                                className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                                                            />
+                                                        ) : (
+                                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-medium">
+                                                                {user.fullName.charAt(0)}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-medium text-slate-900 dark:text-white">
+                                                            {user.fullName}
                                                         </div>
-                                                        <div>
-                                                            <div className="font-medium text-slate-900 dark:text-white">
-                                                                {user.fullName}
-                                                            </div>
-                                                            <div className="text-sm text-slate-500 dark:text-slate-400">
-                                                                {user.email}
-                                                            </div>
+                                                        <div className="text-sm text-slate-500 dark:text-slate-400">
+                                                            {user.email}
                                                         </div>
                                                     </div>
-                                                </td>
-                                                <td className="p-4">
-                                                    <Tag
-                                                        color={roleBadge.color}
-                                                        icon={roleBadge.icon}
-                                                        className="flex items-center gap-1 py-1"
+                                                </div>
+                                            </td>
+                                            <td className="p-4">
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleBadgeStyles(user.roleName)}`}>
+                                                    {user.roleName === 'Admin' && <ShieldCheck size={12} className="mr-1" />}
+                                                    {user.roleName === 'User' && <Users size={12} className="mr-1" />}
+                                                    {user.roleName}
+                                                </span>
+                                            </td>
+                                            <td className="p-4">
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                                    ${user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                                    <span className={`w-2 h-2 mr-1 rounded-full ${user.isActive ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                                                    {user.isActive ? 'Hoạt động' : 'Vô hiệu'}
+                                                </span>
+                                            </td>
+                                            <td className="p-4 text-slate-600 dark:text-slate-400">
+                                                {formatDate(user.createdAt)}
+                                            </td>
+                                            <td className="p-4 text-right">
+                                                <div className="relative inline-block text-left">
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-transparent hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none"
+                                                        onClick={() => toggleDropdown(user.id)}
                                                     >
-                                                        {user.roleName}
-                                                    </Tag>
-                                                </td>
-                                                <td className="p-4">
-                                                    <Badge
-                                                        status={user.isActive ? "success" : "error"}
-                                                        text={user.isActive ? "Hoạt động" : "Vô hiệu"}
-                                                    />
-                                                </td>
-                                                <td className="p-4 text-slate-600 dark:text-slate-400">
-                                                    {new Date(user.createdAt).toLocaleDateString('vi-VN', {
-                                                        year: 'numeric',
-                                                        month: '2-digit',
-                                                        day: '2-digit'
-                                                    })}
-                                                </td>
-                                                <td className="p-4 text-right">
-                                                    <Dropdown
-                                                        overlay={getActionMenu(user)}
-                                                        trigger={['click']}
-                                                        placement="bottomRight"
-                                                    >
-                                                        <Button
-                                                            type="text"
-                                                            icon={<MoreHorizontal size={18} />}
-                                                            className="hover:bg-slate-100 dark:hover:bg-slate-700"
-                                                        />
-                                                    </Dropdown>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
+                                                        <MoreHorizontal size={18} className="text-slate-500" />
+                                                    </button>
+
+                                                    {dropdownOpenId === user.id && (
+                                                        <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-10">
+                                                            <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                                                <button
+                                                                    onClick={() => { router.push(`/admin/users/edit/${user.id}`); setDropdownOpenId(null); }}
+                                                                    className="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+                                                                    role="menuitem"
+                                                                >
+                                                                    <Edit size={14} className="mr-2" />
+                                                                    Chỉnh sửa
+                                                                </button>
+
+                                                                <button
+                                                                    onClick={() => { handleToggleStatus(user.id, user.isActive); setDropdownOpenId(null); }}
+                                                                    className="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+                                                                    role="menuitem"
+                                                                >
+                                                                    {user.isActive ? (
+                                                                        <>
+                                                                            <Lock size={14} className="mr-2" />
+                                                                            Vô hiệu hóa
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <Unlock size={14} className="mr-2" />
+                                                                            Kích hoạt
+                                                                        </>
+                                                                    )}
+                                                                </button>
+
+                                                                <button
+                                                                    onClick={() => { showResetPasswordConfirm(user.id); setDropdownOpenId(null); }}
+                                                                    className="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+                                                                    role="menuitem"
+                                                                >
+                                                                    <RefreshCw size={14} className="mr-2" />
+                                                                    Đặt lại mật khẩu
+                                                                </button>
+
+                                                                <div className="border-t border-gray-100 dark:border-slate-700 my-1"></div>
+
+                                                                <button
+                                                                    onClick={() => { showDeleteConfirm(user.id); setDropdownOpenId(null); }}
+                                                                    className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-slate-700"
+                                                                    role="menuitem"
+                                                                >
+                                                                    <Trash2 size={14} className="mr-2" />
+                                                                    Xóa người dùng
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
                                 )}
                             </tbody>
                         </table>
                     </div>
 
-                    {/* Pagination */}
+                    {/* Custom Pagination */}
                     <div className="bg-slate-50 dark:bg-slate-700/50 px-4 py-3 flex flex-col sm:flex-row justify-between items-center border-t border-slate-200 dark:border-slate-700">
                         <div className="text-sm text-slate-600 dark:text-slate-300 mb-3 sm:mb-0">
                             Hiển thị {users.length > 0 ? (filters.pageNumber - 1) * filters.pageSize + 1 : 0} đến{' '}
                             {Math.min(filters.pageNumber * filters.pageSize, totalUsers)} của {totalUsers} người dùng
                         </div>
 
-                        <Pagination
-                            current={filters.pageNumber}
-                            pageSize={filters.pageSize}
-                            total={totalUsers}
-                            onChange={(page) => handleFilterChange('pageNumber', page)}
-                            onShowSizeChange={(_, size) => handleFilterChange('pageSize', size)}
-                            showSizeChanger
-                            showQuickJumper
-                            showTotal={(total) => `Tổng ${total} người dùng`}
-                        />
+                        <div className="flex items-center space-x-2">
+                            {/* Page size selector */}
+                            <select
+                                className="text-sm border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-200 mr-2"
+                                value={filters.pageSize}
+                                onChange={(e) => handleFilterChange('pageSize', parseInt(e.target.value))}
+                            >
+                                {[10, 20, 30, 50].map(size => (
+                                    <option key={size} value={size}>{size} / trang</option>
+                                ))}
+                            </select>
+
+                            {/* Pagination controls */}
+                            <nav className="flex items-center space-x-1">
+                                {/* First page */}
+                                <button
+                                    onClick={() => handleFilterChange('pageNumber', 1)}
+                                    disabled={filters.pageNumber === 1}
+                                    className={`p-1 rounded ${filters.pageNumber === 1
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
+                                        }`}
+                                >
+                                    <ChevronsLeft size={16} />
+                                </button>
+
+                                {/* Previous page */}
+                                <button
+                                    onClick={() => handleFilterChange('pageNumber', filters.pageNumber - 1)}
+                                    disabled={filters.pageNumber === 1}
+                                    className={`p-1 rounded ${filters.pageNumber === 1
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
+                                        }`}
+                                >
+                                    <ChevronLeft size={16} />
+                                </button>
+
+                                {/* Page numbers */}
+                                {pageNumbers.map((page, index) => (
+                                    <React.Fragment key={page}>
+                                        {/* Add ellipsis if there's a gap in page numbers */}
+                                        {index > 0 && page > pageNumbers[index - 1] + 1 && (
+                                            <span className="px-3 py-1 text-gray-500">...</span>
+                                        )}
+
+                                        <button
+                                            onClick={() => handleFilterChange('pageNumber', page)}
+                                            className={`px-3 py-1 rounded ${filters.pageNumber === page
+                                                ? 'bg-blue-600 text-white'
+                                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
+                                                }`}
+                                        >
+                                            {page}
+                                        </button>
+                                    </React.Fragment>
+                                ))}
+
+                                {/* Next page */}
+                                <button
+                                    onClick={() => handleFilterChange('pageNumber', filters.pageNumber + 1)}
+                                    disabled={filters.pageNumber === totalPages}
+                                    className={`p-1 rounded ${filters.pageNumber === totalPages
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
+                                        }`}
+                                >
+                                    <ChevronRight size={16} />
+                                </button>
+
+                                {/* Last page */}
+                                <button
+                                    onClick={() => handleFilterChange('pageNumber', totalPages)}
+                                    disabled={filters.pageNumber === totalPages}
+                                    className={`p-1 rounded ${filters.pageNumber === totalPages
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
+                                        }`}
+                                >
+                                    <ChevronsRight size={16} />
+                                </button>
+                            </nav>
+                        </div>
                     </div>
                 </div>
 
                 {/* Delete Confirmation Modal */}
-                <Modal
-                    title="Xác nhận xóa người dùng"
-                    open={deleteModalVisible}
-                    onCancel={() => setDeleteModalVisible(false)}
-                    footer={[
-                        <Button key="cancel" onClick={() => setDeleteModalVisible(false)}>
-                            Hủy
-                        </Button>,
-                        <Button
-                            key="delete"
-                            danger
-                            type="primary"
-                            onClick={handleDeleteConfirm}
-                            loading={loading}
-                        >
-                            Xóa
-                        </Button>
-                    ]}
-                >
-                    <div className="flex items-center gap-3 py-2">
-                        <div className="p-2 rounded-full bg-red-50 text-red-500">
-                            <AlertCircle size={24} />
+                {deleteModalVisible && (
+                    <>
+                        <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setDeleteModalVisible(false)}></div>
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md mx-auto">
+                                <div className="p-5">
+                                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                                        Xác nhận xóa người dùng
+                                    </h3>
+                                    <div className="flex items-center gap-3 py-2">
+                                        <div className="p-2 rounded-full bg-red-50 text-red-500">
+                                            <AlertCircle size={24} />
+                                        </div>
+                                        <div>
+                                            <p className="font-medium dark:text-white">Bạn có chắc chắn muốn xóa người dùng này?</p>
+                                            <p className="text-slate-500 text-sm">Hành động này không thể hoàn tác.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="bg-gray-50 dark:bg-slate-700/50 px-5 py-3 flex justify-end gap-2 rounded-b-lg">
+                                    <button
+                                        type="button"
+                                        className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-md hover:bg-gray-50 dark:hover:bg-slate-700"
+                                        onClick={() => setDeleteModalVisible(false)}
+                                    >
+                                        Hủy
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+                                        onClick={handleDeleteConfirm}
+                                        disabled={loading}
+                                    >
+                                        {loading ? (
+                                            <span className="flex items-center">
+                                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                Đang xóa...
+                                            </span>
+                                        ) : 'Xóa'}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <p className="font-medium">Bạn có chắc chắn muốn xóa người dùng này?</p>
-                            <p className="text-slate-500 text-sm">Hành động này không thể hoàn tác.</p>
-                        </div>
-                    </div>
-                </Modal>
+                    </>
+                )}
 
                 {/* Reset Password Confirmation Modal */}
-                <Modal
-                    title="Xác nhận đặt lại mật khẩu"
-                    open={resetPasswordModalVisible}
-                    onCancel={() => setResetPasswordModalVisible(false)}
-                    footer={[
-                        <Button key="cancel" onClick={() => setResetPasswordModalVisible(false)}>
-                            Hủy
-                        </Button>,
-                        <Button
-                            key="reset"
-                            type="primary"
-                            onClick={handleResetPasswordConfirm}
-                            loading={loading}
-                        >
-                            Đặt lại mật khẩu
-                        </Button>
-                    ]}
-                >
-                    <div className="flex items-center gap-3 py-2">
-                        <div className="p-2 rounded-full bg-blue-50 text-blue-500">
-                            <RefreshCw size={24} />
+                {resetPasswordModalVisible && (
+                    <>
+                        <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setResetPasswordModalVisible(false)}></div>
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md mx-auto">
+                                <div className="p-5">
+                                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                                        Xác nhận đặt lại mật khẩu
+                                    </h3>
+                                    <div className="flex items-center gap-3 py-2">
+                                        <div className="p-2 rounded-full bg-blue-50 text-blue-500">
+                                            <RefreshCw size={24} />
+                                        </div>
+                                        <div>
+                                            <p className="font-medium dark:text-white">Đặt lại mật khẩu cho người dùng này?</p>
+                                            <p className="text-slate-500 text-sm">Mật khẩu mới sẽ được gửi qua email của người dùng.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="bg-gray-50 dark:bg-slate-700/50 px-5 py-3 flex justify-end gap-2 rounded-b-lg">
+                                    <button
+                                        type="button"
+                                        className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-md hover:bg-gray-50 dark:hover:bg-slate-700"
+                                        onClick={() => setResetPasswordModalVisible(false)}
+                                    >
+                                        Hủy
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                                        onClick={handleResetPasswordConfirm}
+                                        disabled={loading}
+                                    >
+                                        {loading ? (
+                                            <span className="flex items-center">
+                                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                Đang xử lý...
+                                            </span>
+                                        ) : 'Đặt lại mật khẩu'}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <p className="font-medium">Đặt lại mật khẩu cho người dùng này?</p>
-                            <p className="text-slate-500 text-sm">Mật khẩu mới sẽ được gửi qua email của người dùng.</p>
-                        </div>
-                    </div>
-                </Modal>
+                    </>
+                )}
             </div>
         </div>
     );

@@ -1,12 +1,12 @@
 'use client';
 import React from 'react';
-import Image from 'next/image';
+
 
 const PageLoading = () => {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-white dark:bg-gray-900 z-50">
             <div className="flex flex-col items-center">
-                <Image
+                <img
                     src="/images/loading-new.gif"
                     alt="Loading"
                     width={80}

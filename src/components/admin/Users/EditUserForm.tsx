@@ -5,7 +5,7 @@ import { Button, Card, Form, Input, Select, Spin, Switch, Tabs, message, Upload 
 import { ArrowLeftOutlined, InfoCircleOutlined, LockOutlined, UserOutlined, UploadOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { UpdateUserDto, User } from '@/types/user';
-import { getUserByID } from '@/api/axios/api';
+import { getUserById } from '@/api/axios/api';
 import { updateUser } from '@/api/axios/api';
 import { sendNotification } from '@/api/axios/api';
 import { getRoles } from '@/api/axios/api';
@@ -27,6 +27,8 @@ interface Role {
 }
 
 const EditUserForm = ({ userId }: Props) => {
+    console.log(userId);
+
     const router = useRouter();
     const [form] = Form.useForm();
     const [passwordForm] = Form.useForm();
@@ -45,11 +47,7 @@ const EditUserForm = ({ userId }: Props) => {
         const fetchRoles = async () => {
             try {
                 const response = await getRoles();
-                if (response?.statusCode === 200 && response.data) {
-                    setRoles(response.data);
-                } else {
-                    message.error('Không thể tải danh sách vai trò');
-                }
+                setRoles(response.data);
             } catch (error) {
                 console.error('Error fetching roles:', error);
                 message.error('Đã xảy ra lỗi khi tải danh sách vai trò');
@@ -80,34 +78,29 @@ const EditUserForm = ({ userId }: Props) => {
         const fetchUser = async () => {
             try {
                 setLoading(true);
-                const response = await getUserByID({ id: userId });
+                const response = await getUserById(userId);
+                console.log(response.data);
+                setUser(response.data);
+                setOriginalStatus(response.data.isActive);
+                setOriginalRole(response.data.roleId?.toString() || '1');
+                setBioContent(response.data.bio || '');
 
-                if (response?.statusCode === 200 && response.data) {
-                    console.log(response.data);
-                    setUser(response.data);
-                    setOriginalStatus(response.data.isActive);
-                    setOriginalRole(response.data.roleId?.toString() || '1');
-                    setBioContent(response.data.bio || '');
+                form.setFieldsValue({
+                    fullName: response.data.fullName,
+                    email: response.data.email,
+                    userName: response.data.userName,
+                    personalWebsite: response.data.personalWebsite,
+                    githubLink: response.data.githubLink,
+                    youtubeLink: response.data.youtubeLink,
+                    facebookLink: response.data.facebookLink,
+                    isActive: response.data.isActive,
+                    roleId: response.data.roleId
+                });
 
-                    form.setFieldsValue({
-                        fullName: response.data.fullName,
-                        email: response.data.email,
-                        userName: response.data.userName,
-                        personalWebsite: response.data.personalWebsite,
-                        githubLink: response.data.githubLink,
-                        youtubeLink: response.data.youtubeLink,
-                        facebookLink: response.data.facebookLink,
-                        isActive: response.data.isActive,
-                        roleId: response.data.roleId
-                    });
-
-                    if (response.data.avatar) {
-                        setAvatarPreview(formatAvatarPath(response.data.avatar));
-                    }
-                } else {
-                    message.error('Không thể tải thông tin người dùng');
-                    router.push('/admin/users');
+                if (response.data.avatar) {
+                    setAvatarPreview(formatAvatarPath(response.data.avatar));
                 }
+
             } catch (error) {
                 console.error('Error fetching user:', error);
                 message.error('Đã xảy ra lỗi khi tải thông tin người dùng');
@@ -123,6 +116,7 @@ const EditUserForm = ({ userId }: Props) => {
     }, [userId, router, form]);
 
     const onFinish = async (values: any) => {
+        console.log(values);
         try {
             setSubmitting(true);
 
@@ -285,7 +279,7 @@ const EditUserForm = ({ userId }: Props) => {
             if (response?.statusCode === 200) {
                 message.success('Ảnh đại diện đã được cập nhật thành công');
                 // Refresh the user data
-                const userResponse = await getUserByID({ id: userId });
+                const userResponse = await getUserById(userId);
                 if (userResponse?.statusCode === 200 && userResponse.data) {
                     setUser(userResponse.data);
                     setFileList([]);
@@ -394,7 +388,7 @@ const EditUserForm = ({ userId }: Props) => {
                                     name="userName"
                                     label="Tên người dùng"
                                 >
-                                    <Input placeholder="Nhập tên người dùng" />
+                                    <Input placeholder="Nhập tên người dùng" disabled />
                                 </Form.Item>
 
                                 <Form.Item

@@ -1,14 +1,17 @@
 'use client';
 import RichTextEditor from '@/components/RichTextEditor';
-import { message } from 'antd';
+import { Button, Card, Form, Input, message, Tabs, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
-import { fetchFile, hasValue } from '@/Utils/functions';
-import { CourseCreate, CourseEditAsync } from '@/api/axios/api';
+import { fetchFile } from '@/Utils/functions';
+import { CourseEditAsync } from '@/api/axios/api';
 import { useRouter } from 'next/navigation';
 import CoursePrice from '../create/CoursePrice';
 import Levels from '../create/Levels';
 import Banner from '../create/Banner';
+
+const { Title, Text } = Typography;
+const { TabPane } = Tabs;
 
 interface ICourseEdit {
   title: string;
@@ -19,16 +22,19 @@ interface ICourseEdit {
   isFree: boolean;
   slogan: string;
 }
+
 const CourseEdit = ({ levels, course }: any) => {
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
+  const [form] = Form.useForm();
+
   const [resultsAfterStudying, setResultsAfterStudying] = useState<string>(
     course?.courseDetail?.resultsAfterStudying,
   );
   const [description, setDescription] = useState<string>(
     course?.courseDetail?.description,
   );
-  const [error, setError] = useState<any>();
+  const [error, setError] = useState<any>({});
   const [courseSuggestions, setCourseSuggestions] = useState<string>(
     course?.courseDetail?.courseSuggestions,
   );
@@ -42,6 +48,7 @@ const CourseEdit = ({ levels, course }: any) => {
     isFree: course?.courseDetail?.isFree,
     slogan: course?.courseDetail?.slogan,
   });
+
   useEffect(() => {
     const fetchImage = async () => {
       if (course?.banner) {
@@ -56,12 +63,14 @@ const CourseEdit = ({ levels, course }: any) => {
     };
     fetchImage();
   }, []);
+
   const handleChoiseCourse = (id: any) => {
     setData({
       ...data,
       levelId: id,
     });
   };
+
   const handleSetErrror = (e: any) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -74,10 +83,11 @@ const CourseEdit = ({ levels, course }: any) => {
     if (name === 'slogan' && value.length === 0) {
       setError({
         ...error,
-        [name]: 'Slogan không được bỏ trống',
+        [name]: 'Khẩu hiệu không được bỏ trống',
       });
     }
   };
+
   const handleSubmit = async () => {
     let hasError = false;
 
@@ -92,7 +102,7 @@ const CourseEdit = ({ levels, course }: any) => {
     if (!data?.slogan) {
       setError((prevError: any) => ({
         ...prevError,
-        slogan: 'Slogan không được bỏ trống',
+        slogan: 'Khẩu hiệu không được bỏ trống',
       }));
       hasError = true;
     }
@@ -109,7 +119,7 @@ const CourseEdit = ({ levels, course }: any) => {
       if (!data?.priceOld || data?.priceOld === 0) {
         setError((prevError: any) => ({
           ...prevError,
-          priceOld: 'Giá cũ không được bỏ trống',
+          priceOld: 'Giá gốc không được bỏ trống',
         }));
         hasError = true;
       }
@@ -122,6 +132,7 @@ const CourseEdit = ({ levels, course }: any) => {
       });
       return;
     }
+
     if (
       course?.courseDetail?.courseSuggestions === courseSuggestions &&
       course?.courseDetail?.description === description &&
@@ -130,9 +141,10 @@ const CourseEdit = ({ levels, course }: any) => {
       course?.introduce == introduce &&
       data?.title === data?.title
     ) {
-      messageApi.warning('bạn chưa thay đổi giá trị');
+      messageApi.warning('Bạn chưa thay đổi thông tin nào');
       return;
     }
+
     const formData = new FormData();
     formData.append('CourseCreate.LevelId', data?.levelId?.toString() || '');
     formData.append('CourseCreate.Title', data?.title || '');
@@ -163,83 +175,103 @@ const CourseEdit = ({ levels, course }: any) => {
       courseSuggestions || '',
     );
 
-    const res = await CourseEditAsync(formData, course.id);
-    if (res?.statusCode === 200 || res?.statusCode === 200) {
-      messageApi.open({
-        type: 'success',
-        content: 'Lưu thành công',
-      });
-      router.push('/admin/course');
-    } else {
-      messageApi.open({
-        type: 'error',
-        content: 'Có lỗi xẩy ra, vui lòng thử lại sau',
-      });
+    messageApi.loading({ content: 'Đang lưu thông tin...', key: 'saveLoading' });
+
+    try {
+      const res = await CourseEditAsync(formData, course.id);
+      if (res?.statusCode === 200) {
+        messageApi.success({ content: 'Lưu thành công', key: 'saveLoading' });
+        router.push('/admin/course');
+      } else {
+        messageApi.error({ content: res?.message || 'Có lỗi xảy ra', key: 'saveLoading' });
+      }
+    } catch (error) {
+      messageApi.error({ content: 'Có lỗi xảy ra, vui lòng thử lại sau', key: 'saveLoading' });
     }
   };
 
   return (
-    <div className="p-10 text-[1.3rem]">
+    <div className="p-6 max-w-7xl mx-auto">
       {contextHolder}
-      <div className="text-[2.5rem]  font-bold">Chỉnh sửa khoá học</div>
-      <div className="mt-10">
-        <input
-          onBlur={handleSetErrror}
-          type="text"
-          name={'title'}
-          value={data.title}
-          onChange={e => {
-            setError({
-              ...error,
-              [e.target.name]: '',
-            });
-            setData({
-              ...data,
-              title: e.target.value,
-            });
-          }}
-          className="w-full rounded-xl placeholder-[#cecdcd] text-[3rem] py-11 px-10 text-[#fff] focus:outline-none bg-[#1e75e5]"
-          placeholder="Tiêu đề khoá học ...."
-        />
-        <div className="text-[1.2rem] mt-4 ps-4 text-[#d98888]">
-          {error?.title}
+
+      <div className="flex justify-between items-center mb-6">
+        <Title level={2} className="m-0">Chỉnh sửa khóa học</Title>
+        <Button
+          type="primary"
+          size="large"
+          onClick={handleSubmit}
+          className="bg-blue-500 hover:bg-blue-600"
+        >
+          Lưu thay đổi
+        </Button>
+      </div>
+
+      <Card className="shadow-md mb-6">
+        <div className="mb-6">
+          <input
+            onBlur={handleSetErrror}
+            type="text"
+            name="title"
+            value={data.title}
+            onChange={e => {
+              setError({
+                ...error,
+                [e.target.name]: '',
+              });
+              setData({
+                ...data,
+                title: e.target.value,
+              });
+            }}
+            className="w-full rounded-lg text-[2rem] py-8 px-6 text-white focus:outline-none bg-gradient-to-r from-blue-500 to-blue-600 font-medium"
+            placeholder="Tiêu đề khóa học..."
+          />
+          {error?.title && (
+            <Text type="danger" className="mt-2 block">{error.title}</Text>
+          )}
         </div>
-        <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
-          <div className="">Khẩu hiệu</div>
-          <div className="">
-            <input
-              onBlur={handleSetErrror}
-              type="text"
-              name={'slogan'}
-              value={data.slogan}
-              className="w-full mt-10 rounded-xl placeholder-[#908e8e] text-[1.4rem] py-4 px-10 shadow-lg text-[#000] focus:outline-none bg-[#fff]"
-              placeholder="Slogan ...."
-              onChange={e => {
-                setError({
-                  ...error,
-                  [e.target.name]: '',
-                });
-                setData({
-                  ...data,
-                  slogan: e.target.value,
-                });
-              }}
+
+        <Form layout="vertical" form={form} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="col-span-1">
+            <Form.Item
+              label={<span className="text-base font-medium">Khẩu hiệu</span>}
+              validateStatus={error?.slogan ? 'error' : ''}
+              help={error?.slogan}
+            >
+              <Input
+                name="slogan"
+                value={data.slogan}
+                onChange={e => {
+                  setError({
+                    ...error,
+                    [e.target.name]: '',
+                  });
+                  setData({
+                    ...data,
+                    slogan: e.target.value,
+                  });
+                }}
+                onBlur={handleSetErrror}
+                placeholder="Nhập khẩu hiệu khóa học..."
+                size="large"
+              />
+            </Form.Item>
+          </div>
+
+          <div className="col-span-1">
+            <CoursePrice
+              error={error}
+              setError={setError}
+              data={data}
+              setData={setData}
             />
           </div>
-          <div className="text-[1.2rem] mt-4 ps-4 text-[#d98888]">
-            {error?.slogan}
-          </div>
-        </div>
-        <CoursePrice
-          error={error}
-          setError={setError}
-          data={data}
-          setData={setData}
-        />
-        <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
-          Level
-          <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
-          <div className="pt-10 cursor-pointer grid text-[1.4rem] grid-cols-6 gap-6">
+        </Form>
+      </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <Card title="Cấp độ" className="shadow-md col-span-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {levels?.length > 0 &&
               levels?.map((level: any) => (
                 <Levels
@@ -250,54 +282,56 @@ const CourseEdit = ({ levels, course }: any) => {
                 />
               ))}
           </div>
-        </div>
-        Banner khoá học
-        <span className=" absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
-        <Banner data={data?.banner} setData={setData} />
-        <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
-          Thông tin khoá học
-          <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
-          <div className="pt-10">
-            <RichTextEditor value={introduce} onChange={setIntroduce} />
-          </div>
-        </div>
-        <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
-          Mô tả
-          <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
-          <div className="pt-10">
-            <RichTextEditor value={description} onChange={setDescription} />
-          </div>
-        </div>
-        <div className="grid grid-cols-2">
-          <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
-            Gợi ý khoá học
-            <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
-            <div className="pt-10">
-              <RichTextEditor
-                value={courseSuggestions}
-                onChange={setCourseSuggestions}
-              />
-            </div>
-          </div>
-          <div className="mt-10 relative ps-4 text-[1.6rem] font-medium">
-            Kết quả sau khi học xong khoá học
-            <span className="absolute top-2 left-0 w-[0.3rem] h-[0.3rem] rounded-full bg-[#1e75e5]"></span>
-            <div className="pt-10">
-              <RichTextEditor
-                value={resultsAfterStudying}
-                onChange={setResultsAfterStudying}
-              />
-            </div>
-          </div>
-        </div>
+        </Card>
+
+        <Card title="Banner khóa học" className="shadow-md col-span-1">
+          <Banner data={data?.banner} setData={setData} />
+        </Card>
       </div>
-      <div className="pt-10">
-        <button
-          onClick={handleSubmit}
-          className="px-10 py-4 rounded-2xl bg-[#609fd6] text-[#fff]"
+
+      <Tabs defaultActiveKey="1" type="card" className="mb-6">
+        <TabPane tab="Thông tin khóa học" key="1">
+          <Card className="shadow-md">
+            <RichTextEditor value={introduce} onChange={setIntroduce} />
+          </Card>
+        </TabPane>
+
+        <TabPane tab="Mô tả chi tiết" key="2">
+          <Card className="shadow-md">
+            <RichTextEditor value={description} onChange={setDescription} />
+          </Card>
+        </TabPane>
+
+        <TabPane tab="Gợi ý khóa học" key="3">
+          <Card className="shadow-md">
+            <RichTextEditor value={courseSuggestions} onChange={setCourseSuggestions} />
+          </Card>
+        </TabPane>
+
+        <TabPane tab="Kết quả sau khóa học" key="4">
+          <Card className="shadow-md">
+            <RichTextEditor value={resultsAfterStudying} onChange={setResultsAfterStudying} />
+          </Card>
+        </TabPane>
+      </Tabs>
+
+      <div className="flex justify-end">
+        <Button
+          type="default"
+          size="large"
+          onClick={() => router.push('/admin/course')}
+          className="mr-4"
         >
-          Lưu lại
-        </button>
+          Hủy
+        </Button>
+        <Button
+          type="primary"
+          size="large"
+          onClick={handleSubmit}
+          className="bg-blue-500 hover:bg-blue-600"
+        >
+          Lưu thay đổi
+        </Button>
       </div>
     </div>
   );

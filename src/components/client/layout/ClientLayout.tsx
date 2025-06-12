@@ -13,9 +13,9 @@ export default function ClientLayout({
     return (
         <div>
             <Header />
-            <div className="flex pt-16">
+            <div className="flex pt-20">
                 <Slider />
-                <div className="flex-1">{children}</div>
+                <div className="flex-1 dark:bg-gray-900">{children}</div>
             </div>
             <Footer />
             <Toaster

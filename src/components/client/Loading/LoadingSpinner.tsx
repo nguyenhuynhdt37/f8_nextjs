@@ -1,152 +1,152 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+
 
 const tips = [
-    "Học tập từng bước nhỏ sẽ tạo ra thành công lớn",
-    "Lập trình viên giỏi không phải là người không gặp bug",
-    "Thất bại là cách bạn học code tốt hơn",
-    "Code sạch giúp dự án của bạn bền vững",
-    "Kiên nhẫn là kỹ năng quan trọng nhất của lập trình viên",
-    "Đầu tư thời gian cho việc đọc mã nguồn mở",
-    "Rèn luyện kỹ năng debug sẽ giúp bạn tiết kiệm thời gian",
+  "Học tập từng bước nhỏ sẽ tạo ra thành công lớn",
+  "Lập trình viên giỏi không phải là người không gặp bug",
+  "Thất bại là cách bạn học code tốt hơn",
+  "Code sạch giúp dự án của bạn bền vững",
+  "Kiên nhẫn là kỹ năng quan trọng nhất của lập trình viên",
+  "Đầu tư thời gian cho việc đọc mã nguồn mở",
+  "Rèn luyện kỹ năng debug sẽ giúp bạn tiết kiệm thời gian",
 ];
 
 const LoadingSpinner = () => {
-    const [progress, setProgress] = useState(0);
-    const [tipIndex, setTipIndex] = useState(0);
-    const [mounted, setMounted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [tipIndex, setTipIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-        setMounted(true);
+  useEffect(() => {
+    setMounted(true);
 
-        // Progress animation
-        const interval = setInterval(() => {
-            setProgress(prev => {
-                const nextProgress = prev + Math.random() * 10;
-                return nextProgress > 95 ? 95 : nextProgress;
-            });
-        }, 400);
+    // Progress animation
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        const nextProgress = prev + Math.random() * 10;
+        return nextProgress > 95 ? 95 : nextProgress;
+      });
+    }, 400);
 
-        // Tip rotation
-        const tipInterval = setInterval(() => {
-            setTipIndex(prev => (prev + 1) % tips.length);
-        }, 3000);
+    // Tip rotation
+    const tipInterval = setInterval(() => {
+      setTipIndex(prev => (prev + 1) % tips.length);
+    }, 3000);
 
-        return () => {
-            clearInterval(interval);
-            clearInterval(tipInterval);
-        };
-    }, []);
+    return () => {
+      clearInterval(interval);
+      clearInterval(tipInterval);
+    };
+  }, []);
 
-    // Simulate faster loading completion after some time
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setProgress(100);
-        }, 5000);
+  // Simulate faster loading completion after some time
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setProgress(100);
+    }, 5000);
 
-        return () => clearTimeout(timer);
-    }, []);
+    return () => clearTimeout(timer);
+  }, []);
 
-    return (
-        <div className="fixed inset-0 flex flex-col items-center justify-center z-50 perspective">
-            {/* Background with animated gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 opacity-90">
-                {/* Animated particles */}
-                <div className="particles">
-                    {[...Array(20)].map((_, i) => (
-                        <div
-                            key={i}
-                            className="particle"
-                            style={{
-                                '--index': i,
-                                '--x': `${Math.random() * 100}%`,
-                                '--y': `${Math.random() * 100}%`,
-                                '--size': `${Math.random() * 10 + 5}px`,
-                                '--delay': `${Math.random() * 5}s`
-                            } as React.CSSProperties}
-                        />
-                    ))}
-                </div>
+  return (
+    <div className="fixed inset-0 flex flex-col items-center justify-center z-50 perspective">
+      {/* Background with animated gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 opacity-90">
+        {/* Animated particles */}
+        <div className="particles">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="particle"
+              style={{
+                '--index': i,
+                '--x': `${Math.random() * 100}%`,
+                '--y': `${Math.random() * 100}%`,
+                '--size': `${Math.random() * 10 + 5}px`,
+                '--delay': `${Math.random() * 5}s`
+              } as React.CSSProperties}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className={`transform transition-all duration-1000 ${mounted ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
+        <div className="relative flex flex-col items-center max-w-md px-10 py-12 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl backdrop-blur-lg bg-opacity-90 dark:bg-opacity-80">
+          {/* Animated code lines */}
+          <div className="absolute inset-0 overflow-hidden rounded-2xl opacity-10">
+            <div className="code-lines" />
+          </div>
+
+          {/* Glowing ring */}
+          <div className="relative h-40 w-40 mb-8">
+            {/* Multiple rotating rings */}
+            <div className="absolute inset-0 ring-1 rounded-full ring-offset-1 animate-spin-slower" />
+            <div className="absolute inset-0 ring-2 rounded-full ring-blue-500 ring-offset-1 animate-spin-slow opacity-30" />
+            <div className="absolute inset-0 ring-2 rounded-full ring-orange-500 ring-offset-2 animate-spin-reverse opacity-20" />
+
+            {/* Glowing circles */}
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute glow-dot"
+                style={{
+                  '--index': i,
+                  '--angle': `${i * 90}deg`,
+                } as React.CSSProperties}
+              />
+            ))}
+
+            {/* Main logo container */}
+            <div className="absolute inset-5 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-blue-50 dark:from-gray-800 dark:to-gray-900 shadow-inner pulse-animation">
+              <div className="relative w-24 h-24 rounded-full overflow-hidden flex items-center justify-center">
+                {/* Logo with glow effect */}
+                <div className="absolute inset-0 logo-glow" />
+                <img
+                  src="/logo/logo1.png"
+                  alt="F8 Logo"
+                  width={85}
+                  height={85}
+                  className="z-10 drop-shadow-xl hover-float dark:brightness-110"
+                />
+              </div>
             </div>
+          </div>
 
-            <div className={`transform transition-all duration-1000 ${mounted ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}>
-                <div className="relative flex flex-col items-center max-w-md px-10 py-12 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl backdrop-blur-lg bg-opacity-90 dark:bg-opacity-80">
-                    {/* Animated code lines */}
-                    <div className="absolute inset-0 overflow-hidden rounded-2xl opacity-10">
-                        <div className="code-lines" />
-                    </div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 text-transparent bg-clip-text mb-3 animate-shimmer">
+            Đang tải dữ liệu...
+          </h2>
 
-                    {/* Glowing ring */}
-                    <div className="relative h-40 w-40 mb-8">
-                        {/* Multiple rotating rings */}
-                        <div className="absolute inset-0 ring-1 rounded-full ring-offset-1 animate-spin-slower" />
-                        <div className="absolute inset-0 ring-2 rounded-full ring-blue-500 ring-offset-1 animate-spin-slow opacity-30" />
-                        <div className="absolute inset-0 ring-2 rounded-full ring-orange-500 ring-offset-2 animate-spin-reverse opacity-20" />
+          {/* Progress bar with animated glow */}
+          <div className="w-64 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-5 overflow-hidden relative">
+            <div
+              className="absolute h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-600 rounded-full glow-bar transition-all duration-300 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+            <div className="absolute h-full w-20 bg-white/20 animate-shimmer-bar rounded-full" />
+          </div>
 
-                        {/* Glowing circles */}
-                        {[...Array(4)].map((_, i) => (
-                            <div
-                                key={i}
-                                className="absolute glow-dot"
-                                style={{
-                                    '--index': i,
-                                    '--angle': `${i * 90}deg`,
-                                } as React.CSSProperties}
-                            />
-                        ))}
-
-                        {/* Main logo container */}
-                        <div className="absolute inset-5 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-blue-50 dark:from-gray-800 dark:to-gray-900 shadow-inner pulse-animation">
-                            <div className="relative w-24 h-24 rounded-full overflow-hidden flex items-center justify-center">
-                                {/* Logo with glow effect */}
-                                <div className="absolute inset-0 logo-glow" />
-                                <Image
-                                    src="/logo/logo1.png"
-                                    alt="F8 Logo"
-                                    width={85}
-                                    height={85}
-                                    className="z-10 drop-shadow-xl hover-float dark:brightness-110"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 text-transparent bg-clip-text mb-3 animate-shimmer">
-                        Đang tải dữ liệu...
-                    </h2>
-
-                    {/* Progress bar with animated glow */}
-                    <div className="w-64 h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-5 overflow-hidden relative">
-                        <div
-                            className="absolute h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-600 rounded-full glow-bar transition-all duration-300 ease-out"
-                            style={{ width: `${progress}%` }}
-                        />
-                        <div className="absolute h-full w-20 bg-white/20 animate-shimmer-bar rounded-full" />
-                    </div>
-
-                    {/* Animated tip messages */}
-                    <div className="h-16 text-center overflow-hidden relative">
-                        <div className="w-full transition-transform duration-500 ease-out px-4" style={{
-                            transform: `translateY(-${tipIndex * 100}%)`,
-                        }}>
-                            {tips.map((tip, i) => (
-                                <p key={i} className="h-16 flex items-center justify-center text-gray-600 dark:text-gray-300 italic">
-                                    {tip}
-                                </p>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="mt-6 flex items-center text-xs text-gray-500 dark:text-gray-400 font-code">
-                        <span className="animate-blink mr-2">▶</span>
-                        <span className="typing-animation">console.log("Hello F8 Developer");</span>
-                    </div>
-                </div>
+          {/* Animated tip messages */}
+          <div className="h-16 text-center overflow-hidden relative">
+            <div className="w-full transition-transform duration-500 ease-out px-4" style={{
+              transform: `translateY(-${tipIndex * 100}%)`,
+            }}>
+              {tips.map((tip, i) => (
+                <p key={i} className="h-16 flex items-center justify-center text-gray-600 dark:text-gray-300 italic">
+                  {tip}
+                </p>
+              ))}
             </div>
+          </div>
 
-            {/* Custom animation styles */}
-            <style jsx>{`
+          <div className="mt-6 flex items-center text-xs text-gray-500 dark:text-gray-400 font-code">
+            <span className="animate-blink mr-2">▶</span>
+            <span className="typing-animation">console.log("Hello F8 Developer");</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Custom animation styles */}
+      <style jsx>{`
         .perspective {
           perspective: 1000px;
         }
@@ -295,8 +295,8 @@ const LoadingSpinner = () => {
           animation: code-scroll 20s linear infinite;
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default LoadingSpinner;

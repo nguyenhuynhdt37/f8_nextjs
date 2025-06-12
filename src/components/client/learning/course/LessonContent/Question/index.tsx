@@ -8,7 +8,7 @@ import CodeBlock from './CodeBlock';
 import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiClock, FiFilter, FiCheckCircle, FiXCircle, FiHelpCircle, FiCode, FiBookOpen } from 'react-icons/fi';
-import Image from 'next/image';
+
 
 // Define types for better type safety
 interface QuestionDetail {
@@ -246,7 +246,7 @@ const Question: React.FC<QuestionProps> = ({ id, isCompleteLesson, setIsComplete
             animate={{ opacity: 1, scale: 1 }}
             className="mb-8 rounded-xl overflow-hidden shadow-lg"
           >
-            <Image
+            <img
               src={question.imageUrl}
               alt={question.title}
               width={800}
@@ -360,7 +360,7 @@ const Question: React.FC<QuestionProps> = ({ id, isCompleteLesson, setIsComplete
                     {/* Answer image if available */}
                     {detail.imageUrl && (
                       <div className="mt-3 rounded-lg overflow-hidden">
-                        <Image
+                        <img
                           src={detail.imageUrl}
                           alt="Answer illustration"
                           width={300}

@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
+
 import { MdOutlineLogout } from 'react-icons/md';
 import { useRef, useEffect, useState } from 'react';
 import { logoutApi, getUserProfileStatistics } from '@/api/axios/api';

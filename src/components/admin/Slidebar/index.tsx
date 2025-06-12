@@ -10,7 +10,7 @@ import { IoNotificationsOutline } from 'react-icons/io5';
 import { FiFileText } from 'react-icons/fi';
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import Image from 'next/image';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 

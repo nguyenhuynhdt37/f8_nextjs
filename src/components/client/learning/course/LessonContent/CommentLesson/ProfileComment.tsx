@@ -107,9 +107,10 @@ const ProfileComment = ({
             <div
               className="custom-textview custom-comment prose prose-sm dark:prose-invert max-w-none"
               dangerouslySetInnerHTML={{
-                __html: mdParser.render(data?.content || ''),
+                __html: data?.content || '',
               }}
             />
+
           )}
           {data?.content && data?.isDelete && !data?.prohibited && (
             <div className="italic text-gray-500 dark:text-gray-400 text-sm">

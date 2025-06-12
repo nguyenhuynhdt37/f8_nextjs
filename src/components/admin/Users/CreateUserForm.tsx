@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CreateUserDto } from '@/types/user';
-import { CreateUser, getRoles, sendNotification } from '@/api/axios/api';
+import { createUser, getRoles, sendNotification } from '@/api/axios/api';
 import RichTextEditor from '@/components/RichTextEditor';
 import 'react-quill/dist/quill.snow.css';
 import { ArrowLeftIcon, UserIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
@@ -202,7 +202,7 @@ const CreateUserForm = () => {
                 hasAvatar: !!avatar
             });
 
-            const response = await CreateUser(submitFormData);
+            const response = await createUser(submitFormData);
 
             if (response?.statusCode === 200 || response?.statusCode === 201) {
                 showToast('Người dùng đã được tạo thành công', 'success');

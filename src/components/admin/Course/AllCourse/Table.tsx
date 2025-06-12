@@ -8,7 +8,7 @@ import { useOutsideClick } from '@/hook/useOutsideClick';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { timeAgo } from '@/Utils/functions';
-import Image from 'next/image';
+
 
 interface CourseItem {
   course: {

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Inter } from 'next/font/google';
+import { Inter, Lexend } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { ThemeProvider } from '@/context/ThemeContext';
 import ProviderWrap from '@/redux/middleware/Provider.wrapper';
@@ -8,6 +8,11 @@ import CheckIsLogin from '@/components/client/CheckIsLogin';
 import { cookies } from 'next/headers';
 
 const inter = Inter({ subsets: ['latin'] });
+const lexend = Lexend({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-lexend',
+});
 
 export const metadata: Metadata = {
   title: 'F8 Learning Platform',
@@ -21,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen`}>
+      <body className={`${lexend.className} min-h-screen`}>
         <ThemeProvider>
           <ProviderWrap>
             {children}

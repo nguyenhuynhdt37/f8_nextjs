@@ -30,15 +30,8 @@ const Post = ({ data }: { data: any }) => {
       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700 cursor-pointer h-full flex flex-col"
       onClick={handleClick}
     >
-      <div className="relative overflow-hidden h-36">
-        {/* Window Controls Overlay - Computer UI Style */}
-        <div className="absolute top-0 left-0 right-0 bg-gray-800/70 h-6 z-10 flex items-center px-2">
-          <div className="flex items-center space-x-1.5">
-            <div className="h-2 w-2 rounded-full bg-red-500"></div>
-            <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
-            <div className="h-2 w-2 rounded-full bg-green-500"></div>
-          </div>
-        </div>
+      <div className="relative overflow-hidden h-40">
+
 
         <img
           src={data.banner || 'https://via.placeholder.com/400x225'}
@@ -54,7 +47,7 @@ const Post = ({ data }: { data: any }) => {
       </div>
 
       <div className="p-3 flex-1 flex flex-col">
-        <h3 className="font-medium text-sm mb-2 line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+        <h3 className="font-medium text-sm mb-2 line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 dark:text-white transition-colors">
           {data.title}
         </h3>
 

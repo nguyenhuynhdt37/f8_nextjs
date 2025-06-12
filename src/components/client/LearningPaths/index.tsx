@@ -2,7 +2,7 @@
 import { useAppDispatch, useAppSelector } from '@/redux/hook/hook';
 import { setStateNav } from '@/redux/reducers/slices/NavbarSlice';
 import React, { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
+
 import Link from 'next/link';
 import { getStudySchedule } from '@/api/axios/api';
 import Login from '../Login';
